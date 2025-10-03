@@ -1,5 +1,5 @@
 <script setup>
-import Entries from './Entries.vue'
+import Entries from './EntriesList.vue'
 </script>
 
 <template>

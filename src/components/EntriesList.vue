@@ -8,17 +8,21 @@
     <p v-else-if="!entries?.length" class="empty">Aucune dépense</p>
     <div v-else class="list">
       <div v-for="entry in sortedEntries" :key="entry.id" class="card">
-        <div class="header">
-          <h3>{{ entry.title }}</h3>
-          <span class="date">{{ formatDate(entry.accountingDate) }}</span>
+        <div class="card-layout">
+          <div class="card-left">
+            <h3>{{ entry.title }}</h3>
+            <p v-if="entry.description" class="desc">{{ entry.description }}</p>
+          </div>
+          <div class="card-right">
+            <span class="date">{{ formatDate(entry.accountingDate) }}</span>
+            <div class="amount-line">
+              <span class="amount">{{ entry.amount }}</span>
+              <span class="currency">{{ entry.currencyCode }}</span>
+            </div>
+          </div>
         </div>
-        <p v-if="entry.description" class="desc">{{ entry.description }}</p>
-        <div class="amount-line">
-          <span class="amount">{{ entry.amount }}</span>
-          <span class="currency">{{ entry.currencyCode }}</span>
-        </div>
-        <div v-if="entry.tagTitles?.length" class="tags">
-          <span v-for="tag in entry.tagTitles" :key="tag" class="tag">#{{ tag }}</span>
+        <div v-if="entry.tags?.length" class="tags">
+          <span v-for="tag in entry.tags" :key="tag.id" class="tag">#{{ tag.title }}</span>
         </div>
       </div>
     </div>
@@ -50,6 +54,8 @@ const formatDate = (dateString) => {
     day: '2-digit',
     month: 'long',
     year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   }).format(date)
 }
 
@@ -128,16 +134,25 @@ h2 {
 .card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
-.header {
+.card-layout {
   display: flex;
   justify-content: space-between;
-  align-items: baseline;
+  gap: 1rem;
   margin-bottom: 0.5rem;
+}
+.card-left {
+  flex: 1;
+}
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
 }
 h3 {
   font-size: 1.1rem;
   font-weight: 600;
-  margin: 0;
+  margin: 0 0 0.5rem 0;
   color: #2c3e50;
 }
 .date {
@@ -147,13 +162,12 @@ h3 {
 .desc {
   font-size: 0.9rem;
   color: #5a6c7d;
-  margin: 0.5rem 0;
+  margin: 0;
 }
 .amount-line {
   display: flex;
   gap: 0.5rem;
   align-items: baseline;
-  margin: 0.5rem 0;
 }
 .amount {
   font-weight: 600;

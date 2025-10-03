@@ -2,8 +2,9 @@
   <div v-if="isOpen" class="modal-overlay" @click="$emit('close')">
     <div class="modal" @click.stop>
       <div class="modal-header">
+        <button type="button" class="btn-cancel" @click="$emit('close')">Annuler</button>
         <h2>Nouvelle dépense</h2>
-        <button class="close-btn" @click="$emit('close')">&times;</button>
+        <button type="submit" class="btn-submit" @click="handleSubmit">Enregistrer</button>
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
         <div class="form-row">
@@ -14,7 +15,7 @@
 
           <div class="form-group">
             <label>Date *</label>
-            <input v-model="form.accountingDate" type="date" required />
+            <input v-model="form.accountingDate" type="datetime-local" required />
           </div>
         </div>
 
@@ -36,30 +37,22 @@
 
         <div class="form-group">
           <label>Description</label>
-          <textarea v-model="form.description" rows="3"></textarea>
+          <textarea v-model="form.description" rows="2"></textarea>
         </div>
 
         <div class="form-group">
           <label>Tags</label>
           <div class="tags-container">
-            <label
+            <button
               v-for="tag in availableTags"
               :key="tag.id"
-              class="tag-checkbox"
+              type="button"
+              @click="toggleTag(tag.id)"
+              :class="['tag-btn', { active: form.tags.some(t => t.id === tag.id) }]"
             >
-              <input
-                type="checkbox"
-                :value="tag.id"
-                v-model="form.tagIds"
-              />
-              <span>{{ tag.title }}</span>
-            </label>
+              {{ tag.title }}
+            </button>
           </div>
-        </div>
-
-        <div class="form-actions">
-          <button type="button" class="btn-cancel" @click="$emit('close')">Annuler</button>
-          <button type="submit" class="btn-submit">Enregistrer</button>
         </div>
       </form>
     </div>
@@ -83,9 +76,9 @@ const form = reactive({
   title: '',
   amount: null,
   currencyCode: 'EUR',
-  accountingDate: new Date().toISOString().split('T')[0],
+  accountingDate: new Date().toISOString().slice(0, 16),
   description: '',
-  tagIds: [],
+  tags: [],
 })
 
 const loadTags = async () => {
@@ -95,10 +88,22 @@ const loadTags = async () => {
   }
 }
 
+const toggleTag = (tagId) => {
+  const index = form.tags.findIndex(tag => tag.id === tagId)
+  if (index > -1) {
+    form.tags.splice(index, 1)
+  } else {
+    const tag = availableTags.value.find(t => t.id === tagId)
+    if (tag) {
+      form.tags.push({ id: tag.id, title: tag.title })
+    }
+  }
+}
+
 const handleSubmit = () => {
   const submitData = { ...form }
-  if (submitData.tagIds.length === 0) {
-    delete submitData.tagIds
+  if (submitData.tags.length === 0) {
+    delete submitData.tags
   }
   emit('submit', submitData)
 }
@@ -133,59 +138,47 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1.5rem;
+  padding: 1rem 1.25rem;
   border-bottom: 1px solid #e1e8ed;
 }
 
 .modal-header h2 {
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   color: #2c3e50;
-}
-
-.close-btn {
-  background: none;
-  border: none;
-  font-size: 2rem;
-  color: #7f8c8d;
-  cursor: pointer;
-  line-height: 1;
-}
-
-.close-btn:hover {
-  color: #2c3e50;
+  font-weight: 600;
 }
 
 .modal-body {
-  padding: 1.5rem;
+  padding: 1.25rem;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 1rem;
+  gap: 0.75rem;
 }
 
 .form-group {
-  margin-bottom: 1rem;
+  margin-bottom: 0.75rem;
 }
 
 .form-group label {
   display: block;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
   font-weight: 500;
   color: #2c3e50;
-  font-size: 0.95rem;
+  font-size: 0.9rem;
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
   width: 100%;
-  padding: 0.75rem;
+  padding: 0.6rem;
   border: 1px solid #dfe6e9;
   border-radius: 6px;
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-family: inherit;
 }
 
@@ -203,69 +196,58 @@ onMounted(() => {
 .tags-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.75rem;
-  padding: 0.5rem 0;
+  gap: 0.5rem;
 }
 
-.tag-checkbox {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
+.tag-btn {
+  padding: 0.4rem 0.9rem;
   background: #ecf0f1;
+  color: #2c3e50;
+  border: 1px solid transparent;
   border-radius: 20px;
   cursor: pointer;
-  transition: background 0.2s;
-  user-select: none;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  font-weight: 500;
 }
 
-.tag-checkbox:hover {
+.tag-btn:hover {
   background: #dfe6e9;
 }
 
-.tag-checkbox input[type='checkbox'] {
-  width: auto;
-  margin: 0;
-  cursor: pointer;
-}
-
-.tag-checkbox input[type='checkbox']:checked + span {
-  font-weight: 600;
-  color: #3498db;
-}
-
-.form-actions {
-  display: flex;
-  gap: 1rem;
-  margin-top: 1.5rem;
-  justify-content: flex-end;
+.tag-btn.active {
+  background: #3498db;
+  color: white;
+  border-color: #2980b9;
 }
 
 .btn-cancel,
 .btn-submit {
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: 6px;
   font-weight: 500;
   cursor: pointer;
   border: none;
+  font-size: 0.95rem;
 }
 
 .btn-cancel {
-  background: #ecf0f1;
-  color: #2c3e50;
+  background: transparent;
+  color: #3498db;
 }
 
 .btn-cancel:hover {
-  background: #dfe6e9;
+  background: #ecf0f1;
 }
 
 .btn-submit {
-  background: #3498db;
-  color: white;
+  background: transparent;
+  color: #3498db;
+  font-weight: 600;
 }
 
 .btn-submit:hover {
-  background: #2980b9;
+  background: #ecf0f1;
 }
 
 @media (max-width: 640px) {

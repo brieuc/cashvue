@@ -5,17 +5,17 @@ class ApiClient {
   }
 
   getHeaders() {
-    const token = localStorage.getItem('token')
+    //const token = localStorage.getItem('token')
     return {
       'Content-Type': 'application/json',
       Accept: 'application/json',
-      ...(token && { Authorization: `Bearer ${token}` }),
+      //...(token && { Authorization: `Bearer ${token}` }),
     }
   }
 
   async request(url, options = {}) {
     const response = await fetch(`${this.baseURL}${url}`, {
-      //headers: this.getHeaders(),
+      headers: this.getHeaders(),
       ...options,
     })
 
