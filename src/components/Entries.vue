@@ -1,6 +1,9 @@
 <template>
   <div class="entries">
-    <h2>Mes Dépenses</h2>
+    <div class="header-bar">
+      <h2>Mes Dépenses</h2>
+      <button class="add-btn" @click="isModalOpen = true">+</button>
+    </div>
     <p v-if="loading" class="empty">Chargement...</p>
     <p v-else-if="!entries?.length" class="empty">Aucune dépense</p>
     <div v-else class="list">
@@ -19,15 +22,19 @@
         </div>
       </div>
     </div>
+
+    <EntryModal :is-open="isModalOpen" @close="isModalOpen = false" @submit="handleSubmit" />
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useEntries } from '@/composables/useEntries.js'
+import EntryModal from './EntryModal.vue'
 
-const { loading, getAll } = useEntries()
+const { loading, getAll, create } = useEntries()
 const entries = ref([])
+const isModalOpen = ref(false)
 
 const sortedEntries = computed(() => {
   if (!entries.value) return []
@@ -53,6 +60,14 @@ const loadEntries = async () => {
   }
 }
 
+const handleSubmit = async (formData) => {
+  const result = await create(formData)
+  if (result) {
+    isModalOpen.value = false
+    loadEntries()
+  }
+}
+
 onMounted(() => {
   loadEntries()
 })
@@ -64,11 +79,34 @@ onMounted(() => {
   margin: 0 auto;
   padding: 1.5rem;
 }
+.header-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
 h2 {
   font-size: 1.75rem;
   font-weight: 600;
-  margin-bottom: 1.5rem;
-  text-align: center;
+  margin: 0;
+}
+.add-btn {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: #3498db;
+  color: white;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  transition: background 0.2s;
+}
+.add-btn:hover {
+  background: #2980b9;
 }
 .empty {
   text-align: center;
