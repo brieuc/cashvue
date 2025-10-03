@@ -1,0 +1,143 @@
+<template>
+  <div class="entries">
+    <h2>Mes Dépenses</h2>
+    <p v-if="loading" class="empty">Chargement...</p>
+    <p v-else-if="!entries?.length" class="empty">Aucune dépense</p>
+    <div v-else class="list">
+      <div v-for="entry in sortedEntries" :key="entry.id" class="card">
+        <div class="header">
+          <h3>{{ entry.title }}</h3>
+          <span class="date">{{ formatDate(entry.accountingDate) }}</span>
+        </div>
+        <p v-if="entry.description" class="desc">{{ entry.description }}</p>
+        <div class="amount-line">
+          <span class="amount">{{ entry.amount }}</span>
+          <span class="currency">{{ entry.currencyCode }}</span>
+        </div>
+        <div v-if="entry.tagTitles?.length" class="tags">
+          <span v-for="tag in entry.tagTitles" :key="tag" class="tag">#{{ tag }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useEntries } from '@/composables/useEntries.js'
+
+const { loading, getAll } = useEntries()
+const entries = ref([])
+
+const sortedEntries = computed(() => {
+  if (!entries.value) return []
+  return [...entries.value].sort((a, b) => {
+    return new Date(b.accountingDate) - new Date(a.accountingDate)
+  })
+})
+
+const formatDate = (dateString) => {
+  if (!dateString) return ''
+  const date = new Date(dateString)
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: 'long',
+    year: 'numeric',
+  }).format(date)
+}
+
+const loadEntries = async () => {
+  const result = await getAll()
+  if (result) {
+    entries.value = result
+  }
+}
+
+onMounted(() => {
+  loadEntries()
+})
+</script>
+
+<style scoped>
+.entries {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem;
+}
+h2 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+.empty {
+  text-align: center;
+  padding: 2rem;
+  color: #7f8c8d;
+}
+.list {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.card {
+  background: #fff;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  padding: 1rem;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 0.5rem;
+}
+h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0;
+  color: #2c3e50;
+}
+.date {
+  font-size: 0.85rem;
+  color: #7f8c8d;
+}
+.desc {
+  font-size: 0.9rem;
+  color: #5a6c7d;
+  margin: 0.5rem 0;
+}
+.amount-line {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  margin: 0.5rem 0;
+}
+.amount {
+  font-weight: 600;
+  font-size: 1.25rem;
+  color: #2c3e50;
+}
+.currency {
+  font-weight: 600;
+  color: #27ae60;
+  font-size: 1rem;
+}
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-top: 0.5rem;
+}
+.tag {
+  padding: 0.2rem 0.6rem;
+  background: #ecf0f1;
+  color: #34495e;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+</style>
