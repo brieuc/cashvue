@@ -1,7 +1,7 @@
 // src/services/api.js - Client HTTP simple
 class ApiClient {
   constructor() {
-    this.baseURL = 'http://localhost:8080' //process.env.VUE_APP_URL
+    this.baseURL = process.env.VUE_APP_URL
   }
 
   getHeaders() {
