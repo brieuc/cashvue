@@ -1,7 +1,7 @@
 // src/services/api.js - Client HTTP simple
 class ApiClient {
   constructor() {
-    this.baseURL = import.meta.env.VITE_API_URL
+    this.baseURL = import.meta.env.VITE_API_URL || '/api/cashtag'
   }
 
   getHeaders() {
