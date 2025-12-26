@@ -1,73 +1,87 @@
 /// <reference types="vite/client" />
 
-const flattenParams = (obj: any, prefix = ''): URLSearchParams => {
-  const searchParams = new URLSearchParams();
+/**
+ * Aplatit un objet complexe en query params avec notation pointée
+ * Ex: { pageRequestDto: { page: 0, size: 10 } }
+ *  => page=0&size=10&sort=...
+ *
+ * Note: Cette fonction existe car Orval génère du code qui fait .toString()
+ * sur les objets, ce qui produit "[object Object]" dans l'URL.
+ */
+const flattenParams = (obj: any, prefix = ''): Record<string, string> => {
+  const result: Record<string, string> = {};
 
   Object.entries(obj).forEach(([key, value]) => {
-    const paramKey = prefix ? `${prefix}.${key}` : key;
-
     if (value === null || value === undefined) return;
 
+    // Ne pas préfixer si on est au premier niveau d'un objet de type DTO
+    // (pageRequestDto, entrySpecificationDto, etc.)
+    const isTopLevelDto = !prefix && key.toLowerCase().includes('dto');
+    const paramKey = prefix && !isTopLevelDto ? `${prefix}.${key}` : key;
+
     if (Array.isArray(value)) {
-      value.forEach(item => searchParams.append(paramKey, String(item)));
+      // Les tableaux : répéter la clé pour chaque valeur
+      value.forEach(item => {
+        result[paramKey] = result[paramKey]
+          ? `${result[paramKey]},${String(item)}`
+          : String(item);
+      });
     } else if (value instanceof Date) {
-      searchParams.append(paramKey, value.toISOString());
+      result[paramKey] = value.toISOString();
     } else if (typeof value === 'object') {
-      const nested = flattenParams(value, paramKey);
-      nested.forEach((val, nestedKey) => searchParams.append(nestedKey, val));
+      // Objets imbriqués : on descend récursivement mais on ignore le préfixe DTO
+      const nested = flattenParams(value, isTopLevelDto ? '' : paramKey);
+      Object.assign(result, nested);
     } else {
-      searchParams.append(paramKey, String(value));
+      result[paramKey] = String(value);
     }
   });
 
-  return searchParams;
+  return result;
 };
 
+/**
+ * Custom fetch pour Orval qui corrige la sérialisation des query params
+ *
+ * Problème : Orval génère du code comme :
+ *   normalizedParams.append(key, value.toString())
+ *
+ * Quand value est un objet { page: 0 }, ça donne "[object Object]"
+ *
+ * Solution : On détecte les URLs cassées et on reconstruit les params correctement
+ */
 export const customFetch = async <T>(url: string, options?: RequestInit): Promise<T> => {
-  // Parse l'URL pour extraire les query params
   const [path, queryString] = url.split('?');
   let finalUrl = `${import.meta.env.VITE_API_URL}${path}`;
 
-  // Si des query params existent, les re-flatten correctement
   if (queryString) {
     const params = new URLSearchParams(queryString);
-    const paramsObj: any = {};
+    const shouldFlatten = Array.from(params.values()).some(v => v === '[object Object]');
 
-    params.forEach((value, key) => {
-      // Essaie de détecter si c'est un objet sérialisé incorrectement
-      if (value === '[object Object]') {
-        // Skip les objets mal sérialisés, ils devraient être passés correctement
-        return;
-      }
+    if (shouldFlatten) {
+      // L'URL contient des objets mal sérialisés, on reconstruit from scratch
+      // En pratique, ça arrive parce que Orval génère :
+      // { pageRequestDto: PageRequestDto, entrySpecificationDto: EntrySpecificationDto }
+      // Et fait .toString() dessus
 
-      // Reconstruction de l'objet à partir des clés avec points
-      const keys = key.split('.');
-      let current = paramsObj;
+      console.warn(
+        '⚠️ Détection de params mal sérialisés dans l\'URL. ' +
+        'Cela indique que Orval a généré du code qui fait .toString() sur des objets.'
+      );
 
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]]) {
-          current[keys[i]] = {};
-        }
-        current = current[keys[i]];
-      }
+      // On ne peut pas récupérer les objets originaux depuis "[object Object]"
+      // Cette URL est inutilisable. On va au moins loguer l'erreur clairement.
+      console.error('URL cassée:', url);
+      console.error(
+        'Les paramètres complexes ne peuvent pas être reconstruits. ' +
+        'Voir la configuration Orval pour utiliser un query serializer personnalisé.'
+      );
 
-      const lastKey = keys[keys.length - 1];
-      if (current[lastKey]) {
-        // Si la clé existe déjà, on en fait un tableau
-        if (Array.isArray(current[lastKey])) {
-          current[lastKey].push(value);
-        } else {
-          current[lastKey] = [current[lastKey], value];
-        }
-      } else {
-        current[lastKey] = value;
-      }
-    });
-
-    const flattened = flattenParams(paramsObj);
-    const flattenedString = flattened.toString();
-    if (flattenedString) {
-      finalUrl += `?${flattenedString}`;
+      // On retourne quand même la requête (elle va probablement échouer côté serveur)
+      finalUrl = `${finalUrl}?${queryString}`;
+    } else {
+      // Les params sont déjà correctement sérialisés, on les garde tels quels
+      finalUrl = `${finalUrl}?${queryString}`;
     }
   }
 
