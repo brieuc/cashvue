@@ -59,26 +59,32 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { reactive, onMounted, ref } from 'vue'
-import { useTags } from '@/composables/useTags.js'
+import { useTags } from '@/composables/useTags'
+import type { Tag, CreateEntryRequest } from '@/types'
 
-defineProps({
-  isOpen: Boolean,
-})
+interface Props {
+  isOpen: boolean
+}
 
-const emit = defineEmits(['close', 'submit'])
+defineProps<Props>()
+
+const emit = defineEmits<{
+  close: []
+  submit: [data: CreateEntryRequest]
+}>()
 
 const { getAll } = useTags()
-const availableTags = ref([])
+const availableTags = ref<Tag[]>([])
 
 const form = reactive({
   title: '',
-  amount: null,
+  amount: null as number | null,
   currencyCode: 'EUR',
   accountingDate: new Date().toISOString().slice(0, 16),
   description: '',
-  tags: [],
+  tags: [] as Array<{ id: string; title: string }>,
 })
 
 const loadTags = async () => {
@@ -88,12 +94,12 @@ const loadTags = async () => {
   }
 }
 
-const toggleTag = (tagId) => {
-  const index = form.tags.findIndex(tag => tag.id === tagId)
+const toggleTag = (tagId: string) => {
+  const index = form.tags.findIndex((tag) => tag.id === tagId)
   if (index > -1) {
     form.tags.splice(index, 1)
   } else {
-    const tag = availableTags.value.find(t => t.id === tagId)
+    const tag = availableTags.value.find((t) => t.id === tagId)
     if (tag) {
       form.tags.push({ id: tag.id, title: tag.title })
     }
@@ -101,8 +107,8 @@ const toggleTag = (tagId) => {
 }
 
 const handleSubmit = () => {
-  const submitData = { ...form }
-  if (submitData.tags.length === 0) {
+  const submitData = { ...form } as CreateEntryRequest
+  if (submitData.tags && submitData.tags.length === 0) {
     delete submitData.tags
   }
   emit('submit', submitData)
