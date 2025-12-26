@@ -1,12 +1,13 @@
-// src/composables/useApi.js - Helper générique pour les appels API
+// src/composables/useApi.ts - Helper générique pour les appels API
 import { ref } from 'vue'
-//import { useDailyStore } from '@/dailyStore.js'
+import type { UseApiReturn } from '@/types'
+//import { useDailyStore } from '@/dailyStore.ts'
 
-export function useApi() {
+export function useApi(): UseApiReturn {
   //const store = useDailyStore()
   const loading = ref(false)
 
-  const execute = async (apiCall, successMessage = '') => {
+  const execute = async <T>(apiCall: () => Promise<T>, successMessage = ''): Promise<T> => {
     loading.value = true
     //store.errorMessage = ''
 
@@ -17,7 +18,7 @@ export function useApi() {
       }
       return result
     } catch (error) {
-      //store.errorMessage = error.message¨
+      //store.errorMessage = error.message
       console.log(error)
       throw error
     } finally {

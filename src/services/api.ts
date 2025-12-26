@@ -1,10 +1,12 @@
-// src/services/api.js - Client HTTP simple
+// src/services/api.ts - Client HTTP simple
 class ApiClient {
+  private baseURL: string
+
   constructor() {
     this.baseURL = import.meta.env.VITE_API_URL || '/api/cashtag'
   }
 
-  getHeaders() {
+  getHeaders(): Record<string, string> {
     //const token = localStorage.getItem('token')
     return {
       'Content-Type': 'application/json',
@@ -13,7 +15,7 @@ class ApiClient {
     }
   }
 
-  async request(url, options = {}) {
+  async request(url: string, options: RequestInit = {}): Promise<Response> {
     const response = await fetch(`${this.baseURL}${url}`, {
       headers: this.getHeaders(),
       ...options,
@@ -26,28 +28,28 @@ class ApiClient {
     return response
   }
 
-  async get(url) {
+  async get<T>(url: string): Promise<T> {
     const response = await this.request(url)
-    return response.json()
+    return response.json() as Promise<T>
   }
 
-  async post(url, data) {
+  async post<T>(url: string, data: unknown): Promise<T> {
     const response = await this.request(url, {
       method: 'POST',
       body: JSON.stringify(data),
     })
-    return response.json()
+    return response.json() as Promise<T>
   }
 
-  async put(url, data) {
+  async put<T>(url: string, data: unknown): Promise<T> {
     const response = await this.request(url, {
       method: 'PUT',
       body: JSON.stringify(data),
     })
-    return response.json()
+    return response.json() as Promise<T>
   }
 
-  async delete(url) {
+  async delete(url: string): Promise<void> {
     await this.request(url, { method: 'DELETE' })
   }
 }

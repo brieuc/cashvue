@@ -341,12 +341,6 @@ function extractDateFromPath(pathname) {
   return match ? match[1] : null
 }
 
-function isDateToday(dateString) {
-  if (!dateString) return false
-  const today = new Date().toISOString().split('T')[0]
-  return dateString === today
-}
-
 function shouldCache(request) {
   const url = new URL(request.url)
 

@@ -31,23 +31,26 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { ref, computed, onMounted } from 'vue'
-import { useEntries } from '@/composables/useEntries.js'
+import { useEntries } from '@/composables/useEntries'
 import EntryModal from './EntryModal.vue'
+//import { createEntry, type EntryDto, type getEntries, type GetEntriesParams } from '@/api/generated'
+import { createEntry } from '@/api/generated'
+import type { EntryDto, GetEntriesParams } from '@/api/generated'
 
-const { loading, getAll, create } = useEntries()
-const entries = ref([])
+const { entries, loading, error, fetchEntries } = useEntries()
+//const entries = ref<Entry[]>([])
 const isModalOpen = ref(false)
 
 const sortedEntries = computed(() => {
   if (!entries.value) return []
   return [...entries.value].sort((a, b) => {
-    return new Date(b.accountingDate) - new Date(a.accountingDate)
+    return new Date(b.accountingDate).getTime() - new Date(a.accountingDate).getTime()
   })
 })
 
-const formatDate = (dateString) => {
+const formatDate = (dateString: string): string => {
   if (!dateString) return ''
   const date = new Date(dateString)
   return new Intl.DateTimeFormat('fr-FR', {
@@ -60,16 +63,26 @@ const formatDate = (dateString) => {
 }
 
 const loadEntries = async () => {
-  const result = await getAll()
-  if (result) {
-    entries.value = result
-  }
+  console.log("loadEntries");
+  const params: GetEntriesParams = {
+    entrySpecificationDto: {
+      startDate: new Date("2024-01-01"),
+      endDate: new Date ("2025-12-31")
+    },
+    pageRequestDto: {
+      page: 0,
+      size: 20
+    }
+  };
+  await fetchEntries(params)
+  console.log(entries.value);
 }
 
-const handleSubmit = async (formData) => {
-  const result = await create(formData)
-  if (result) {
+const handleSubmit = async (formData: EntryDto) => {
+  const response = await createEntry(formData)
+  if (response.status === 201) {
     isModalOpen.value = false
+    console.log(response.data);
     loadEntries()
   }
 }
