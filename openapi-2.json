@@ -1,0 +1,2015 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Rates",
+      "description": "API de gestion des taux de change"
+    },
+    {
+      "name": "Currencies",
+      "description": "API de gestion des devises"
+    },
+    {
+      "name": "Tags",
+      "description": "API de gestion des tags/étiquettes"
+    },
+    {
+      "name": "Entries",
+      "description": "API de gestion des entrées financières"
+    },
+    {
+      "name": "Periods",
+      "description": "API de gestion des périodes comptables"
+    },
+    {
+      "name": "Computation",
+      "description": "API de calcul et conversion de devises"
+    }
+  ],
+  "paths": {
+    "/tags/{id}": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Récupérer un tag par son ID",
+        "description": "Retourne un tag spécifique",
+        "operationId": "getTagById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID du tag",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Tag non trouvé"
+          },
+          "200": {
+            "description": "Tag trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Mettre à jour un tag",
+        "description": "Met à jour un tag existant",
+        "operationId": "updateTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID du tag à mettre à jour",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "description": "Nouvelles informations du tag",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TagDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "404": {
+            "description": "Tag non trouvé"
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "200": {
+            "description": "Tag mis à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Supprimer un tag",
+        "description": "Supprime un tag définitivement",
+        "operationId": "deleteTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID du tag à supprimer",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Tag non trouvé"
+          },
+          "204": {
+            "description": "Tag supprimé avec succès"
+          }
+        }
+      }
+    },
+    "/rates/{id}": {
+      "get": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Récupérer un taux par son ID",
+        "description": "Retourne un taux de change spécifique",
+        "operationId": "getRateById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID du taux",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Taux trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Taux non trouvé"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Mettre à jour un taux",
+        "description": "Met à jour un taux de change existant",
+        "operationId": "updateRate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID du taux à mettre à jour",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "description": "Nouvelles informations du taux",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
+          "200": {
+            "description": "Taux mis à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Taux non trouvé"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Supprimer un taux",
+        "description": "Supprime un taux de change",
+        "operationId": "deleteRate",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID du taux à supprimer",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Taux supprimé avec succès"
+          },
+          "404": {
+            "description": "Taux non trouvé"
+          }
+        }
+      }
+    },
+    "/periods/{id}": {
+      "get": {
+        "tags": [
+          "Periods"
+        ],
+        "summary": "Récupérer une période par son ID",
+        "description": "Retourne une période spécifique",
+        "operationId": "getPeriodById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de la période",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Période non trouvée"
+          },
+          "200": {
+            "description": "Période trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeriodDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Periods"
+        ],
+        "summary": "Mettre à jour une période",
+        "description": "Met à jour une période comptable existante",
+        "operationId": "updatePeriod",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de la période à mettre à jour",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "description": "Nouvelles informations de la période",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Période mise à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeriodDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Période non trouvée"
+          },
+          "400": {
+            "description": "Données invalides"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Periods"
+        ],
+        "summary": "Supprimer une période",
+        "description": "Supprime une période comptable",
+        "operationId": "deletePeriod",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de la période à supprimer",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Période supprimée avec succès"
+          },
+          "404": {
+            "description": "Période non trouvée"
+          }
+        }
+      }
+    },
+    "/entries/{id}": {
+      "get": {
+        "tags": [
+          "Entries"
+        ],
+        "summary": "Récupérer une entrée par son ID",
+        "description": "Retourne une entrée spécifique identifiée par son ID",
+        "operationId": "getEntryById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de l'entrée à récupérer",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Entrée non trouvée"
+          },
+          "200": {
+            "description": "Entrée trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntryDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Entries"
+        ],
+        "summary": "Mettre à jour une entrée",
+        "description": "Met à jour une entrée existante avec les nouvelles informations fournies",
+        "operationId": "updateEntry",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de l'entrée à mettre à jour",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "description": "Nouvelles informations de l'entrée",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntryDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Entrée mise à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntryDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entrée non trouvée"
+          },
+          "400": {
+            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Entries"
+        ],
+        "summary": "Supprimer une entrée",
+        "description": "Supprime définitivement une entrée existante",
+        "operationId": "deleteEntry",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de l'entrée à supprimer",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Entrée supprimée avec succès"
+          },
+          "404": {
+            "description": "Entrée non trouvée"
+          }
+        }
+      }
+    },
+    "/tags": {
+      "get": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Récupérer tous les tags",
+        "description": "Retourne une liste paginée de tous les tags",
+        "operationId": "getTags",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate,desc",
+                "title,asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+                "example": "[\"accountingDate,desc\",\"title,asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate,desc",
+              "title,asc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageImplTagDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Créer un nouveau tag",
+        "description": "Crée un nouveau tag/étiquette",
+        "operationId": "createTag",
+        "requestBody": {
+          "description": "Informations du tag à créer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TagDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Tag créé avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides"
+          }
+        }
+      }
+    },
+    "/rates": {
+      "get": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Récupérer tous les taux de change",
+        "description": "Retourne une liste paginée de tous les taux de change",
+        "operationId": "getRates",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate,desc",
+                "title,asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+                "example": "[\"accountingDate,desc\",\"title,asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate,desc",
+              "title,asc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageImplRateDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Créer un nouveau taux",
+        "description": "Crée un nouveau taux de change",
+        "operationId": "createRate",
+        "requestBody": {
+          "description": "Informations du taux à créer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
+          "201": {
+            "description": "Taux créé avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/periods": {
+      "get": {
+        "tags": [
+          "Periods"
+        ],
+        "summary": "Récupérer toutes les périodes",
+        "description": "Retourne une liste paginée de toutes les périodes comptables",
+        "operationId": "getPeriods",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate,desc",
+                "title,asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+                "example": "[\"accountingDate,desc\",\"title,asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate,desc",
+              "title,asc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageImplPeriodDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Periods"
+        ],
+        "summary": "Créer une nouvelle période",
+        "description": "Crée une nouvelle période comptable",
+        "operationId": "createPeriod",
+        "requestBody": {
+          "description": "Informations de la période à créer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PeriodDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Période créée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeriodDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides"
+          }
+        }
+      }
+    },
+    "/entries": {
+      "get": {
+        "tags": [
+          "Entries"
+        ],
+        "summary": "Récupérer toutes les entrées",
+        "description": "Retourne une liste paginée d'entrées filtrées selon les critères de recherche fournis",
+        "operationId": "getEntries",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date of the search period (inclusive, will use start of day)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Start date of the search period (inclusive, will use start of day)",
+              "format": "date",
+              "example": "2024-01-01"
+            },
+            "example": "2024-01-01"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date of the search period (inclusive, will use end of day)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "End date of the search period (inclusive, will use end of day)",
+              "format": "date",
+              "example": "2026-12-31"
+            },
+            "example": "2026-12-31"
+          },
+          {
+            "name": "tagIds",
+            "in": "query",
+            "description": "List of tag IDs to filter entries",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "List of tag IDs to filter entries",
+              "example": [1, 2, 5],
+              "items": {
+                "type": "integer",
+                "description": "List of tag IDs to filter entries",
+                "format": "int64"
+              }
+            },
+            "example": [1, 2, 5]
+          },
+          {
+            "name": "startAmount",
+            "in": "query",
+            "description": "Minimum transaction amount",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "description": "Minimum transaction amount",
+              "format": "double",
+              "example": 100
+            },
+            "example": 100
+          },
+          {
+            "name": "endAmount",
+            "in": "query",
+            "description": "Maximum transaction amount",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "description": "Maximum transaction amount",
+              "format": "double",
+              "example": 5000
+            },
+            "example": 5000
+          },
+          {
+            "name": "currencyCodes",
+            "in": "query",
+            "description": "Currency codes to filter entries (ISO 4217 codes)",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "Currency codes to filter entries (ISO 4217 codes)",
+              "example": [
+                "CHF",
+                "EUR",
+                "USD"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Currency codes to filter entries (ISO 4217 codes)",
+                "example": "[\"CHF\",\"EUR\",\"USD\"]"
+              }
+            },
+            "example": [
+              "CHF",
+              "EUR",
+              "USD"
+            ]
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate,desc",
+                "title,asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+                "example": "[\"accountingDate,desc\",\"title,asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate,desc",
+              "title,asc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageImplEntryDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Entries"
+        ],
+        "summary": "Créer une nouvelle entrée",
+        "description": "Crée une nouvelle entrée financière avec les informations fournies",
+        "operationId": "createEntry",
+        "requestBody": {
+          "description": "Informations de l'entrée à créer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EntryDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Entrée créée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EntryDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides"
+          }
+        }
+      }
+    },
+    "/currencies": {
+      "get": {
+        "tags": [
+          "Currencies"
+        ],
+        "summary": "Récupérer toutes les devises",
+        "description": "Retourne une liste paginée de toutes les devises",
+        "operationId": "getCurrencies",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate,desc",
+                "title,asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+                "example": "[\"accountingDate,desc\",\"title,asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate,desc",
+              "title,asc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageImplCurrencyDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Currencies"
+        ],
+        "summary": "Créer une nouvelle devise",
+        "description": "Crée une nouvelle devise",
+        "operationId": "createCurrency",
+        "requestBody": {
+          "description": "Informations de la devise à créer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CurrencyDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Devise créée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides"
+          }
+        }
+      }
+    },
+    "/computation": {
+      "post": {
+        "tags": [
+          "Computation"
+        ],
+        "summary": "Calculer la somme avec conversion de devises",
+        "description": "Calcule la somme des montants fournis en appliquant les taux de change appropriés pour convertir dans la devise cible",
+        "operationId": "compute",
+        "requestBody": {
+          "description": "Requête de calcul contenant les montants et la devise cible",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComputationRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Données invalides ou taux de change manquant"
+          },
+          "200": {
+            "description": "Calcul effectué avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ComputationResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rates/currency/{currencyCode}": {
+      "get": {
+        "tags": [
+          "Rates"
+        ],
+        "summary": "Récupérer les taux par devise",
+        "description": "Retourne les taux de change pour une devise spécifique",
+        "operationId": "getRatesByCurrency",
+        "parameters": [
+          {
+            "name": "currencyCode",
+            "in": "path",
+            "description": "Code ISO de la devise",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EUR"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate,desc",
+                "title,asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
+                "example": "[\"accountingDate,desc\",\"title,asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate,desc",
+              "title,asc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Liste des taux pour la devise",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RateDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/periods/by-date": {
+      "get": {
+        "tags": [
+          "Periods"
+        ],
+        "summary": "Récupérer une période par date",
+        "description": "Retourne la période comptable contenant une date spécifique",
+        "operationId": "getPeriodByDate",
+        "parameters": [
+          {
+            "name": "date",
+            "in": "query",
+            "description": "Date à rechercher",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "date"
+            },
+            "example": "2024-01-15"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Période trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PeriodDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Aucune période ne contient cette date"
+          }
+        }
+      }
+    },
+    "/currencies/{code}": {
+      "get": {
+        "tags": [
+          "Currencies"
+        ],
+        "summary": "Récupérer une devise par son code",
+        "description": "Retourne une devise spécifique identifiée par son code ISO",
+        "operationId": "getCurrencyByCode",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Code ISO de la devise",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EUR"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Devise non trouvée"
+          },
+          "200": {
+            "description": "Devise trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Currencies"
+        ],
+        "summary": "Supprimer une devise",
+        "description": "Supprime une devise",
+        "operationId": "deleteCurrency",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "description": "Code ISO de la devise à supprimer",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "EUR"
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Devise non trouvée"
+          },
+          "204": {
+            "description": "Devise supprimée avec succès"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TagDto": {
+        "required": [
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the tag",
+            "format": "int64",
+            "example": 1
+          },
+          "title": {
+            "maxLength": 100,
+            "type": "string",
+            "description": "Name/title of the tag",
+            "example": "Office"
+          },
+          "description": {
+            "maxLength": 500,
+            "type": "string",
+            "description": "Detailed description of the tag",
+            "example": "Office-related expenses and supplies"
+          },
+          "icon": {
+            "maxLength": 50,
+            "type": "string",
+            "description": "Icon associated with the tag (emoji or code)",
+            "example": "🏢"
+          },
+          "sortingOrder": {
+            "minimum": 0,
+            "type": "integer",
+            "description": "Sort order for display",
+            "format": "int32",
+            "example": 10
+          }
+        },
+        "description": "Represents a tag/label for categorizing entries",
+        "example": [
+          {
+            "id": 1,
+            "name": "Office"
+          },
+          {
+            "id": 2,
+            "name": "IT"
+          }
+        ]
+      },
+      "RateDto": {
+        "required": [
+          "rate",
+          "sourceCurrencyCode",
+          "targetCurrencyCode",
+          "valueDate"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the exchange rate",
+            "format": "int64",
+            "readOnly": true,
+            "example": 1
+          },
+          "sourceCurrencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 code of the source currency",
+            "example": "EUR"
+          },
+          "targetCurrencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 code of the target currency (reference currency)",
+            "example": "CHF"
+          },
+          "valueDate": {
+            "type": "string",
+            "description": "Validity date of the exchange rate",
+            "format": "date",
+            "example": "2024-01-15"
+          },
+          "rate": {
+            "type": "number",
+            "description": "Exchange rate value (1 unit of source = rate units of target)",
+            "example": 0.95
+          }
+        },
+        "description": "Represents an exchange rate between two currencies"
+      },
+      "PeriodDto": {
+        "required": [
+          "endDate",
+          "startDate",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the period",
+            "format": "int64",
+            "readOnly": true,
+            "example": 1
+          },
+          "title": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Title or name of the period",
+            "example": "First quarter 2024"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date and time of the period",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date and time of the period",
+            "format": "date-time"
+          }
+        },
+        "description": "Represents a defined time period"
+      },
+      "EntryDto": {
+        "required": [
+          "accountingDate",
+          "amount",
+          "currencyCode",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the entry",
+            "format": "int64",
+            "example": 1
+          },
+          "accountingDate": {
+            "type": "string",
+            "description": "Accounting date of the transaction",
+            "format": "date-time"
+          },
+          "modificationDate": {
+            "type": "string",
+            "description": "Last modification date (managed automatically)",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "title": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Title or label of the entry",
+            "example": "Computer hardware purchase"
+          },
+          "description": {
+            "maxLength": 1000,
+            "type": "string",
+            "description": "Detailed description of the transaction",
+            "example": "Purchase of 2 laptops for the development team"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Transaction amount (positive for credit, negative for debit)",
+            "example": 2500.5
+          },
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 currency code (3 letters)",
+            "example": "CHF"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "List of tags/labels associated with this entry",
+            "example": [
+              {
+                "id": 1,
+                "name": "Office"
+              },
+              {
+                "id": 2,
+                "name": "IT"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          }
+        },
+        "description": "Represents a financial entry (transaction)"
+      },
+      "CurrencyDto": {
+        "required": [
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 currency code (3 uppercase letters)",
+            "example": "CHF"
+          }
+        },
+        "description": "Represents a monetary currency"
+      },
+      "ComputationRequestDto": {
+        "required": [
+          "endDate",
+          "startDate",
+          "targetCurrencyCode"
+        ],
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "description": "Start date of the calculation period",
+            "format": "date",
+            "example": "2024-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date of the calculation period",
+            "format": "date",
+            "example": "2024-12-31"
+          },
+          "tags": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "List of tags to filter entries in the calculation",
+            "example": [
+              {
+                "id": 1,
+                "title": "Office"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          },
+          "targetCurrencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 code of the target currency for conversion (reference currency or tag currency)",
+            "example": "CHF"
+          }
+        },
+        "description": "Request for aggregated amount calculation over a period"
+      },
+      "ComputationCurrencyAmountDto": {
+        "type": "object",
+        "properties": {
+          "currencyCode": {
+            "type": "string",
+            "description": "ISO 4217 currency code",
+            "example": "EUR"
+          },
+          "numberOfEntries": {
+            "type": "integer",
+            "description": "Number of entries in this currency",
+            "format": "int64",
+            "example": 15
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Total amount in this currency (before conversion)",
+            "example": 5000
+          }
+        },
+        "description": "Breakdown of aggregated calculation for a specific currency",
+        "example": {
+          "EUR": {
+            "currencyCode": "EUR",
+            "numberOfEntries": 15,
+            "totalAmount": "5000.00"
+          },
+          "USD": {
+            "currencyCode": "USD",
+            "numberOfEntries": 10,
+            "totalAmount": "3000.00"
+          }
+        }
+      },
+      "ComputationResponseDto": {
+        "type": "object",
+        "properties": {
+          "startDate": {
+            "type": "string",
+            "description": "Start date of the calculated period",
+            "format": "date",
+            "example": "2024-01-01"
+          },
+          "endDate": {
+            "type": "string",
+            "description": "End date of the calculated period",
+            "format": "date",
+            "example": "2024-12-31"
+          },
+          "totalAmount": {
+            "type": "number",
+            "description": "Total amount converted to the target currency",
+            "example": 15750.5
+          },
+          "targetCurrencyCode": {
+            "type": "string",
+            "description": "ISO 4217 code of the target currency used for conversion",
+            "example": "CHF"
+          },
+          "numberOfEntries": {
+            "type": "integer",
+            "description": "Total number of entries included in the calculation",
+            "format": "int64",
+            "example": 42
+          },
+          "computationByCurrency": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ComputationCurrencyAmountDto"
+            },
+            "description": "Breakdown of calculations by source currency (key = currency code, value = calculation details)",
+            "example": {
+              "EUR": {
+                "currencyCode": "EUR",
+                "numberOfEntries": 15,
+                "totalAmount": "5000.00"
+              },
+              "USD": {
+                "currencyCode": "USD",
+                "numberOfEntries": 10,
+                "totalAmount": "3000.00"
+              }
+            }
+          }
+        },
+        "description": "Result of aggregated amount calculation"
+      },
+      "PageImplTagDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageableObject": {
+        "type": "object",
+        "properties": {
+          "paged": {
+            "type": "boolean"
+          },
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "unpaged": {
+            "type": "boolean"
+          },
+          "offset": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          }
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "sorted": {
+            "type": "boolean"
+          },
+          "unsorted": {
+            "type": "boolean"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplRateDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RateDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplPeriodDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeriodDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplEntryDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntryDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrencyDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,3 +1,5 @@
+/// <reference types="vite/client" />
+
 export const customFetch = async <T>(
   url: string,
   options?: RequestInit & { params?: Record<string, any> }
@@ -32,6 +34,11 @@ export const customFetch = async <T>(
     },
   });
 
-  if (!response.ok) throw new Error(response.statusText);
-  return response.json();
+  const data = response.ok ? await response.json() : undefined;
+
+  return {
+    data,
+    status: response.status,
+    headers: response.headers,
+  } as T;
 };

@@ -1,6 +1,6 @@
 // src/services/periods.ts
 import { api } from './api'
-import type { Period, CreatePeriodRequest, UpdatePeriodRequest } from '@/types'
+import type { Period, CreatePeriodRequest, UpdatePeriodRequest } from '@/types/types'
 
 export const periodService = {
   async getAll(): Promise<Period[]> {

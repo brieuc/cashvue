@@ -1,6 +1,6 @@
 // src/services/currencies.ts
 import { api } from './api'
-import type { Currency, CreateCurrencyRequest, UpdateCurrencyRequest } from '@/types'
+import type { Currency, CreateCurrencyRequest, UpdateCurrencyRequest } from '@/types/types'
 
 export const currencyService = {
   async getAll(): Promise<Currency[]> {

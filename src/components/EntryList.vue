@@ -32,16 +32,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, watch, watchEffect } from 'vue'
 import { useEntries } from '@/composables/useEntries'
 import EntryModal from './EntryModal.vue'
 //import { createEntry, type EntryDto, type getEntries, type GetEntriesParams } from '@/api/generated'
 import { createEntry } from '@/api/generated'
-import type { EntryDto, GetEntriesParams } from '@/api/generated'
+import type { EntryDto, GetEntriesParams, TagDto } from '@/api/generated'
 
 const { entries, loading, error, fetchEntries } = useEntries()
 //const entries = ref<Entry[]>([])
 const isModalOpen = ref(false)
+
+const { filteringTags, startDate, endDate } = defineProps<{
+  filteringTags: TagDto[];
+  startDate: string,
+  endDate: string
+}>();
 
 const sortedEntries = computed(() => {
   if (!entries.value) return []
@@ -65,18 +71,28 @@ const formatDate = (dateString: string): string => {
 const loadEntries = async () => {
   console.log("loadEntries");
   const params: GetEntriesParams = {
-    entrySpecificationDto: {
-      startDate: new Date("2024-01-01"),
-      endDate: new Date ("2025-12-31")
-    },
-    pageRequestDto: {
+      startDate: startDate.split('T')[0],
+      endDate: endDate.split('T')[0],
+      tagIds: filteringTags.map(tagDto => tagDto.id!),
       page: 0,
       size: 20
-    }
   };
   await fetchEntries(params)
   console.log(entries.value);
 }
+
+watchEffect(async() => {
+  // runs only once before 3.5
+  // re-runs when the "foo" prop changes in 3.5+
+  console.log("entry list new tags : " + filteringTags);
+  console.log("period startDate : " + startDate + " endDate : " + endDate);
+  loadEntries();
+})
+/*
+watch(filteringTags, (newValue) => {
+  console.log("entry list new tags : " + newValue);
+});
+*/
 
 const handleSubmit = async (formData: EntryDto) => {
   const response = await createEntry(formData)

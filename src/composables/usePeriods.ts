@@ -1,23 +1,17 @@
-// src/composables/usePeriods.ts
-import { useApi } from './useApi'
-import { periodService } from '@/services/periods'
-import type { UsePeriodsReturn, CreatePeriodRequest, UpdatePeriodRequest } from '@/types'
+import { getPeriods, type GetPeriodsParams, type PeriodDto } from "@/api/generated";
+import { ref } from "vue";
 
-export function usePeriods(): UsePeriodsReturn {
-  const { loading, execute } = useApi()
+export function usePeriods() {
 
-  const getAll = () => execute(() => periodService.getAll())
+  const periods = ref<PeriodDto[]>([]);
 
-  const getCurrent = () => execute(() => periodService.getCurrent())
+  const fetchPeriods = async(params : GetPeriodsParams) => {
+    const response = getPeriods(params);
+    response.then(r => {
+      periods.value = r.data.content as PeriodDto[] || [];
+    });
+  }
 
-  const create = (data: CreatePeriodRequest) =>
-    execute(() => periodService.create(data), 'Période créée !')
+  return {periods, fetchPeriods}
 
-  const update = (id: string, data: UpdatePeriodRequest) =>
-    execute(() => periodService.update(id, data), 'Période mise à jour !')
-
-  const deletePeriod = (id: string) =>
-    execute(() => periodService.delete(id), 'Période supprimée !')
-
-  return { loading, getAll, getCurrent, create, update, deletePeriod }
 }

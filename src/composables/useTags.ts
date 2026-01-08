@@ -1,19 +1,19 @@
-// src/composables/useTags.ts
-import { useApi } from './useApi'
-import { tagService } from '@/services/tags'
-import type { UseTagsReturn, CreateTagRequest, UpdateTagRequest } from '@/types'
 
-export function useTags(): UseTagsReturn {
-  const { loading, execute } = useApi()
+import { getTags, type GetTagsParams } from "@/api/generated"
+import { type TagDto } from "@/api/generated";
+import { ref } from "vue";
+export function useTags() {
 
-  const getAll = () => execute(() => tagService.getAll())
+  const tags = ref<TagDto[]>([]);
+  const fetchTags = async (params? : GetTagsParams) => {
 
-  const create = (data: CreateTagRequest) => execute(() => tagService.create(data), 'Tag créé !')
+    getTags().then(response => {
+      if(response.status === 200) {
+        tags.value = response.data.content as TagDto[] || [];
+        console.log("tags " + JSON.stringify(tags.value));
+      }
+    })
+  }
 
-  const update = (id: string, data: UpdateTagRequest) =>
-    execute(() => tagService.update(id, data), 'Tag mis à jour !')
-
-  const deleteTag = (id: string) => execute(() => tagService.delete(id), 'Tag supprimé !')
-
-  return { loading, getAll, create, update, deleteTag }
+  return {fetchTags, tags};
 }

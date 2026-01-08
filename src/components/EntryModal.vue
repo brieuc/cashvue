@@ -68,14 +68,13 @@ interface Props {
   isOpen: boolean
 }
 
-defineProps<Props>()
+defineProps<Props>();
 
 const emit = defineEmits<{
   close: []
   submit: [data: CreateEntryRequest]
 }>()
 
-const { getAll } = useTags()
 const availableTags = ref<Tag[]>([])
 
 const form = reactive({
@@ -87,23 +86,8 @@ const form = reactive({
   tags: [] as Array<{ id: string; title: string }>,
 })
 
-const loadTags = async () => {
-  const tags = await getAll()
-  if (tags) {
-    availableTags.value = tags
-  }
-}
-
 const toggleTag = (tagId: string) => {
-  const index = form.tags.findIndex((tag) => tag.id === tagId)
-  if (index > -1) {
-    form.tags.splice(index, 1)
-  } else {
-    const tag = availableTags.value.find((t) => t.id === tagId)
-    if (tag) {
-      form.tags.push({ id: tag.id, title: tag.title })
-    }
-  }
+
 }
 
 const handleSubmit = () => {
@@ -115,7 +99,7 @@ const handleSubmit = () => {
 }
 
 onMounted(() => {
-  loadTags()
+
 })
 </script>
 
