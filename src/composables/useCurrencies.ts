@@ -1,7 +1,7 @@
 // src/composables/useCurrencies.ts
 import { useApi } from './useApi'
 import { currencyService } from '@/services/currencies'
-import type { UseCurrenciesReturn, CreateCurrencyRequest, UpdateCurrencyRequest } from '@/types'
+import type { UseCurrenciesReturn, CreateCurrencyRequest, UpdateCurrencyRequest } from '@/types/types'
 
 export function useCurrencies(): UseCurrenciesReturn {
   const { loading, execute } = useApi()

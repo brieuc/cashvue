@@ -1,7 +1,7 @@
 // src/composables/useEntries.ts
 import { useApi } from './useApi'
 import { entryService } from '@/services/entries'
-import type { UseEntriesReturn, CreateEntryRequest, UpdateEntryRequest } from '@/types'
+import type { UseEntriesReturn, CreateEntryRequest, UpdateEntryRequest } from '@/types/types'
 
 export function useEntries(): UseEntriesReturn {
   const { loading, execute } = useApi()

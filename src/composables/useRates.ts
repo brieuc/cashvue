@@ -1,7 +1,7 @@
 // src/composables/useRates.ts
 import { useApi } from './useApi'
 import { rateService } from '@/services/rates'
-import type { UseRatesReturn, CreateRateRequest, UpdateRateRequest } from '@/types'
+import type { UseRatesReturn, CreateRateRequest, UpdateRateRequest } from '@/types/types'
 
 export function useRates(): UseRatesReturn {
   const { loading, execute } = useApi()

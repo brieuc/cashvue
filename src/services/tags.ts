@@ -1,6 +1,6 @@
 // src/services/tags.ts
 import { api } from './api'
-import type { Tag, CreateTagRequest, UpdateTagRequest } from '@/types'
+import type { Tag, CreateTagRequest, UpdateTagRequest } from '@/types/types'
 
 export const tagService = {
   async getAll(): Promise<Tag[]> {

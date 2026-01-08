@@ -1,6 +1,6 @@
 // src/services/rates.ts
 import { api } from './api'
-import type { Rate, CreateRateRequest, UpdateRateRequest } from '@/types'
+import type { Rate, CreateRateRequest, UpdateRateRequest } from '@/types/types'
 
 export const rateService = {
   async getAll(): Promise<Rate[]> {

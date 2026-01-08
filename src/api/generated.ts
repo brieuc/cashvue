@@ -4,7 +4,7 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import { customFetch } from './fetch-mutator';
+import { customFetch } from './fetch-instance';
 
 // https://stackoverflow.com/questions/49579094/typescript-conditional-types-filter-out-readonly-properties-pick-only-requir/49579497#49579497
 type IfEquals<X, Y, A = X, B = never> = (<T>() => T extends X ? 1 : 2) extends <
@@ -37,7 +37,7 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
  */
 export type TagDto = {
   /** Unique identifier of the tag */
-  readonly id?: number;
+  id?: number;
   /**
    * Name/title of the tag
    * @maxLength 100
@@ -79,7 +79,7 @@ export type RateDto = {
    */
   targetCurrencyCode: string;
   /** Validity date of the exchange rate */
-  valueDate: Date;
+  valueDate: string;
   /** Exchange rate value (1 unit of source = rate units of target) */
   rate: number;
 };
@@ -96,9 +96,9 @@ export type PeriodDto = {
    */
   title: string;
   /** Start date and time of the period */
-  startDate: Date;
+  startDate: string;
   /** End date and time of the period */
-  endDate: Date;
+  endDate: string;
 };
 
 /**
@@ -106,11 +106,11 @@ export type PeriodDto = {
  */
 export type EntryDto = {
   /** Unique identifier of the entry */
-  readonly id?: number;
+  id?: number;
   /** Accounting date of the transaction */
-  accountingDate: Date;
+  accountingDate: string;
   /** Last modification date (managed automatically) */
-  readonly modificationDate?: Date;
+  readonly modificationDate?: string;
   /**
    * Title or label of the entry
    * @maxLength 255
@@ -150,9 +150,9 @@ export type CurrencyDto = {
  */
 export type ComputationRequestDto = {
   /** Start date of the calculation period */
-  startDate: Date;
+  startDate: string;
   /** End date of the calculation period */
-  endDate: Date;
+  endDate: string;
   /** List of tags to filter entries in the calculation */
   tags?: TagDto[];
   /**
@@ -185,9 +185,9 @@ export type ComputationResponseDtoComputationByCurrency = {[key: string]: Comput
  */
 export type ComputationResponseDto = {
   /** Start date of the calculated period */
-  startDate?: Date;
+  startDate?: string;
   /** End date of the calculated period */
-  endDate?: Date;
+  endDate?: string;
   /** Total amount converted to the target currency */
   totalAmount?: number;
   /** ISO 4217 code of the target currency used for conversion */
@@ -198,95 +198,234 @@ export type ComputationResponseDto = {
   computationByCurrency?: ComputationResponseDtoComputationByCurrency;
 };
 
-/**
- * Pagination parameters for list queries
- */
-export type PageRequestDto = {
-  /**
-   * Page number (starts at 0)
-   * @minimum 0
-   * @maximum 2147483647
-   */
-  page?: number;
-  /**
-   * Number of elements per page
-   * @minimum 1
-   * @maximum 100
-   */
+export type PageImplTagDto = {
+  content?: TagDto[];
+  pageable?: PageableObject;
+  totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
+  first?: boolean;
+  numberOfElements?: number;
   size?: number;
-  /** Sort criteria (format: 'property,direction' where direction = asc|desc) */
-  sort?: string[];
+  number?: number;
+  sort?: SortObject;
+  empty?: boolean;
 };
 
-/**
- * Filter criteria for searching financial entries
- */
-export type EntrySpecificationDto = {
-  /** Start date of the search period (inclusive, will use start of day) */
-  startDate?: Date;
-  /** End date of the search period (inclusive, will use end of day) */
-  endDate?: Date;
-  /** List of tag IDs to filter entries */
-  tagIds?: number[];
-  /** Minimum transaction amount */
-  startAmount?: number;
-  /** Maximum transaction amount */
-  endAmount?: number;
-  /** Currency codes to filter entries (ISO 4217 codes) */
-  currencyCodes?: string[];
+export type PageableObject = {
+  paged?: boolean;
+  pageNumber?: number;
+  pageSize?: number;
+  unpaged?: boolean;
+  offset?: number;
+  sort?: SortObject;
+};
+
+export type SortObject = {
+  sorted?: boolean;
+  unsorted?: boolean;
+  empty?: boolean;
+};
+
+export type PageImplRateDto = {
+  content?: RateDto[];
+  pageable?: PageableObject;
+  totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
+  first?: boolean;
+  numberOfElements?: number;
+  size?: number;
+  number?: number;
+  sort?: SortObject;
+  empty?: boolean;
+};
+
+export type PageImplPeriodDto = {
+  content?: PeriodDto[];
+  pageable?: PageableObject;
+  totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
+  first?: boolean;
+  numberOfElements?: number;
+  size?: number;
+  number?: number;
+  sort?: SortObject;
+  empty?: boolean;
+};
+
+export type PageImplEntryDto = {
+  content?: EntryDto[];
+  pageable?: PageableObject;
+  totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
+  first?: boolean;
+  numberOfElements?: number;
+  size?: number;
+  number?: number;
+  sort?: SortObject;
+  empty?: boolean;
+};
+
+export type PageImplCurrencyDto = {
+  content?: CurrencyDto[];
+  pageable?: PageableObject;
+  totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
+  first?: boolean;
+  numberOfElements?: number;
+  size?: number;
+  number?: number;
+  sort?: SortObject;
+  empty?: boolean;
 };
 
 export type GetTagsParams = {
 /**
- * Paramètres de pagination
+ * Page number (starts at 0)
+ * @minimum 0
+ * @maximum 2147483647
  */
-pageRequestDto: PageRequestDto;
+page?: number;
+/**
+ * Number of elements per page
+ * @minimum 1
+ * @maximum 100
+ */
+size?: number;
+/**
+ * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ */
+sort?: string[];
 };
 
 export type GetRatesParams = {
 /**
- * Paramètres de pagination
+ * Page number (starts at 0)
+ * @minimum 0
+ * @maximum 2147483647
  */
-pageRequestDto: PageRequestDto;
+page?: number;
+/**
+ * Number of elements per page
+ * @minimum 1
+ * @maximum 100
+ */
+size?: number;
+/**
+ * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ */
+sort?: string[];
 };
 
 export type GetPeriodsParams = {
 /**
- * Paramètres de pagination
+ * Page number (starts at 0)
+ * @minimum 0
+ * @maximum 2147483647
  */
-pageRequestDto: PageRequestDto;
+page?: number;
+/**
+ * Number of elements per page
+ * @minimum 1
+ * @maximum 100
+ */
+size?: number;
+/**
+ * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ */
+sort?: string[];
 };
 
 export type GetEntriesParams = {
 /**
- * Critères de filtrage des entrées
+ * Start date of the search period (inclusive, will use start of day)
  */
-entrySpecificationDto: EntrySpecificationDto;
+startDate?: string;
 /**
- * Paramètres de pagination (page, size, sort)
+ * End date of the search period (inclusive, will use end of day)
  */
-pageRequestDto: PageRequestDto;
+endDate?: string;
+/**
+ * List of tag IDs to filter entries
+ */
+tagIds?: number[];
+/**
+ * Minimum transaction amount
+ */
+startAmount?: number;
+/**
+ * Maximum transaction amount
+ */
+endAmount?: number;
+/**
+ * Currency codes to filter entries (ISO 4217 codes)
+ */
+currencyCodes?: string[];
+/**
+ * Page number (starts at 0)
+ * @minimum 0
+ * @maximum 2147483647
+ */
+page?: number;
+/**
+ * Number of elements per page
+ * @minimum 1
+ * @maximum 100
+ */
+size?: number;
+/**
+ * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ */
+sort?: string[];
 };
 
 export type GetCurrenciesParams = {
 /**
- * Paramètres de pagination
+ * Page number (starts at 0)
+ * @minimum 0
+ * @maximum 2147483647
  */
-pageRequestDto: PageRequestDto;
+page?: number;
+/**
+ * Number of elements per page
+ * @minimum 1
+ * @maximum 100
+ */
+size?: number;
+/**
+ * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ */
+sort?: string[];
 };
 
 export type GetRatesByCurrencyParams = {
 /**
- * Paramètres de pagination
+ * Page number (starts at 0)
+ * @minimum 0
+ * @maximum 2147483647
  */
-pageRequestDto: PageRequestDto;
+page?: number;
+/**
+ * Number of elements per page
+ * @minimum 1
+ * @maximum 100
+ */
+size?: number;
+/**
+ * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ */
+sort?: string[];
 };
 
 export type GetPeriodByDateParams = {
 /**
  * Date à rechercher
  */
-date: Date;
+date: string;
 };
 
 /**
@@ -370,7 +509,7 @@ export const getUpdateTagUrl = (id: number,) => {
 }
 
 export const updateTag = async (id: number,
-    tagDto: NonReadonly<TagDto>, options?: RequestInit): Promise<updateTagResponse> => {
+    tagDto: TagDto, options?: RequestInit): Promise<updateTagResponse> => {
   
   return customFetch<updateTagResponse>(getUpdateTagUrl(id),
   {      
@@ -850,7 +989,7 @@ export const deleteEntry = async (id: number, options?: RequestInit): Promise<de
  * @summary Récupérer tous les tags
  */
 export type getTagsResponse200 = {
-  data: TagDto[]
+  data: PageImplTagDto
   status: 200
 }
     
@@ -861,11 +1000,19 @@ export type getTagsResponseSuccess = (getTagsResponse200) & {
 
 export type getTagsResponse = (getTagsResponseSuccess)
 
-export const getGetTagsUrl = (params: GetTagsParams,) => {
+export const getGetTagsUrl = (params?: GetTagsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+    const explodeParameters = ["sort"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -876,7 +1023,7 @@ export const getGetTagsUrl = (params: GetTagsParams,) => {
   return stringifiedParams.length > 0 ? `/tags?${stringifiedParams}` : `/tags`
 }
 
-export const getTags = async (params: GetTagsParams, options?: RequestInit): Promise<getTagsResponse> => {
+export const getTags = async (params?: GetTagsParams, options?: RequestInit): Promise<getTagsResponse> => {
   
   return customFetch<getTagsResponse>(getGetTagsUrl(params),
   {      
@@ -920,7 +1067,7 @@ export const getCreateTagUrl = () => {
   return `/tags`
 }
 
-export const createTag = async (tagDto: NonReadonly<TagDto>, options?: RequestInit): Promise<createTagResponse> => {
+export const createTag = async (tagDto: TagDto, options?: RequestInit): Promise<createTagResponse> => {
   
   return customFetch<createTagResponse>(getCreateTagUrl(),
   {      
@@ -939,7 +1086,7 @@ export const createTag = async (tagDto: NonReadonly<TagDto>, options?: RequestIn
  * @summary Récupérer tous les taux de change
  */
 export type getRatesResponse200 = {
-  data: RateDto[]
+  data: PageImplRateDto
   status: 200
 }
     
@@ -950,11 +1097,19 @@ export type getRatesResponseSuccess = (getRatesResponse200) & {
 
 export type getRatesResponse = (getRatesResponseSuccess)
 
-export const getGetRatesUrl = (params: GetRatesParams,) => {
+export const getGetRatesUrl = (params?: GetRatesParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+    const explodeParameters = ["sort"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -965,7 +1120,7 @@ export const getGetRatesUrl = (params: GetRatesParams,) => {
   return stringifiedParams.length > 0 ? `/rates?${stringifiedParams}` : `/rates`
 }
 
-export const getRates = async (params: GetRatesParams, options?: RequestInit): Promise<getRatesResponse> => {
+export const getRates = async (params?: GetRatesParams, options?: RequestInit): Promise<getRatesResponse> => {
   
   return customFetch<getRatesResponse>(getGetRatesUrl(params),
   {      
@@ -1028,7 +1183,7 @@ export const createRate = async (rateDto: NonReadonly<RateDto>, options?: Reques
  * @summary Récupérer toutes les périodes
  */
 export type getPeriodsResponse200 = {
-  data: PeriodDto[]
+  data: PageImplPeriodDto
   status: 200
 }
     
@@ -1039,11 +1194,19 @@ export type getPeriodsResponseSuccess = (getPeriodsResponse200) & {
 
 export type getPeriodsResponse = (getPeriodsResponseSuccess)
 
-export const getGetPeriodsUrl = (params: GetPeriodsParams,) => {
+export const getGetPeriodsUrl = (params?: GetPeriodsParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+    const explodeParameters = ["sort"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1054,7 +1217,7 @@ export const getGetPeriodsUrl = (params: GetPeriodsParams,) => {
   return stringifiedParams.length > 0 ? `/periods?${stringifiedParams}` : `/periods`
 }
 
-export const getPeriods = async (params: GetPeriodsParams, options?: RequestInit): Promise<getPeriodsResponse> => {
+export const getPeriods = async (params?: GetPeriodsParams, options?: RequestInit): Promise<getPeriodsResponse> => {
   
   return customFetch<getPeriodsResponse>(getGetPeriodsUrl(params),
   {      
@@ -1117,7 +1280,7 @@ export const createPeriod = async (periodDto: NonReadonly<PeriodDto>, options?: 
  * @summary Récupérer toutes les entrées
  */
 export type getEntriesResponse200 = {
-  data: EntryDto[]
+  data: PageImplEntryDto
   status: 200
 }
     
@@ -1128,11 +1291,19 @@ export type getEntriesResponseSuccess = (getEntriesResponse200) & {
 
 export type getEntriesResponse = (getEntriesResponseSuccess)
 
-export const getGetEntriesUrl = (params: GetEntriesParams,) => {
+export const getGetEntriesUrl = (params?: GetEntriesParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+    const explodeParameters = ["tagIds","currencyCodes","sort"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1143,7 +1314,7 @@ export const getGetEntriesUrl = (params: GetEntriesParams,) => {
   return stringifiedParams.length > 0 ? `/entries?${stringifiedParams}` : `/entries`
 }
 
-export const getEntries = async (params: GetEntriesParams, options?: RequestInit): Promise<getEntriesResponse> => {
+export const getEntries = async (params?: GetEntriesParams, options?: RequestInit): Promise<getEntriesResponse> => {
   
   return customFetch<getEntriesResponse>(getGetEntriesUrl(params),
   {      
@@ -1206,7 +1377,7 @@ export const createEntry = async (entryDto: NonReadonly<EntryDto>, options?: Req
  * @summary Récupérer toutes les devises
  */
 export type getCurrenciesResponse200 = {
-  data: CurrencyDto[]
+  data: PageImplCurrencyDto
   status: 200
 }
     
@@ -1217,11 +1388,19 @@ export type getCurrenciesResponseSuccess = (getCurrenciesResponse200) & {
 
 export type getCurrenciesResponse = (getCurrenciesResponseSuccess)
 
-export const getGetCurrenciesUrl = (params: GetCurrenciesParams,) => {
+export const getGetCurrenciesUrl = (params?: GetCurrenciesParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+    const explodeParameters = ["sort"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1232,7 +1411,7 @@ export const getGetCurrenciesUrl = (params: GetCurrenciesParams,) => {
   return stringifiedParams.length > 0 ? `/currencies?${stringifiedParams}` : `/currencies`
 }
 
-export const getCurrencies = async (params: GetCurrenciesParams, options?: RequestInit): Promise<getCurrenciesResponse> => {
+export const getCurrencies = async (params?: GetCurrenciesParams, options?: RequestInit): Promise<getCurrenciesResponse> => {
   
   return customFetch<getCurrenciesResponse>(getGetCurrenciesUrl(params),
   {      
@@ -1352,11 +1531,19 @@ export type getRatesByCurrencyResponseSuccess = (getRatesByCurrencyResponse200) 
 export type getRatesByCurrencyResponse = (getRatesByCurrencyResponseSuccess)
 
 export const getGetRatesByCurrencyUrl = (currencyCode: string,
-    params: GetRatesByCurrencyParams,) => {
+    params?: GetRatesByCurrencyParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+    const explodeParameters = ["sort"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1368,7 +1555,7 @@ export const getGetRatesByCurrencyUrl = (currencyCode: string,
 }
 
 export const getRatesByCurrency = async (currencyCode: string,
-    params: GetRatesByCurrencyParams, options?: RequestInit): Promise<getRatesByCurrencyResponse> => {
+    params?: GetRatesByCurrencyParams, options?: RequestInit): Promise<getRatesByCurrencyResponse> => {
   
   return customFetch<getRatesByCurrencyResponse>(getGetRatesByCurrencyUrl(currencyCode,params),
   {      

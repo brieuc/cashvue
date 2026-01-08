@@ -1,6 +1,6 @@
 // src/composables/useApi.ts - Helper générique pour les appels API
 import { ref } from 'vue'
-import type { UseApiReturn } from '@/types'
+import type { UseApiReturn } from '@/types/types'
 //import { useDailyStore } from '@/dailyStore.ts'
 
 export function useApi(): UseApiReturn {

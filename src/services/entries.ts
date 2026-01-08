@@ -1,6 +1,6 @@
 // src/services/entries.ts
 import { api } from './api'
-import type { Entry, CreateEntryRequest, UpdateEntryRequest } from '@/types'
+import type { Entry, CreateEntryRequest, UpdateEntryRequest } from '@/types/types'
 
 export const entryService = {
   async getAll(): Promise<Entry[]> {

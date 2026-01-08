@@ -13,7 +13,8 @@ export function useEntries() {
     try {
       console.log("params " + JSON.stringify(params));
       const response = await getEntries(params);
-      console.log("response.data" + JSON.stringify(response));
+      entries.value = (response.data.content as EntryDto[]) || [];
+      //console.log("response.data" + JSON.stringify(response.data.content));
       //entries.value = [{accountingDate: new Date(), amount: 99.99, title: "super totre", currencyCode: "CHF"}];
     } catch (e) {
       error.value = 'Erreur lors du chargement ' + e;
