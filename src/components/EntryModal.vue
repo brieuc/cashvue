@@ -40,20 +40,7 @@
           <textarea v-model="form.description" rows="2"></textarea>
         </div>
 
-        <div class="form-group">
-          <label>Tags</label>
-          <div class="tags-container">
-            <button
-              v-for="tag in availableTags"
-              :key="tag.id"
-              type="button"
-              @click="toggleTag(tag.id)"
-              :class="['tag-btn', { active: form.tags.some(t => t.id === tag.id) }]"
-            >
-              {{ tag.title }}
-            </button>
-          </div>
-        </div>
+        <TagFilter v-model="form.tags" />
       </form>
     </div>
   </div>
@@ -62,7 +49,9 @@
 <script setup lang="ts">
 import { reactive, onMounted, ref } from 'vue'
 import { useTags } from '@/composables/useTags'
-import type { Tag, CreateEntryRequest } from '@/types'
+import { type Tag, CreateEntryRequest } from '@/types'
+import TagFilter from './TagFilter.vue';
+import type { TagDto } from '@/api/generated';
 
 interface Props {
   isOpen: boolean
@@ -75,23 +64,17 @@ const emit = defineEmits<{
   submit: [data: CreateEntryRequest]
 }>()
 
-const availableTags = ref<Tag[]>([])
-
-const form = reactive({
+const form = reactive<CreateEntryRequest>({
   title: '',
   amount: null as number | null,
   currencyCode: 'EUR',
-  accountingDate: new Date().toISOString().slice(0, 16),
+  accountingDate: new Date().toISOString().split('T')[0],
   description: '',
-  tags: [] as Array<{ id: string; title: string }>,
-})
-
-const toggleTag = (tagId: string) => {
-
-}
+  tags: [] as Array<TagDto>,
+});
 
 const handleSubmit = () => {
-  const submitData = { ...form } as CreateEntryRequest
+  const submitData = { ...form }
   if (submitData.tags && submitData.tags.length === 0) {
     delete submitData.tags
   }

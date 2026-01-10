@@ -28,12 +28,13 @@ const select = (p : PeriodDto) => {
 
 const loadPeriods = () => {
   const params : GetPeriodsParams = {
-    
+
   }
+  fetchPeriods(params);
 }
 
 onMounted(() => {
-  fetchPeriods();
+  loadPeriods();
 })
 
 </script>
@@ -47,5 +48,11 @@ onMounted(() => {
   background: #3498db;
   color: white;
   border-color: #2980b9;
+}
+
+/* Pour rendre les boutons inline */
+button {
+  display: inline-block;
+  margin-right: 0.5rem;
 }
 </style>

@@ -74,4 +74,10 @@ onMounted(() => {
   color: white;
   border-color: #2980b9;
 }
+
+/* Pour rendre les boutons inline */
+button {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
 </style>
