@@ -26,16 +26,3 @@ export interface UpdateEntryRequest {
   currencyCode?: string
   tags?: TagDto[]
 }
-
-/**
- * Return type for the useEntries composable
- */
-export interface UseEntriesReturn {
-  entries: Ref<EntryDto[]>
-  loading: Ref<boolean>
-  error: Ref<string | null>
-  fetchEntries: (params: any) => Promise<void>
-  createEntry?: (data: CreateEntryRequest) => Promise<void>
-  updateEntry?: (id: number, data: UpdateEntryRequest) => Promise<void>
-  deleteEntry?: (id: number) => Promise<void>
-}

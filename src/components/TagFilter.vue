@@ -9,15 +9,11 @@ import SelectedTag from './SelectedTag.vue';
 import TagSelection from './TagSelection.vue';
 import { ref } from 'vue';
 
-const selectedTags = ref<TagDto[]>([]);
-const emit = defineEmits<{
-    toggle: [Array<TagDto>]
-  }>();
+
+const selectedTags = defineModel({ required: true, type: Array<TagDto>, default: () => [] })
 
 
 const handleToggle = (tags : Array<TagDto>) => { // no need for async for now
   selectedTags.value = tags;
-  console.log("tag filter : " + selectedTags.value);
-  emit('toggle', selectedTags.value);
 }
 </script>
