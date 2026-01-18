@@ -5,12 +5,11 @@ import { ref } from "vue";
 export function useTags() {
 
   const tags = ref<TagDto[]>([]);
-  const fetchTags = async (params? : GetTagsParams) => {
+  const fetchTags = async (params : GetTagsParams) => {
 
-    getTags().then(response => {
+    getTags(params).then(response => {
       if(response.status === 200) {
         tags.value = response.data.content as TagDto[] || [];
-        console.log("tags " + JSON.stringify(tags.value));
       }
     })
   }

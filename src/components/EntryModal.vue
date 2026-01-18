@@ -3,7 +3,7 @@
     <div class="modal" @click.stop>
       <div class="modal-header">
         <button type="button" class="btn-cancel" @click="$emit('close')">Annuler</button>
-        <h2>Nouvelle dépense</h2>
+        <h2>{{ props.entry ? props.entry.title : "Nouvelle dépense" }}</h2>
         <button type="submit" class="btn-submit" @click="handleSubmit">Enregistrer</button>
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
@@ -28,9 +28,9 @@
           <div class="form-group">
             <label>Devise *</label>
             <select v-model="form.currencyCode" required>
-              <option value="EUR">EUR (€)</option>
-              <option value="USD">USD ($)</option>
-              <option value="GBP">GBP (£)</option>
+              <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
+                {{ currency.code }}
+              </option>
             </select>
           </div>
         </div>
@@ -47,31 +47,54 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, ref } from 'vue'
-import { useTags } from '@/composables/useTags'
-import { type Tag, CreateEntryRequest } from '@/types'
+import { reactive, onMounted, watch, onUpdated } from 'vue'
 import TagFilter from './TagFilter.vue';
-import type { TagDto } from '@/api/generated';
+import type { EntryDto, GetCurrenciesParams, TagDto } from '@/api/generated';
+import type { CreateEntryRequest } from '@/types/types';
+import { useCurrencies } from '@/composables/useCurrencies';
+
+const { currencies, fetchCurrencies } = useCurrencies();
 
 interface Props {
-  isOpen: boolean
+  isOpen: boolean,
+  entry?: EntryDto
 }
 
-defineProps<Props>();
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   close: []
   submit: [data: CreateEntryRequest]
 }>()
 
-const form = reactive<CreateEntryRequest>({
+const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
+  title: entry.title,
+  amount: entry.amount,
+  currencyCode: entry.currencyCode,
+  accountingDate: entry.accountingDate,
+  description: entry.description,
+  tags: entry.tags,
+});
+
+const defaultForm : CreateEntryRequest = {
   title: '',
   amount: null as number | null,
-  currencyCode: 'EUR',
-  accountingDate: new Date().toISOString().split('T')[0],
+  currencyCode: 'CHF',
+  accountingDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   description: '',
   tags: [] as Array<TagDto>,
-});
+};
+
+const form = reactive<CreateEntryRequest>({...defaultForm});
+
+watch(() => props.entry, (entry) => {
+  if(entry)
+    Object.assign(form, getFormEntry(entry));
+  else
+    Object.assign(form, {...defaultForm});
+}, {immediate: true});
+
+
 
 const handleSubmit = () => {
   const submitData = { ...form }
@@ -81,9 +104,21 @@ const handleSubmit = () => {
   emit('submit', submitData)
 }
 
-onMounted(() => {
+const loadCurrencies = () => {
+  const params : GetCurrenciesParams = {
 
+  };
+  fetchCurrencies(params);
+}
+
+onMounted(() => {
+  loadCurrencies();
 })
+
+onUpdated(() => {
+  console.log("props.entry" + props.entry);
+});
+
 </script>
 
 <style scoped>
@@ -164,34 +199,6 @@ onMounted(() => {
 
 .form-group textarea {
   resize: vertical;
-}
-
-.tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-.tag-btn {
-  padding: 0.4rem 0.9rem;
-  background: #ecf0f1;
-  color: #2c3e50;
-  border: 1px solid transparent;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.2s;
-  font-size: 0.9rem;
-  font-weight: 500;
-}
-
-.tag-btn:hover {
-  background: #dfe6e9;
-}
-
-.tag-btn.active {
-  background: #3498db;
-  color: white;
-  border-color: #2980b9;
 }
 
 .btn-cancel,
