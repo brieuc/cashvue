@@ -47,8 +47,7 @@ const handleSelectPeriod = (period: PeriodDto) => {
 }
 
 .period-bar {
-  position: sticky;
-  top: 0;
+  flex-shrink: 0;
   z-index: 10;
   background: white;
   border-bottom: 1px solid #e1e8ed;
@@ -62,28 +61,26 @@ const handleSelectPeriod = (period: PeriodDto) => {
   flex: 1;
   overflow-y: auto;
   padding-bottom: 1rem;
+  min-height: 0;
 }
 
 .tag-bar {
-  position: sticky;
-  bottom: 0;
+  flex-shrink: 0;
   z-index: 10;
   background: white;
   border-top: 1px solid #e1e8ed;
   padding: 0.75rem;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
+  max-height: 200px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* Scroll horizontal sans barre visible */
-.period-bar::-webkit-scrollbar,
-.tag-bar::-webkit-scrollbar {
+.period-bar::-webkit-scrollbar {
   height: 4px;
 }
 
-.period-bar::-webkit-scrollbar-thumb,
-.tag-bar::-webkit-scrollbar-thumb {
+.period-bar::-webkit-scrollbar-thumb {
   background: #ddd;
   border-radius: 4px;
 }

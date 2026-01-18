@@ -1,35 +1,39 @@
 @import './base.css';
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
-
-a,
-.green {
+a {
   text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+  color: #3498db;
+  transition: 0.2s;
 }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+a:hover {
+  opacity: 0.8;
 }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+/* Styles partagés pour les boutons tag */
+button {
+  display: inline-block;
+  margin-right: 0.5rem;
+}
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.tag-btn {
+  padding: 0.4rem 0.9rem;
+  background: #ecf0f1;
+  color: #2c3e50;
+  border: 1px solid transparent;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.tag-btn:hover {
+  background: #dfe6e9;
+}
+
+.tag-btn.active {
+  background: #3498db;
+  color: white;
+  border-color: #2980b9;
 }

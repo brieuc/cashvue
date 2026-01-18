@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { getEntries } from '@/api/generated';
+import { createEntry, getEntries, updateEntry } from '@/api/generated';
 import type { EntryDto, GetEntriesParams } from '@/api/generated';
 
 export function useEntries() {
@@ -11,11 +11,8 @@ export function useEntries() {
     loading.value = true;
     error.value = null;
     try {
-      console.log("params " + JSON.stringify(params));
       const response = await getEntries(params);
       entries.value = (response.data.content as EntryDto[]) || [];
-      //console.log("response.data" + JSON.stringify(response.data.content));
-      //entries.value = [{accountingDate: new Date(), amount: 99.99, title: "super totre", currencyCode: "CHF"}];
     } catch (e) {
       error.value = 'Erreur lors du chargement ' + e;
     } finally {
@@ -23,5 +20,13 @@ export function useEntries() {
     }
   };
 
-  return { entries, loading, error, fetchEntries };
+  const addEntry = async (entry : EntryDto) => {
+    return createEntry(entry);
+  };
+
+  const editEntry = async(id : number,  entry : EntryDto) => {
+    return updateEntry(id, entry)
+  };
+
+  return { entries, loading, error, fetchEntries, addEntry, editEntry };
 }

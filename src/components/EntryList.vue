@@ -2,52 +2,49 @@
   <div class="entries">
     <div class="header-bar">
       <h2>Mes Dépenses</h2>
-      <button class="add-btn" @click="isModalOpen = true">+</button>
+      <button class="add-btn" @click="isModalOpen = true, selectedEntry = null">+</button>
     </div>
-    <p v-if="loading" class="empty">Chargement...</p>
+    <p v-if="loading" class="empty"></p>
     <p v-else-if="!entries?.length" class="empty">Aucune dépense</p>
     <div v-else class="list">
-      <div v-for="entry in sortedEntries" :key="entry.id" class="card">
-        <div class="card-layout">
-          <div class="card-left">
-            <h3>{{ entry.title }}</h3>
-            <p v-if="entry.description" class="desc">{{ entry.description }}</p>
-          </div>
-          <div class="card-right">
-            <span class="date">{{ formatDate(entry.accountingDate) }}</span>
-            <div class="amount-line">
-              <span class="amount">{{ entry.amount }}</span>
-              <span class="currency">{{ entry.currencyCode }}</span>
-            </div>
-          </div>
-        </div>
-        <div v-if="entry.tags?.length" class="tags">
-          <span v-for="tag in entry.tags" :key="tag.id" class="tag">#{{ tag.title }}</span>
-        </div>
+      <div v-for="entry in sortedEntries" :key="entry.id" class="card" @click="selectEntry(entry)"
+        :class="{ 'highlight': highlightedEntryId === entry.id }" :data-entry-id="entry.id">
+        <EntryView :entry="entry"></EntryView>
       </div>
     </div>
 
-    <EntryModal :is-open="isModalOpen" @close="isModalOpen = false" @submit="handleSubmit" />
+    <EntryModal :is-open="isModalOpen" :entry="selectedEntry" @close="isModalOpen = false" @submit="handleSubmit" />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, watch, watchEffect } from 'vue'
+import { ref, computed, onMounted, watch, watchEffect, nextTick } from 'vue'
 import { useEntries } from '@/composables/useEntries'
 import EntryModal from './EntryModal.vue'
 //import { createEntry, type EntryDto, type getEntries, type GetEntriesParams } from '@/api/generated'
 import { createEntry } from '@/api/generated'
 import type { EntryDto, GetEntriesParams, TagDto } from '@/api/generated'
+import EntryView from './EntryView.vue'
 
-const { entries, loading, error, fetchEntries } = useEntries()
+const { entries, loading, error, fetchEntries, addEntry, editEntry } = useEntries()
 //const entries = ref<Entry[]>([])
 const isModalOpen = ref(false)
+const selectedEntry = ref<EntryDto | null>(null);
+const highlightedEntryId = ref<number | null>(null);
 
 const { filteringTags, startDate, endDate } = defineProps<{
   filteringTags: TagDto[];
   startDate: string,
   endDate: string
 }>();
+
+const isInCurrentPeriod = (date: string) => {
+    const entryDate = new Date(date);
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    return entryDate >= start && entryDate <= end;
+};
+
 
 const sortedEntries = computed(() => {
   if (!entries.value) return []
@@ -56,36 +53,27 @@ const sortedEntries = computed(() => {
   })
 })
 
-const formatDate = (dateString: string): string => {
-  if (!dateString) return ''
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('fr-FR', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date)
-}
+const selectEntry = async (entry: EntryDto) => {
+  selectedEntry.value = entry;
+  isModalOpen.value = true;
+};
 
 const loadEntries = async () => {
-  console.log("loadEntries");
   const params: GetEntriesParams = {
       startDate: startDate.split('T')[0],
       endDate: endDate.split('T')[0],
       tagIds: filteringTags.map(tagDto => tagDto.id!),
       page: 0,
-      size: 20
+      size: 300
   };
   await fetchEntries(params)
-  console.log(entries.value);
 }
 
 watchEffect(async() => {
   // runs only once before 3.5
   // re-runs when the "foo" prop changes in 3.5+
-  console.log("entry list new tags : " + filteringTags);
-  console.log("period startDate : " + startDate + " endDate : " + endDate);
+  //console.log("entry list new tags : " + filteringTags);
+  //console.log("period startDate : " + startDate + " endDate : " + endDate);
   loadEntries();
 })
 /*
@@ -94,14 +82,75 @@ watch(filteringTags, (newValue) => {
 });
 */
 
+const scrollToAndHighlight = (entryId: number) => {
+  // Trouver l'élément DOM
+  const card = document.querySelector(`[data-entry-id="${entryId}"]`);
+
+  if (card) {
+    card.scrollIntoView({ behavior: 'instant', block: 'center' });
+
+    // Attendre la fin du scroll avant de highlighter
+    setTimeout(() => {
+      highlightedEntryId.value = entryId;
+      setTimeout(() => highlightedEntryId.value = null, 1500);
+    }, 300);
+  }
+};
+
 const handleSubmit = async (formData: EntryDto) => {
+
+  console.log("handleSubmit" + JSON.stringify(formData));
+  if (selectedEntry.value) {
+    formData.id = selectedEntry.value.id;
+    editEntry(selectedEntry.value.id!, formData).then(response => {
+      if (response.status === 200) {
+        isModalOpen.value = false
+        // loadEntries() we don't want to reload the entire list
+        const index = entries.value.findIndex(entry => entry.id === selectedEntry.value?.id);
+        if (index != -1) {
+          entries.value[index] = { ...selectedEntry.value, ...formData};
+          highlightedEntryId.value = selectedEntry.value?.id ?? null;
+          setTimeout(() => highlightedEntryId.value = null, 1500);
+        }
+      }
+    })
+  }
+  else {
+    addEntry(formData).then(response => {
+      if (response.status === 201) {
+        isModalOpen.value = false
+        // loadEntries() we can just add the entry at the beginning of the array
+        // it works only if the new entry should be in that list
+        // We could be in a period which doesn't concern the entry. In that case,
+        // we don't want to reload the list. If the entry should be in the period,
+        // for the moment we reload
+        //if (new Date(formData.accountingDate).
+        //loadEntries()
+        const newEntry = response.data;
+
+        if (isInCurrentPeriod(newEntry.accountingDate)) {
+          // Ajouter localement
+          entries.value?.push(newEntry);
+
+          // Attendre le prochain rendu puis scroller + highlight
+          nextTick(() => {
+            scrollToAndHighlight(newEntry.id);
+          });
+        } else {
+          // Optionnel : afficher un message "Entrée créée mais hors période"
+        }
+      }
+    })
+  }
+};
+
+  /*
   const response = await createEntry(formData)
   if (response.status === 201) {
     isModalOpen.value = false
-    console.log(response.data);
     loadEntries()
   }
-}
+  */
 
 onMounted(() => {
   loadEntries()
@@ -110,7 +159,6 @@ onMounted(() => {
 
 <style scoped>
 .entries {
-  max-width: 1200px;
   margin: 0 auto;
   padding: 1.5rem;
 }
@@ -151,74 +199,24 @@ h2 {
 .list {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-columns: 1fr;
 }
-.card {
-  background: #fff;
-  border: 1px solid #e1e8ed;
-  border-radius: 8px;
-  padding: 1rem;
-  transition: box-shadow 0.2s;
-}
-.card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-}
-.card-layout {
-  display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
-}
-.card-left {
-  flex: 1;
-}
-.card-right {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 0.25rem;
-}
+
 h3 {
   font-size: 1.1rem;
   font-weight: 600;
   margin: 0 0 0.5rem 0;
   color: #2c3e50;
 }
-.date {
-  font-size: 0.85rem;
-  color: #7f8c8d;
+
+.card.highlight {
+  animation: flash 1.5s ease-out;
 }
-.desc {
-  font-size: 0.9rem;
-  color: #5a6c7d;
-  margin: 0;
-}
-.amount-line {
-  display: flex;
-  gap: 0.5rem;
-  align-items: baseline;
-}
-.amount {
-  font-weight: 600;
-  font-size: 1.25rem;
-  color: #2c3e50;
-}
-.currency {
-  font-weight: 600;
-  color: #27ae60;
-  font-size: 1rem;
-}
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-top: 0.5rem;
-}
-.tag {
-  padding: 0.2rem 0.6rem;
-  background: #ecf0f1;
-  color: #34495e;
-  border-radius: 12px;
-  font-size: 0.8rem;
+
+@keyframes flash {
+  0%, 100% { background: #fff; }
+  25% { background: #d4edda; }
+  50% { background: #fff; }
+  75% { background: #d4edda; }
 }
 </style>

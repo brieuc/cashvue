@@ -8,10 +8,15 @@
 </template>
 
 <script setup lang="ts">
-import { type TagDto } from '@/api/generated';
-import { reactive, ref, onMounted, computed } from 'vue';
+import { type GetTagsParams, type TagDto } from '@/api/generated';
+import { onMounted, computed } from 'vue';
 import { useTags } from '@/composables/useTags';
-import type { CreateEntryRequest } from '@/types/types';
+
+interface Props {
+  selectedTags: Array<TagDto>
+}
+
+const props = defineProps<Props>();
 
 const emit = defineEmits<{
   toggle: [data: Array<TagDto>]
@@ -20,42 +25,33 @@ const emit = defineEmits<{
 const {fetchTags, tags} = useTags();
 
 const availableTags = computed(() => tags.value);
-const selectedTags = ref<TagDto[]>([]);
-
-/*
-const form : CreateEntryRequest = reactive({
-  title: '',
-  description: '',
-  amount: null as number | null,
-  currencyCode: 'CHF',
-  accountingDate: new Date().toISOString().slice(0, 16),
-  tags: [] as Array<{ id: number; title: string }>
-})
-  */
 
 const toggleTag = (selectedTag: TagDto | undefined) => {
-  console.log("toggleTag called with:", selectedTag);
   if (!selectedTag)
     return;
-  // We're looking for the tag first in the selected tag to unselect it
-  const index = selectedTags.value.findIndex((tag) => tag.id === selectedTag.id)
+
+  const newSelectedTags = [...props.selectedTags];
+  const index = newSelectedTags.findIndex((tag) => tag.id === selectedTag.id)
+
   if (index > -1) {
-    selectedTags.value.splice(index, 1)
+    newSelectedTags.splice(index, 1)
   } else {
-    // then we add it if it was not present.
     const tag = availableTags.value?.find((t) => t.id === selectedTag.id)
     if (tag) {
-      selectedTags.value.push({ id: tag.id, title: tag.title })
+      newSelectedTags.push({ id: tag.id, title: tag.title })
     }
   }
 
-  emit('toggle', selectedTags.value);
-  console.log("Event emitted with:", selectedTags.value);
+  emit('toggle', newSelectedTags);
 }
 
 
 const loadTags = () => {
-  fetchTags();
+  const params: GetTagsParams = {
+    size: 1000,
+    sort: ["sortingOrder:asc"]
+  }
+  fetchTags(params);
 }
 
 onMounted(() => {
@@ -64,20 +60,3 @@ onMounted(() => {
 
 </script>
 
-<style>
-.tag-btn:hover {
-  background: #dfe6e9;
-}
-
-.tag-btn.active {
-  background: #3498db;
-  color: white;
-  border-color: #2980b9;
-}
-
-/* Pour rendre les boutons inline */
-button {
-  display: inline-block;
-  margin-right: 0.5rem;
-}
-</style>

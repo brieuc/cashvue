@@ -19,6 +19,7 @@ export interface CreateEntryRequest {
  * All fields are optional for partial updates
  */
 export interface UpdateEntryRequest {
+  id: number,
   accountingDate?: string
   title?: string
   description?: string

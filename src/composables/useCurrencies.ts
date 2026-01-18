@@ -1,21 +1,15 @@
-// src/composables/useCurrencies.ts
-import { useApi } from './useApi'
-import { currencyService } from '@/services/currencies'
-import type { UseCurrenciesReturn, CreateCurrencyRequest, UpdateCurrencyRequest } from '@/types/types'
+import { getCurrencies, type CurrencyDto, type GetCurrenciesParams } from "@/api/generated";
+import { ref } from "vue";
 
-export function useCurrencies(): UseCurrenciesReturn {
-  const { loading, execute } = useApi()
+export function useCurrencies() {
 
-  const getAll = () => execute(() => currencyService.getAll())
+  const currencies = ref<CurrencyDto[]>([]);
 
-  const create = (data: CreateCurrencyRequest) =>
-    execute(() => currencyService.create(data), 'Devise créée !')
+  const fetchCurrencies = async (params : GetCurrenciesParams) => {
+    getCurrencies(params).then(response => {
+      currencies.value = response.data.content || [];
+    });
+  }
 
-  const update = (code: string, data: UpdateCurrencyRequest) =>
-    execute(() => currencyService.update(code, data), 'Devise mise à jour !')
-
-  const deleteCurrency = (code: string) =>
-    execute(() => currencyService.delete(code), 'Devise supprimée !')
-
-  return { loading, getAll, create, update, deleteCurrency }
+  return { currencies, fetchCurrencies };
 }
