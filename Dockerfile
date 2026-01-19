@@ -2,8 +2,8 @@ FROM node:latest as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
-COPY patch-devtools.js .
-RUN node patch-devtools.js
+COPY patch-devtools.cjs .
+RUN node patch-devtools.cjs
 COPY ./ .
 RUN npm run build
 
