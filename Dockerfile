@@ -2,8 +2,9 @@ FROM node:latest as build-stage
 WORKDIR /app
 COPY package*.json ./
 RUN npm install
+COPY patch-devtools.js .
+RUN node patch-devtools.js
 COPY ./ .
-ENV NODE_ENV=production
 RUN npm run build
 
 FROM nginx:alpine as production-stage
