@@ -49,6 +49,7 @@ const handleRemove = (tagToRemove: TagDto) => {
   overflow-y: hidden;
   white-space: nowrap;
   padding-top: 0.5rem;
+  margin-bottom: 50px; /* Ajouter cette ligne */
 }
 
 .selected-tags-sticky::-webkit-scrollbar,
