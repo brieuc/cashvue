@@ -1,7 +1,3 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-</script>
-
 <template>
   <header>
 
@@ -14,4 +10,18 @@ import { RouterLink, RouterView } from 'vue-router'
   </header>
 
   <RouterView />
+
+
 </template>
+
+<script setup lang="ts">
+import { onMounted } from 'vue';
+import { RouterLink, RouterView } from 'vue-router'
+
+  onMounted(() => {
+    setTimeout(() => {
+      window.scrollTo({ top: 40, behavior: 'smooth'})
+    }, 100)
+  })
+
+</script>

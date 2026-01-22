@@ -78,7 +78,7 @@ const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
 
 const defaultForm : CreateEntryRequest = {
   title: '',
-  amount: null as number | null,
+  amount: -0.00,
   currencyCode: 'CHF',
   accountingDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   description: '',
