@@ -83,7 +83,8 @@ const handleSelectPeriod = (period: PeriodDto) => {
   z-index: 10;
   background: white;
   border-top: 1px solid #e1e8ed;
-  padding: 0.75rem;
+  /*padding: 0.75rem;*/
+  padding-top: 0.25rem;
   max-height: 200px;
   display: flex;
   flex-direction: column;
