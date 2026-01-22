@@ -2,7 +2,7 @@
   <div class="app-layout">
     <!-- Period en haut fixe -->
     <div class="period-bar">
-      <PeriodSelection @select="handleSelectPeriod" />
+      <PeriodSelection v-model="selectedPeriod" />
     </div>
 
     <!-- Liste au milieu scrollable -->
@@ -26,16 +26,30 @@ import { type TagDto, type PeriodDto } from '@/api/generated';
 import EntryList from '@/components/EntryList.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
 import TagFilter from '@/components/TagFilter.vue';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
+
 
 const selectedTags = ref<Array<TagDto>>([]);
-const startDate = ref<string>("1900-01-01");
-const endDate = ref<string>("2100-12-31");
+const selectedPeriod = ref<PeriodDto>();
 
+const startDate = ref<string>("2000-01-01");
+const endDate = ref<string>("2000-01-01");
+
+watch(selectedPeriod, (newPeriod) => {
+  if (!newPeriod)
+    return;
+  console.log("HomeView newPeriod " + JSON.stringify(newPeriod));
+  startDate.value = newPeriod.startDate;
+  endDate.value = newPeriod!.endDate;
+});
+
+/*
 const handleSelectPeriod = (period: PeriodDto) => {
   startDate.value = period.startDate;
   endDate.value = period.endDate;
 }
+*/
+
 </script>
 
 <style scoped>
@@ -43,7 +57,7 @@ const handleSelectPeriod = (period: PeriodDto) => {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  overflow: hidden;
+  overflow-y: hidden;
 }
 
 .period-bar {

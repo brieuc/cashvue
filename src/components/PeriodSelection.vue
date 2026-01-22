@@ -10,14 +10,31 @@
 <script setup lang="ts">
 import { type GetPeriodsParams, type PeriodDto } from '@/api/generated';
 import { usePeriods } from '@/composables/usePeriods';
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
-const selectedPeriod = ref<PeriodDto | null>(null);
+//const selectedPeriod = ref<PeriodDto | undefined>();
 const {periods, fetchPeriods} = usePeriods();
+
+const selectedPeriod = defineModel({type: Object, default: () => ({}) });
 
 interface Emit {
   select: [PeriodDto]
 }
+
+watch(periods, (periods) => {
+  const first = periods?.[0];
+  if (first) {
+    console.log("emit " + JSON.stringify(first));
+    selectedPeriod.value = first;
+    //emit("select", first);
+    /*
+        setTimeout(() => {    emit("select", first);}, 100);
+
+
+
+    */
+  }
+});
 
 const emit = defineEmits<Emit>();
 
