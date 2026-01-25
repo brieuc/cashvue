@@ -1,6 +1,6 @@
 export default {
   api: {
-    input: './openapi-2.json',
+    input: './openapi.json',
     output: {
       target: './src/api/generated.ts',
       client: 'fetch',

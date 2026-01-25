@@ -59,6 +59,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Tag non trouvé"
+          },
           "200": {
             "description": "Tag trouvé",
             "content": {
@@ -68,9 +71,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Tag non trouvé"
           }
         }
       },
@@ -106,11 +106,11 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "404": {
             "description": "Tag non trouvé"
+          },
+          "400": {
+            "description": "Données invalides"
           },
           "200": {
             "description": "Tag mis à jour avec succès",
@@ -145,11 +145,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Tag supprimé avec succès"
-          },
           "404": {
             "description": "Tag non trouvé"
+          },
+          "204": {
+            "description": "Tag supprimé avec succès"
           }
         }
       }
@@ -226,9 +226,6 @@
           "404": {
             "description": "Taux non trouvé"
           },
-          "400": {
-            "description": "Données invalides"
-          },
           "200": {
             "description": "Taux mis à jour avec succès",
             "content": {
@@ -238,6 +235,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       },
@@ -293,6 +293,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Période non trouvée"
+          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -302,9 +305,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Période non trouvée"
           }
         }
       },
@@ -340,9 +340,6 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
           "200": {
             "description": "Période mise à jour avec succès",
             "content": {
@@ -352,6 +349,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Période non trouvée"
           },
           "400": {
             "description": "Données invalides"
@@ -457,12 +457,6 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Entrée non trouvée"
-          },
-          "400": {
-            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
-          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -472,6 +466,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
+          },
+          "404": {
+            "description": "Entrée non trouvée"
           }
         }
       },
@@ -515,25 +515,67 @@
         "operationId": "getTags",
         "parameters": [
           {
-            "name": "pageRequestDto",
+            "name": "page",
             "in": "query",
-            "description": "Paramètres de pagination",
-            "required": true,
+            "description": "Page number (starts at 0)",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageRequestDto"
-            }
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate:desc",
+                "title:asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+                "example": "[\"accountingDate:desc\",\"title:asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate:desc",
+              "title:asc"
+            ]
           }
         ],
         "responses": {
           "200": {
-            "description": "Liste des tags récupérée avec succès",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TagDto"
-                  }
+                  "$ref": "#/components/schemas/PageImplTagDto"
                 }
               }
             }
@@ -585,25 +627,67 @@
         "operationId": "getRates",
         "parameters": [
           {
-            "name": "pageRequestDto",
+            "name": "page",
             "in": "query",
-            "description": "Paramètres de pagination",
-            "required": true,
+            "description": "Page number (starts at 0)",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageRequestDto"
-            }
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate:desc",
+                "title:asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+                "example": "[\"accountingDate:desc\",\"title:asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate:desc",
+              "title:asc"
+            ]
           }
         ],
         "responses": {
           "200": {
-            "description": "Liste des taux récupérée avec succès",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/RateDto"
-                  }
+                  "$ref": "#/components/schemas/PageImplRateDto"
                 }
               }
             }
@@ -629,9 +713,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Taux créé avec succès",
             "content": {
@@ -641,6 +722,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -655,25 +739,67 @@
         "operationId": "getPeriods",
         "parameters": [
           {
-            "name": "pageRequestDto",
+            "name": "page",
             "in": "query",
-            "description": "Paramètres de pagination",
-            "required": true,
+            "description": "Page number (starts at 0)",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageRequestDto"
-            }
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate:desc",
+                "title:asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+                "example": "[\"accountingDate:desc\",\"title:asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate:desc",
+              "title:asc"
+            ]
           }
         ],
         "responses": {
           "200": {
-            "description": "Liste des périodes récupérée avec succès",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/PeriodDto"
-                  }
+                  "$ref": "#/components/schemas/PageImplPeriodDto"
                 }
               }
             }
@@ -725,34 +851,163 @@
         "operationId": "getEntries",
         "parameters": [
           {
-            "name": "entrySpecificationDto",
+            "name": "startDate",
             "in": "query",
-            "description": "Critères de filtrage des entrées",
-            "required": true,
+            "description": "Start date of the search period (inclusive, will use start of day)",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/EntrySpecificationDto"
-            }
+              "type": "string",
+              "description": "Start date of the search period (inclusive, will use start of day)",
+              "format": "date",
+              "example": "2024-01-01"
+            },
+            "example": "2024-01-01"
           },
           {
-            "name": "pageRequestDto",
+            "name": "endDate",
             "in": "query",
-            "description": "Paramètres de pagination (page, size, sort)",
-            "required": true,
+            "description": "End date of the search period (inclusive, will use end of day)",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageRequestDto"
-            }
+              "type": "string",
+              "description": "End date of the search period (inclusive, will use end of day)",
+              "format": "date",
+              "example": "2026-12-31"
+            },
+            "example": "2026-12-31"
+          },
+          {
+            "name": "tagIds",
+            "in": "query",
+            "description": "List of tag IDs to filter entries",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "List of tag IDs to filter entries",
+              "example": [1, 2, 5],
+              "items": {
+                "type": "integer",
+                "description": "List of tag IDs to filter entries",
+                "format": "int64"
+              }
+            },
+            "example": [1, 2, 5]
+          },
+          {
+            "name": "startAmount",
+            "in": "query",
+            "description": "Minimum transaction amount",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "description": "Minimum transaction amount",
+              "format": "double",
+              "example": 100
+            },
+            "example": 100
+          },
+          {
+            "name": "endAmount",
+            "in": "query",
+            "description": "Maximum transaction amount",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "description": "Maximum transaction amount",
+              "format": "double",
+              "example": 5000
+            },
+            "example": 5000
+          },
+          {
+            "name": "currencyCodes",
+            "in": "query",
+            "description": "Currency codes to filter entries (ISO 4217 codes)",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "Currency codes to filter entries (ISO 4217 codes)",
+              "example": [
+                "CHF",
+                "EUR",
+                "USD"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Currency codes to filter entries (ISO 4217 codes)",
+                "example": "[\"CHF\",\"EUR\",\"USD\"]"
+              }
+            },
+            "example": [
+              "CHF",
+              "EUR",
+              "USD"
+            ]
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate:desc",
+                "title:asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+                "example": "[\"accountingDate:desc\",\"title:asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate:desc",
+              "title:asc"
+            ]
           }
         ],
         "responses": {
           "200": {
-            "description": "Liste des entrées récupérée avec succès",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/EntryDto"
-                  }
+                  "$ref": "#/components/schemas/PageImplEntryDto"
                 }
               }
             }
@@ -804,25 +1059,67 @@
         "operationId": "getCurrencies",
         "parameters": [
           {
-            "name": "pageRequestDto",
+            "name": "page",
             "in": "query",
-            "description": "Paramètres de pagination",
-            "required": true,
+            "description": "Page number (starts at 0)",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageRequestDto"
-            }
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate:desc",
+                "title:asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+                "example": "[\"accountingDate:desc\",\"title:asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate:desc",
+              "title:asc"
+            ]
           }
         ],
         "responses": {
           "200": {
-            "description": "Liste des devises récupérée avec succès",
+            "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/CurrencyDto"
-                  }
+                  "$ref": "#/components/schemas/PageImplCurrencyDto"
                 }
               }
             }
@@ -920,13 +1217,58 @@
             "example": "EUR"
           },
           {
-            "name": "pageRequestDto",
+            "name": "page",
             "in": "query",
-            "description": "Paramètres de pagination",
-            "required": true,
+            "description": "Page number (starts at 0)",
+            "required": false,
             "schema": {
-              "$ref": "#/components/schemas/PageRequestDto"
-            }
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate:desc",
+                "title:asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+                "example": "[\"accountingDate:desc\",\"title:asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate:desc",
+              "title:asc"
+            ]
           }
         ],
         "responses": {
@@ -1005,9 +1347,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Devise non trouvée"
-          },
           "200": {
             "description": "Devise trouvée",
             "content": {
@@ -1017,6 +1356,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Devise non trouvée"
           }
         }
       },
@@ -1052,6 +1394,22 @@
   },
   "components": {
     "schemas": {
+      "CurrencyDto": {
+        "required": [
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 currency code (3 uppercase letters)",
+            "example": "CHF"
+          }
+        },
+        "description": "Represents a monetary currency"
+      },
       "TagDto": {
         "required": [
           "title"
@@ -1062,7 +1420,6 @@
             "type": "integer",
             "description": "Unique identifier of the tag",
             "format": "int64",
-            "readOnly": true,
             "example": 1
           },
           "title": {
@@ -1089,6 +1446,19 @@
             "description": "Sort order for display",
             "format": "int32",
             "example": 10
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyDto"
+          },
+          "isCumulative": {
+            "type": "boolean",
+            "description": "Whether the tag represents cumulative values",
+            "example": false
+          },
+          "hidden": {
+            "type": "boolean",
+            "description": "Whether the tag is hidden from display",
+            "example": false
           }
         },
         "description": "Represents a tag/label for categorizing entries",
@@ -1177,6 +1547,14 @@
             "type": "string",
             "description": "End date and time of the period",
             "format": "date-time"
+          },
+          "currency": {
+            "$ref": "#/components/schemas/CurrencyDto"
+          },
+          "hidden": {
+            "type": "boolean",
+            "description": "Whether the period is hidden from display",
+            "example": false
           }
         },
         "description": "Represents a defined time period"
@@ -1194,7 +1572,6 @@
             "type": "integer",
             "description": "Unique identifier of the entry",
             "format": "int64",
-            "readOnly": true,
             "example": 1
           },
           "accountingDate": {
@@ -1252,22 +1629,6 @@
           }
         },
         "description": "Represents a financial entry (transaction)"
-      },
-      "CurrencyDto": {
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "properties": {
-          "code": {
-            "maxLength": 3,
-            "minLength": 3,
-            "type": "string",
-            "description": "ISO 4217 currency code (3 uppercase letters)",
-            "example": "CHF"
-          }
-        },
-        "description": "Represents a monetary currency"
       },
       "ComputationRequestDto": {
         "required": [
@@ -1400,97 +1761,275 @@
         },
         "description": "Result of aggregated amount calculation"
       },
-      "PageRequestDto": {
+      "PageImplTagDto": {
         "type": "object",
         "properties": {
-          "page": {
-            "maximum": 2147483647,
-            "minimum": 0,
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
             "type": "integer",
-            "description": "Page number (starts at 0)",
-            "format": "int32",
-            "example": 0,
-            "default": 0
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
           },
           "size": {
-            "maximum": 100,
-            "minimum": 1,
             "type": "integer",
-            "description": "Number of elements per page",
-            "format": "int32",
-            "example": 20
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
           },
           "sort": {
-            "type": "array",
-            "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
-            "example": [
-              "accountingDate,desc",
-              "title,asc"
-            ],
-            "items": {
-              "type": "string",
-              "description": "Sort criteria (format: 'property,direction' where direction = asc|desc)",
-              "example": "[\"accountingDate,desc\",\"title,asc\"]"
-            }
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
           }
-        },
-        "description": "Pagination parameters for list queries"
+        }
       },
-      "EntrySpecificationDto": {
+      "PageableObject": {
         "type": "object",
         "properties": {
-          "startDate": {
-            "type": "string",
-            "description": "Start date of the search period (inclusive, will use start of day)",
-            "format": "date",
-            "example": "2024-01-01"
+          "unpaged": {
+            "type": "boolean"
           },
-          "endDate": {
-            "type": "string",
-            "description": "End date of the search period (inclusive, will use end of day)",
-            "format": "date",
-            "example": "2024-12-31"
+          "paged": {
+            "type": "boolean"
           },
-          "tagIds": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "List of tag IDs to filter entries",
-            "example": [1, 2, 5],
-            "items": {
-              "type": "integer",
-              "description": "List of tag IDs to filter entries",
-              "format": "int64"
-            }
+          "pageNumber": {
+            "type": "integer",
+            "format": "int32"
           },
-          "startAmount": {
-            "type": "number",
-            "description": "Minimum transaction amount",
-            "format": "double",
-            "example": 100
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
           },
-          "endAmount": {
-            "type": "number",
-            "description": "Maximum transaction amount",
-            "format": "double",
-            "example": 5000
+          "offset": {
+            "type": "integer",
+            "format": "int64"
           },
-          "currencyCodes": {
-            "uniqueItems": true,
-            "type": "array",
-            "description": "Currency codes to filter entries (ISO 4217 codes)",
-            "example": [
-              "CHF",
-              "EUR",
-              "USD"
-            ],
-            "items": {
-              "type": "string",
-              "description": "Currency codes to filter entries (ISO 4217 codes)",
-              "example": "[\"CHF\",\"EUR\",\"USD\"]"
-            }
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
           }
-        },
-        "description": "Filter criteria for searching financial entries"
+        }
+      },
+      "SortObject": {
+        "type": "object",
+        "properties": {
+          "unsorted": {
+            "type": "boolean"
+          },
+          "sorted": {
+            "type": "boolean"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplRateDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RateDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplPeriodDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/PeriodDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplEntryDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntryDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PageImplCurrencyDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/CurrencyDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
       }
     }
   }

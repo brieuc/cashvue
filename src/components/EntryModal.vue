@@ -8,36 +8,45 @@
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
         <div class="form-row">
-          <div class="form-group">
-            <label>Titre *</label>
-            <input v-model="form.title" type="text" required />
-          </div>
-
-          <div class="form-group">
-            <label>Date *</label>
-            <input v-model="form.accountingDate" type="datetime-local" required />
-          </div>
-        </div>
-
-        <div class="form-row">
-          <div class="form-group">
-            <label>Montant *</label>
-            <input v-model.number="form.amount" type="number" step="0.01" required />
-          </div>
-
-          <div class="form-group">
-            <label>Devise *</label>
-            <select v-model="form.currencyCode" required>
+            <div class="form-group" style="display: flex; justify-content: space-evenly; align-items: center; padding: 0 1rem;"">
+            <span>
+              <button
+                  type="button"
+                  class="amount-toggle"
+                  :class="isPositive ? 'positive' : 'negative'"
+                  @click="isPositive = !isPositive">
+                  {{ isPositive ? '+' : '−' }}
+              </button>
+            </span>
+            <span><input v-model.number="form.amount"
+              type="number"
+              inputmode="decimal"
+              step="any"
+              class="amount-input" />
+            </span>
+            <span><select v-model="form.currencyCode" required>
               <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
                 {{ currency.code }}
               </option>
-            </select>
+            </select></span>
+            </div>
+          <div class="form-group">
+            <input v-model="form.title" type="text" placeholder="Titre" />
           </div>
+
+          <div class="form-group">
+            <input v-model="form.accountingDate" type="datetime-local" required />
+          </div>
+
+
+        </div>
+
+        <div class="form-row">
+
         </div>
 
         <div class="form-group">
-          <label>Description</label>
-          <textarea v-model="form.description" rows="2"></textarea>
+          <textarea v-model="form.description" rows="2" placeholder="Description"></textarea>
         </div>
 
         <TagFilter v-model="form.tags" />
@@ -47,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, watch, onUpdated } from 'vue'
+import { reactive, onMounted, watch, onUpdated, ref } from 'vue'
 import TagFilter from './TagFilter.vue';
 import type { EntryDto, GetCurrenciesParams, TagDto } from '@/api/generated';
 import type { CreateEntryRequest } from '@/types/types';
@@ -67,9 +76,11 @@ const emit = defineEmits<{
   submit: [data: CreateEntryRequest]
 }>()
 
+ const isPositive = ref<boolean>(false);
+
 const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
   title: entry.title,
-  amount: entry.amount,
+  amount: Math.abs(entry.amount as number),
   currencyCode: entry.currencyCode,
   accountingDate: entry.accountingDate,
   description: entry.description,
@@ -78,7 +89,7 @@ const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
 
 const defaultForm : CreateEntryRequest = {
   title: '',
-  amount: -0.00,
+  amount: 0.00,
   currencyCode: 'CHF',
   accountingDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   description: '',
@@ -88,16 +99,23 @@ const defaultForm : CreateEntryRequest = {
 const form = reactive<CreateEntryRequest>({...defaultForm});
 
 watch(() => props.entry, (entry) => {
-  if(entry)
+  if(entry) {
     Object.assign(form, getFormEntry(entry));
-  else
+    isPositive.value = entry.amount > 0.0 ? true : false;
+  }
+  else {
     Object.assign(form, {...defaultForm});
+    isPositive.value = false;
+  }
 }, {immediate: true});
 
 
 
 const handleSubmit = () => {
   const submitData = { ...form }
+  // Put the right amount depending on -/+ button
+  if (isPositive.value === false)
+    submitData.amount = (submitData.amount ?? 0) * -1.00;
   if (submitData.tags && submitData.tags.length === 0) {
     delete submitData.tags
   }
@@ -199,6 +217,35 @@ onUpdated(() => {
 
 .form-group textarea {
   resize: vertical;
+}
+
+.amount-toggle {
+  width: 2.5rem;
+  height: 2.5rem; /* même hauteur qu'un input standard */
+  border: none;
+  border-radius: 4px;
+  font-size: 1.25rem;
+  font-weight: bold;
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.form-group input.amount-input {
+  font-size: 1.75rem;
+  font-weight: 600;
+  text-align: right;
+  width: 8ch;
+  padding: 0.5rem 0.75rem;
+  height: 3rem;
+}
+
+.amount-toggle.positive {
+  background-color: #22c55e; /* vert */
+}
+
+.amount-toggle.negative {
+  background-color: #ef4444; /* rouge */
 }
 
 .btn-cancel,

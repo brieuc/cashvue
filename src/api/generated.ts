@@ -33,6 +33,18 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
 } : DistributeReadOnlyOverUnions<T>;
 
 /**
+ * Represents a monetary currency
+ */
+export type CurrencyDto = {
+  /**
+   * ISO 4217 currency code (3 uppercase letters)
+   * @minLength 3
+   * @maxLength 3
+   */
+  code: string;
+};
+
+/**
  * Represents a tag/label for categorizing entries
  */
 export type TagDto = {
@@ -58,6 +70,11 @@ export type TagDto = {
    * @minimum 0
    */
   sortingOrder?: number;
+  currency?: CurrencyDto;
+  /** Whether the tag represents cumulative values */
+  isCumulative?: boolean;
+  /** Whether the tag is hidden from display */
+  hidden?: boolean;
 };
 
 /**
@@ -99,6 +116,9 @@ export type PeriodDto = {
   startDate: string;
   /** End date and time of the period */
   endDate: string;
+  currency?: CurrencyDto;
+  /** Whether the period is hidden from display */
+  hidden?: boolean;
 };
 
 /**
@@ -131,18 +151,6 @@ export type EntryDto = {
   currencyCode: string;
   /** List of tags/labels associated with this entry */
   tags?: TagDto[];
-};
-
-/**
- * Represents a monetary currency
- */
-export type CurrencyDto = {
-  /**
-   * ISO 4217 currency code (3 uppercase letters)
-   * @minLength 3
-   * @maxLength 3
-   */
-  code: string;
 };
 
 /**
@@ -213,17 +221,17 @@ export type PageImplTagDto = {
 };
 
 export type PageableObject = {
+  unpaged?: boolean;
   paged?: boolean;
   pageNumber?: number;
   pageSize?: number;
-  unpaged?: boolean;
   offset?: number;
   sort?: SortObject;
 };
 
 export type SortObject = {
-  sorted?: boolean;
   unsorted?: boolean;
+  sorted?: boolean;
   empty?: boolean;
 };
 
@@ -293,11 +301,11 @@ page?: number;
 /**
  * Number of elements per page
  * @minimum 1
- * @maximum 100
+ * @maximum 1000
  */
 size?: number;
 /**
- * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
 };
@@ -312,11 +320,11 @@ page?: number;
 /**
  * Number of elements per page
  * @minimum 1
- * @maximum 100
+ * @maximum 1000
  */
 size?: number;
 /**
- * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
 };
@@ -331,11 +339,11 @@ page?: number;
 /**
  * Number of elements per page
  * @minimum 1
- * @maximum 100
+ * @maximum 1000
  */
 size?: number;
 /**
- * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
 };
@@ -374,11 +382,11 @@ page?: number;
 /**
  * Number of elements per page
  * @minimum 1
- * @maximum 100
+ * @maximum 1000
  */
 size?: number;
 /**
- * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
 };
@@ -393,11 +401,11 @@ page?: number;
 /**
  * Number of elements per page
  * @minimum 1
- * @maximum 100
+ * @maximum 1000
  */
 size?: number;
 /**
- * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
 };
@@ -412,11 +420,11 @@ page?: number;
 /**
  * Number of elements per page
  * @minimum 1
- * @maximum 100
+ * @maximum 1000
  */
 size?: number;
 /**
- * Sort criteria (format: 'property,direction' where direction = asc|desc)
+ * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
 };
