@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 import { type GetTagsParams, type TagDto } from '@/api/generated';
-import { onMounted, computed } from 'vue';
+import { onMounted, computed, toRaw } from 'vue';
 import { useTags } from '@/composables/useTags';
 
 interface Props {
@@ -38,7 +38,7 @@ const toggleTag = (selectedTag: TagDto | undefined) => {
   } else {
     const tag = availableTags.value?.find((t) => t.id === selectedTag.id)
     if (tag) {
-      newSelectedTags.push({ id: tag.id, title: tag.title })
+      newSelectedTags.push( {...toRaw(tag)} )
     }
   }
 

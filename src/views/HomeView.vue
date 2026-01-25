@@ -5,6 +5,9 @@
       <PeriodSelection v-model="selectedPeriod" />
     </div>
 
+    <div class="header-bar">
+      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags"></HeaderView>
+    </div>
     <!-- Liste au milieu scrollable -->
     <div class="entry-content">
       <EntryList
@@ -24,13 +27,14 @@
 <script setup lang="ts">
 import { type TagDto, type PeriodDto } from '@/api/generated';
 import EntryList from '@/components/EntryList.vue';
+import HeaderView from '@/components/HeaderView.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
 import TagFilter from '@/components/TagFilter.vue';
 import { ref, watch } from 'vue';
 
 
 const selectedTags = ref<Array<TagDto>>([]);
-const selectedPeriod = ref<PeriodDto>();
+const selectedPeriod = ref<PeriodDto | undefined>();
 
 const startDate = ref<string>("2000-01-01");
 const endDate = ref<string>("2000-01-01");
@@ -69,6 +73,10 @@ const handleSelectPeriod = (period: PeriodDto) => {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+}
+
+.header-bar {
+  border-bottom: 1px solid #e1e8ed;
 }
 
 .entry-content {
