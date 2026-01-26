@@ -8,7 +8,7 @@
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
         <div class="form-row">
-            <div class="form-group" style="display: flex; justify-content: space-evenly; align-items: center; padding: 0 1rem;"">
+            <div class="form-group" style="display: flex; justify-content: space-evenly; align-items: center; padding: 0 1rem;">
             <span>
               <button
                   type="button"
