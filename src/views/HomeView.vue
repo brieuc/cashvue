@@ -6,7 +6,7 @@
     </div>
 
     <div class="header-bar">
-      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags"></HeaderView>
+      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags" :entries-updated="entriesChanged"></HeaderView>
     </div>
     <!-- Liste au milieu scrollable -->
     <div class="entry-content">
@@ -14,6 +14,7 @@
         :filtering-tags="selectedTags"
         :start-date="startDate"
         :end-date="endDate"
+        @entries-changed="entriesChanged++"
       />
     </div>
 
@@ -38,6 +39,8 @@ const selectedPeriod = ref<PeriodDto | undefined>();
 
 const startDate = ref<string>("2000-01-01");
 const endDate = ref<string>("2000-01-01");
+
+const entriesChanged = ref<number>(0);
 
 watch(selectedPeriod, (newPeriod) => {
   if (!newPeriod)

@@ -32,6 +32,10 @@ const isModalOpen = ref(false)
 const selectedEntry = ref<EntryDto | null>(null);
 const highlightedEntryId = ref<number | null>(null);
 
+const emit = defineEmits<{
+    entriesChanged : [];
+}>();
+
 const { filteringTags, startDate, endDate } = defineProps<{
   filteringTags: TagDto[];
   startDate: string,
@@ -142,6 +146,7 @@ const handleSubmit = async (formData: EntryDto) => {
       }
     })
   }
+  emit("entriesChanged");
 };
 
   /*

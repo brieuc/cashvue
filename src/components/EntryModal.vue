@@ -22,7 +22,8 @@
               type="number"
               inputmode="decimal"
               step="any"
-              class="amount-input" />
+              class="amount-input"
+              ref="inputRef"/>
             </span>
             <span><select v-model="form.currencyCode" required>
               <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
@@ -56,7 +57,7 @@
 </template>
 
 <script setup lang="ts">
-import { reactive, onMounted, watch, onUpdated, ref } from 'vue'
+import { reactive, onMounted, watch, onUpdated, ref, nextTick } from 'vue'
 import TagFilter from './TagFilter.vue';
 import type { EntryDto, GetCurrenciesParams, TagDto } from '@/api/generated';
 import type { CreateEntryRequest } from '@/types/types';
@@ -69,6 +70,7 @@ interface Props {
   entry?: EntryDto
 }
 
+const inputRef = ref<HTMLInputElement | null>(null);
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
@@ -89,7 +91,7 @@ const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
 
 const defaultForm : CreateEntryRequest = {
   title: '',
-  amount: 0.00,
+  amount: null,
   currencyCode: 'CHF',
   accountingDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   description: '',
@@ -109,6 +111,13 @@ watch(() => props.entry, (entry) => {
   }
 }, {immediate: true});
 
+ watch(() => props.isOpen, (open) => {
+    if (open) {
+      nextTick(() => {
+        inputRef.value?.focus();
+      });
+    }
+  });
 
 
 const handleSubmit = () => {
@@ -120,6 +129,9 @@ const handleSubmit = () => {
     delete submitData.tags
   }
   emit('submit', submitData)
+  // Reset the form
+  Object.assign(form, {...defaultForm});
+  isPositive.value = false;
 }
 
 const loadCurrencies = () => {
@@ -135,6 +147,7 @@ onMounted(() => {
 
 onUpdated(() => {
   console.log("props.entry" + props.entry);
+
 });
 
 </script>
