@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-import { type TagDto, type PeriodDto, type ComputationRequestDto } from '@/api/generated';
+import { type TagDto, type PeriodDto, type ComputationRequestDto, updateEntry } from '@/api/generated';
 import { useComputation } from '@/composables/useComputation';
 import { onMounted, ref, watch } from 'vue';
 
@@ -17,12 +17,13 @@ const selectedTags = ref<TagDto[]>([]);
 
 interface Props {
   selectedPeriod : PeriodDto | undefined,
-  selectedTags : TagDto[]
+  selectedTags : TagDto[],
+  entriesUpdated : number
 }
 
 const { fetchComputation, computationResponse } = useComputation();
 
-const { selectedPeriod, selectedTags } = defineProps<Props>();
+const { selectedPeriod, selectedTags, entriesUpdated } = defineProps<Props>();
 
 const totalAmount = ref<number>(0.0);
 const currency = ref<string>("");
@@ -35,6 +36,10 @@ watch(computationResponse, (computationResponse) => {
     currency.value = computationResponse.targetCurrencyCode ?? "";
     nbEntries.value = computationResponse.numberOfEntries;
   }
+});
+
+watch(() => entriesUpdated, () => {
+  getComputation(selectedPeriod, selectedTags);
 });
 
 watch(() => selectedPeriod, (period) => {
