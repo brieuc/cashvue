@@ -2,7 +2,7 @@
   <div v-if="isOpen" class="modal-overlay" @click="$emit('close')">
     <div class="modal" @click.stop>
       <div class="modal-header">
-        <button type="button" class="btn-cancel" @click="$emit('close')">Annuler</button>
+        <button type="button" class="btn-cancel" @click="cancel">Annuler</button>
         <h2>{{ props.entry ? props.entry.title : "Nouvelle dépense" }}</h2>
         <button type="submit" class="btn-submit" @click="handleSubmit">Enregistrer</button>
       </div>
@@ -119,6 +119,12 @@ watch(() => props.entry, (entry) => {
     }
   });
 
+const cancel = () => {
+  Object.assign(form, {...defaultForm});
+  isPositive.value = false;
+  emit("close");
+};
+
 
 const handleSubmit = () => {
   const submitData = { ...form }
@@ -217,7 +223,8 @@ onUpdated(() => {
   padding: 0.6rem;
   border: 1px solid #dfe6e9;
   border-radius: 6px;
-  font-size: 0.95rem;
+  /*font-size: 0.95rem;*/
+  font-size: 16px;
   font-family: inherit;
 }
 
@@ -226,6 +233,11 @@ onUpdated(() => {
 .form-group textarea:focus {
   outline: none;
   border-color: #3498db;
+}
+
+.form-group input[type="datetime-local"] {
+  max-width: 100%;
+  -webkit-appearance: none;
 }
 
 .form-group textarea {
