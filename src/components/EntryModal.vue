@@ -2,9 +2,9 @@
   <div v-if="isOpen" class="modal-overlay" @click="$emit('close')">
     <div class="modal" @click.stop>
       <div class="modal-header">
-        <button type="button" class="btn-cancel" @click="cancel">Annuler</button>
-        <h2>{{ props.entry ? props.entry.title : "Nouvelle dépense" }}</h2>
-        <button type="submit" class="btn-submit" @click="handleSubmit">Enregistrer</button>
+        <button type="button" class="btn-cancel" @click="cancel">Cancel</button>
+        <h2>{{ props.entry ? props.entry.title : "New Entry" }}</h2>
+        <button type="submit" class="btn-submit" @click="handleSubmit">Save</button>
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
         <div class="form-row">
@@ -101,6 +101,7 @@ const defaultForm : CreateEntryRequest = {
 const form = reactive<CreateEntryRequest>({...defaultForm});
 
 watch(() => props.entry, (entry) => {
+  console.log("watch " + JSON.stringify(entry));
   if(entry) {
     Object.assign(form, getFormEntry(entry));
     isPositive.value = entry.amount > 0.0 ? true : false;
@@ -111,17 +112,22 @@ watch(() => props.entry, (entry) => {
   }
 }, {immediate: true});
 
- watch(() => props.isOpen, (open) => {
-    if (open) {
-      nextTick(() => {
-        inputRef.value?.focus();
-      });
-    }
-  });
+watch(() => props.isOpen, (open) => {
+  if (open) {
+    nextTick(() => {
+      inputRef.value?.focus();
+    });
+  }
+});
 
 const cancel = () => {
-  Object.assign(form, {...defaultForm});
-  isPositive.value = false;
+  // Need to verifiy if there is an entry because if we clear the data
+  // and we try to launch again the same entry, the watch props.entry
+  // is not triggered again so the form stays blank.
+  if (!props.entry) {
+    Object.assign(form, {...defaultForm});
+    isPositive.value = false;
+  }
   emit("close");
 };
 
@@ -136,7 +142,7 @@ const handleSubmit = () => {
   }
   emit('submit', submitData)
   // Reset the form
-  Object.assign(form, {...defaultForm});
+  Object.assign(form, defaultForm);
   isPositive.value = false;
 }
 
@@ -164,7 +170,7 @@ onUpdated(() => {
   inset: 0;
   background: rgba(0, 0, 0, 0.5);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   z-index: 1000;
   padding: 1rem;

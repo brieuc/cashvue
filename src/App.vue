@@ -4,6 +4,8 @@
     <div>
       <nav>
         <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/tags">Tags</RouterLink>
+        <RouterLink to="/periods">Periods</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>
@@ -25,3 +27,13 @@ import { RouterLink, RouterView } from 'vue-router'
   })
 
 </script>
+
+<style scoped>
+  nav a {
+    margin-right: 1rem;
+  }
+
+  nav a:last-child {
+    margin-right: 0;
+  }
+</style>

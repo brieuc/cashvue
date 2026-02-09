@@ -108,6 +108,7 @@ const handleSubmit = async (formData: EntryDto) => {
     formData.id = selectedEntry.value.id;
     editEntry(selectedEntry.value.id!, formData).then(response => {
       if (response.status === 200) {
+        emit("entriesChanged");
         isModalOpen.value = false
         // loadEntries() we don't want to reload the entire list
         const index = entries.value.findIndex(entry => entry.id === selectedEntry.value?.id);
@@ -122,6 +123,7 @@ const handleSubmit = async (formData: EntryDto) => {
   else {
     addEntry(formData).then(response => {
       if (response.status === 201) {
+        emit("entriesChanged");
         isModalOpen.value = false
         // loadEntries() we can just add the entry at the beginning of the array
         // it works only if the new entry should be in that list
@@ -146,7 +148,6 @@ const handleSubmit = async (formData: EntryDto) => {
       }
     })
   }
-  emit("entriesChanged");
 };
 
   /*
