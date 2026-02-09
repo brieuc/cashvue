@@ -1,7 +1,7 @@
 <template>
   <div style="display: flex; justify-content: space-between; align-items: center; padding: 0 1rem;">
       <span><h2>{{ nbEntries }} entrées</h2></span>
-      <span><h2>{{ currency }} {{ totalAmount }}</h2></span>
+      <span><h2>{{ formatAmount(totalAmount, currency) }}</h2></span>
     </div>
 </template>
 
@@ -49,6 +49,17 @@ watch(() => selectedPeriod, (period) => {
 watch(() => selectedTags, (tags) => {
   getComputation(selectedPeriod, tags);
 })
+
+// For an obscure reason, the fr-FR local doesn't manage the quote correctly and the currency code
+// which should be before the amount.
+const formatAmount = (amount: number, currencyCode: string, locale = 'de-CH') => {
+  if (!currencyCode)
+    return '';
+  return new Intl.NumberFormat(locale, {
+    style: 'currency',
+    currency: currencyCode,
+  }).format(amount)
+}
 
 const getComputation = (period : PeriodDto | undefined, selectedTags : TagDto[]) => {
   if (!period)

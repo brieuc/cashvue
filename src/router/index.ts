@@ -9,6 +9,22 @@ const routes: RouteRecordRaw[] = [
     component: HomeView,
   },
   {
+    path: '/tags',
+    name: 'tags',
+    // route level code-splitting
+    // this generates a separate chunk (About.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import('../components/tags/TagList.vue'),
+  },
+  {
+    path: '/periods',
+    name: 'periods',
+    // route level code-splitting
+    // this generates a separate chunk (About.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () => import('../components/periods/PeriodList.vue'),
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting

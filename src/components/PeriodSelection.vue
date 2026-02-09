@@ -53,7 +53,15 @@ const loadPeriods = () => {
 }
 
 onMounted(() => {
+  console.log("mounted period");
   loadPeriods();
+  // The periods update should treated in the watch but since
+  // we don't reload the usePeriod.periods every time, we need
+  // to manage the selected element directly there when the period
+  // is already loaded.
+  if (periods.value) {
+    selectedPeriod.value = periods.value?.[0];
+  }
 })
 
 </script>
