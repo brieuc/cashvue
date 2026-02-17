@@ -1,9 +1,9 @@
 <template>
 <div class="header-bar">
   <h1>Tags</h1>
-  <button class="add-btn" @click="selectedTag = newTag">+</button>
+  <button class="add-btn" @click="showModal = true">+</button>
 </div>
-<div v-if="selectedTag">
+<div v-if="showModal">
   <TagModal :tag="selectedTag" @submit="handleSubmit" @close="close"></TagModal>
 </div>
 <div class="card" v-for="tag in tags" v-bind:key="tag.id" @click="selectTag(tag)">
@@ -20,18 +20,14 @@ import { createTag, updateTag, type TagDto } from '@/api/generated';
 
 const { tags } = useTags();
 const selectedTag = ref<TagDto>();
+const showModal = ref<boolean>(false);
+
 
 const selectTag = (tag: TagDto) => {
   if (tag) {
+    showModal.value = true;
     selectedTag.value = tag;
   }
-};
-
-const newTag : TagDto = {
-  title: "",
-  description: "",
-  icon: "",
-  hidden: false
 };
 
 const handleSubmit = (tag: TagDto) => {
@@ -54,10 +50,12 @@ const handleSubmit = (tag: TagDto) => {
   });}
 
   selectedTag.value = undefined;
+  showModal.value = false;
 };
 
 const close = () => {
   selectedTag.value = undefined;
+  showModal.value = false;
 };
 
 </script>

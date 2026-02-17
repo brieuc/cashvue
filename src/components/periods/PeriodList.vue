@@ -1,7 +1,7 @@
 <template>
 <div class="header-bar">
   <h2>Mes Périodes</h2>
-  <button class="add-btn" @click="selectedPeriod = newPeriod; showModal = true">+</button>
+  <button class="add-btn" @click="showModal = true">+</button>
 </div>
 <div v-if="showModal">
   <PeriodModal :period="selectedPeriod" @submit="handleSubmit" @close="close"></PeriodModal>

@@ -33,18 +33,6 @@ type NonReadonly<T> = [T] extends [UnionToIntersection<T>] ? {
 } : DistributeReadOnlyOverUnions<T>;
 
 /**
- * Represents a monetary currency
- */
-export type CurrencyDto = {
-  /**
-   * ISO 4217 currency code (3 uppercase letters)
-   * @minLength 3
-   * @maxLength 3
-   */
-  code: string;
-};
-
-/**
  * Represents a tag/label for categorizing entries
  */
 export type TagDto = {
@@ -70,7 +58,12 @@ export type TagDto = {
    * @minimum 0
    */
   sortingOrder?: number;
-  currency?: CurrencyDto;
+  /**
+   * ISO 4217 currency code (3 letters)
+   * @minLength 3
+   * @maxLength 3
+   */
+  currencyCode: string;
   /** Whether the tag represents cumulative values */
   isCumulative?: boolean;
   /** Whether the tag is hidden from display */
@@ -116,7 +109,12 @@ export type PeriodDto = {
   startDate: string;
   /** End date and time of the period */
   endDate: string;
-  currency?: CurrencyDto;
+  /**
+   * ISO 4217 currency code (3 letters)
+   * @minLength 3
+   * @maxLength 3
+   */
+  currencyCode: string;
   /** Whether the period is hidden from display */
   hidden?: boolean;
 };
@@ -151,6 +149,20 @@ export type EntryDto = {
   currencyCode: string;
   /** List of tags/labels associated with this entry */
   tags?: TagDto[];
+};
+
+/**
+ * Represents a monetary currency
+ */
+export type CurrencyDto = {
+  /**
+   * ISO 4217 currency code (3 uppercase letters)
+   * @minLength 3
+   * @maxLength 3
+   */
+  code: string;
+  /** Whether this currency is the reference currency */
+  reference?: boolean;
 };
 
 /**
@@ -212,8 +224,8 @@ export type PageImplTagDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -241,8 +253,8 @@ export type PageImplRateDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -255,8 +267,8 @@ export type PageImplPeriodDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -269,8 +281,8 @@ export type PageImplEntryDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -283,8 +295,8 @@ export type PageImplCurrencyDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
