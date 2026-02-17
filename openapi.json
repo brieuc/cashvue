@@ -106,12 +106,6 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
-          },
-          "400": {
-            "description": "Données invalides"
-          },
           "200": {
             "description": "Tag mis à jour avec succès",
             "content": {
@@ -121,6 +115,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       },
@@ -145,11 +145,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
-          },
           "204": {
             "description": "Tag supprimé avec succès"
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       }
@@ -340,6 +340,12 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Période non trouvée"
+          },
+          "400": {
+            "description": "Données invalides"
+          },
           "200": {
             "description": "Période mise à jour avec succès",
             "content": {
@@ -349,12 +355,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Période non trouvée"
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       },
@@ -457,6 +457,9 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Entrée non trouvée"
+          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -469,9 +472,6 @@
           },
           "400": {
             "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
-          },
-          "404": {
-            "description": "Entrée non trouvée"
           }
         }
       },
@@ -825,9 +825,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Période créée avec succès",
             "content": {
@@ -837,6 +834,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1033,6 +1033,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Entrée créée avec succès",
             "content": {
@@ -1042,9 +1045,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1145,6 +1145,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Devise créée avec succès",
             "content": {
@@ -1154,9 +1157,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1181,9 +1181,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides ou taux de change manquant"
-          },
           "200": {
             "description": "Calcul effectué avec succès",
             "content": {
@@ -1193,6 +1190,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides ou taux de change manquant"
           }
         }
       }
@@ -1394,24 +1394,9 @@
   },
   "components": {
     "schemas": {
-      "CurrencyDto": {
-        "required": [
-          "code"
-        ],
-        "type": "object",
-        "properties": {
-          "code": {
-            "maxLength": 3,
-            "minLength": 3,
-            "type": "string",
-            "description": "ISO 4217 currency code (3 uppercase letters)",
-            "example": "CHF"
-          }
-        },
-        "description": "Represents a monetary currency"
-      },
       "TagDto": {
         "required": [
+          "currencyCode",
           "title"
         ],
         "type": "object",
@@ -1447,8 +1432,12 @@
             "format": "int32",
             "example": 10
           },
-          "currency": {
-            "$ref": "#/components/schemas/CurrencyDto"
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 currency code (3 letters)",
+            "example": "CHF"
           },
           "isCumulative": {
             "type": "boolean",
@@ -1519,6 +1508,7 @@
       },
       "PeriodDto": {
         "required": [
+          "currencyCode",
           "endDate",
           "startDate",
           "title"
@@ -1548,8 +1538,12 @@
             "description": "End date and time of the period",
             "format": "date-time"
           },
-          "currency": {
-            "$ref": "#/components/schemas/CurrencyDto"
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 currency code (3 letters)",
+            "example": "CHF"
           },
           "hidden": {
             "type": "boolean",
@@ -1629,6 +1623,26 @@
           }
         },
         "description": "Represents a financial entry (transaction)"
+      },
+      "CurrencyDto": {
+        "required": [
+          "code"
+        ],
+        "type": "object",
+        "properties": {
+          "code": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 currency code (3 uppercase letters)",
+            "example": "CHF"
+          },
+          "reference": {
+            "type": "boolean",
+            "description": "Whether this currency is the reference currency"
+          }
+        },
+        "description": "Represents a monetary currency"
       },
       "ComputationRequestDto": {
         "required": [
@@ -1784,12 +1798,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -1870,12 +1884,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -1916,12 +1930,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -1962,12 +1976,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2008,12 +2022,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
