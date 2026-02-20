@@ -28,10 +28,9 @@ export const customFetch = async <T>(
 
   const response = await fetch(finalUrl, {
     ...options,
-    headers: {
-      'Content-Type': 'application/json',
-      ...options?.headers,
-    },
+    headers: options?.body instanceof FormData
+      ? { ...options?.headers }
+      : { 'Content-Type': 'application/json', ...options?.headers },
   });
 
   const data = response.ok ? await response.json() : undefined;

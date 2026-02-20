@@ -12,14 +12,19 @@
       </div>
     </div>
   </div>
-  <div v-if="entry.tags?.length" class="tags">
-    <span v-for="tag in entry.tags" :key="tag.id" class="tag">#{{ tag.title }}</span>
+  <div v-if="entry.tags?.length">
+    <span v-for="tag in entry.tags" :key="tag.id">
+      <img class="tag-icon" :src="`${uploadsUrl}/${tag!.icon}`" />
+    </span>
+
   </div>
 </template>
 
 
 <script setup lang="ts">
 import type { EntryDto } from '@/api/generated';
+
+const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 
 const formatDate = (dateString: string): string => {
   if (!dateString) return ''
@@ -41,6 +46,15 @@ defineProps<props>();
 </script>
 
 <style>
+
+.tag-icon {
+    margin-left: 0.5rem;
+    border-radius: 3px;
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
 .card {
   background: #fff;
   border: 1px solid #e1e8ed;
