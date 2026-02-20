@@ -20,6 +20,11 @@
         <img class="tag-icon" :src="`${uploadsUrl}/${tag!.icon}`" />
         <input type="file" @change="uploadIcon" accept="image/*" />
       </div>
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="isCumulativeChk" v-model="form.isCumulative" />
+        <label for="isCumulativeChk">Cumulative Tag</label>
+
+      </div>
     </div>
   </div>
 </div>
@@ -54,7 +59,9 @@ const getFormTag = (t : TagDto) : TagDto => ({
   title: t.title,
   description: t.description,
   icon: t.icon,
-  hidden: t.hidden
+  hidden: t.hidden,
+  isCumulative: t.isCumulative,
+  currencyCode: t.currencyCode
 });
 
 const defaultForm : TagDto = {
@@ -62,7 +69,9 @@ const defaultForm : TagDto = {
   title: "",
   description: "",
   icon: "",
-  hidden: false
+  hidden: false,
+  currencyCode: "",
+  isCumulative: false
 };
 
 const form = reactive<TagDto>({...defaultForm});
@@ -153,6 +162,20 @@ const uploadIcon = async (event: Event) => {
   font-weight: 500;
   color: #2c3e50;
   font-size: 0.9rem;
+}
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+}
+
+.checkbox-group label {
+  margin-bottom: 0;
 }
 
 .form-group input,

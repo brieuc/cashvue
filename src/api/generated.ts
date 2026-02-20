@@ -115,6 +115,7 @@ export type PeriodDto = {
    * @maxLength 3
    */
   currencyCode?: string;
+
   /** Whether the period is hidden from display */
   hidden?: boolean;
 };
@@ -224,8 +225,8 @@ export type PageImplTagDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -253,8 +254,8 @@ export type PageImplRateDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -267,8 +268,8 @@ export type PageImplPeriodDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -281,8 +282,8 @@ export type PageImplEntryDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -295,8 +296,8 @@ export type PageImplCurrencyDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;

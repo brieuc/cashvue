@@ -106,12 +106,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
-          "404": {
-            "description": "Tag non trouvé"
-          },
           "200": {
             "description": "Tag mis à jour avec succès",
             "content": {
@@ -121,6 +115,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       },
@@ -145,11 +145,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
-          },
           "204": {
             "description": "Tag supprimé avec succès"
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       }
@@ -340,6 +340,9 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Période non trouvée"
+          },
           "400": {
             "description": "Données invalides"
           },
@@ -352,9 +355,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Période non trouvée"
           }
         }
       },
@@ -457,6 +457,9 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Entrée non trouvée"
+          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -466,7 +469,7 @@
                 }
               }
             }
-          },
+          },  
           "404": {
             "description": "Entrée non trouvée"
           },
@@ -896,9 +899,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Période créée avec succès",
             "content": {
@@ -908,6 +908,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1467,6 +1470,7 @@
     "schemas": {
       "TagDto": {
         "required": [
+          "currencyCode",
           "title"
         ],
         "type": "object",
@@ -1578,6 +1582,7 @@
       },
       "PeriodDto": {
         "required": [
+          "currencyCode",
           "endDate",
           "startDate",
           "title"
@@ -1867,12 +1872,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -1953,12 +1958,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -1999,12 +2004,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2045,12 +2050,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2091,12 +2096,12 @@
           "last": {
             "type": "boolean"
           },
-          "first": {
-            "type": "boolean"
-          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",

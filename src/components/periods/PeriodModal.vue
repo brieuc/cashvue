@@ -47,7 +47,7 @@ const getFormPeriod = (prd : PeriodDto) : PeriodDto => ({
   title: prd.title,
   startDate: prd.startDate,
   endDate: prd.endDate,
-  currency: prd.currency,
+  currencyCode: prd.currencyCode,
   hidden: prd.hidden
 });
 
@@ -56,6 +56,7 @@ const defaultForm : PeriodDto = {
   title: "",
   startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   endDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+  currencyCode: "",
   hidden: false
 };
 
