@@ -63,7 +63,7 @@ export type TagDto = {
    * @minLength 3
    * @maxLength 3
    */
-  currencyCode: string;
+  currencyCode?: string;
   /** Whether the tag represents cumulative values */
   isCumulative?: boolean;
   /** Whether the tag is hidden from display */
@@ -114,7 +114,8 @@ export type PeriodDto = {
    * @minLength 3
    * @maxLength 3
    */
-  currencyCode: string;
+  currencyCode?: string;
+
   /** Whether the period is hidden from display */
   hidden?: boolean;
 };
@@ -320,6 +321,10 @@ size?: number;
  * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
+};
+
+export type UploadIconBody = {
+  file: Blob;
 };
 
 export type GetRatesParams = {
@@ -1096,6 +1101,58 @@ export const createTag = async (tagDto: TagDto, options?: RequestInit): Promise<
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       tagDto,)
+  }
+);}
+
+
+
+/**
+ * @summary Uploader une icône pour un tag
+ */
+export type uploadIconResponse200 = {
+  data: TagDto
+  status: 200
+}
+
+export type uploadIconResponse400 = {
+  data: TagDto
+  status: 400
+}
+
+export type uploadIconResponse404 = {
+  data: TagDto
+  status: 404
+}
+    
+export type uploadIconResponseSuccess = (uploadIconResponse200) & {
+  headers: Headers;
+};
+export type uploadIconResponseError = (uploadIconResponse400 | uploadIconResponse404) & {
+  headers: Headers;
+};
+
+export type uploadIconResponse = (uploadIconResponseSuccess | uploadIconResponseError)
+
+export const getUploadIconUrl = (id: number,) => {
+
+
+  
+
+  return `/tags/${id}/icon`
+}
+
+export const uploadIcon = async (id: number,
+    uploadIconBody: UploadIconBody, options?: RequestInit): Promise<uploadIconResponse> => {
+    const formData = new FormData();
+formData.append(`file`, uploadIconBody.file)
+
+  return customFetch<uploadIconResponse>(getUploadIconUrl(id),
+  {      
+    ...options,
+    method: 'POST'
+    ,
+    body: 
+      formData,
   }
 );}
 

@@ -223,8 +223,8 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Taux non trouvé"
+          "400": {
+            "description": "Données invalides"
           },
           "200": {
             "description": "Taux mis à jour avec succès",
@@ -236,8 +236,8 @@
               }
             }
           },
-          "400": {
-            "description": "Données invalides"
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       },
@@ -262,11 +262,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Taux non trouvé"
-          },
           "204": {
             "description": "Taux supprimé avec succès"
+          },
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       }
@@ -379,11 +379,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
           "204": {
             "description": "Période supprimée avec succès"
+          },
+          "404": {
+            "description": "Période non trouvée"
           }
         }
       }
@@ -410,9 +410,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Entrée non trouvée"
-          },
           "200": {
             "description": "Entrée trouvée",
             "content": {
@@ -422,6 +419,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Entrée non trouvée"
           }
         }
       },
@@ -469,6 +469,9 @@
                 }
               }
             }
+          },  
+          "404": {
+            "description": "Entrée non trouvée"
           },
           "400": {
             "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
@@ -496,11 +499,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Entrée non trouvée"
-          },
           "204": {
             "description": "Entrée supprimée avec succès"
+          },
+          "404": {
+            "description": "Entrée non trouvée"
           }
         }
       }
@@ -601,6 +604,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Tag créé avec succès",
             "content": {
@@ -610,9 +616,77 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/tags/{id}/icon": {
+      "post": {
+        "tags": [
+          "Tags"
+        ],
+        "summary": "Uploader une icône pour un tag",
+        "operationId": "uploadIcon",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Tag id",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Icône uploadée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDto"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tag non trouvé",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDto"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Données invalides"
+            "description": "Fichier invalide",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TagDto"
+                }
+              }
+            }
           }
         }
       }
@@ -1310,6 +1384,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Aucune période ne contient cette date"
+          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -1319,9 +1396,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Aucune période ne contient cette date"
           }
         }
       }
@@ -1347,6 +1421,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Devise non trouvée"
+          },
           "200": {
             "description": "Devise trouvée",
             "content": {
@@ -1356,9 +1433,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Devise non trouvée"
           }
         }
       },
@@ -1382,11 +1456,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Devise supprimée avec succès"
-          },
           "404": {
             "description": "Devise non trouvée"
+          },
+          "204": {
+            "description": "Devise supprimée avec succès"
           }
         }
       }

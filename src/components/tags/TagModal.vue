@@ -16,9 +16,14 @@
       <div class="form-group">
         <input v-model="form.icon" type="text" placeholder="Icon">
       </div>
+      <div>
+        <img class="tag-icon" :src="`${uploadsUrl}/${tag!.icon}`" />
+        <input type="file" @change="uploadIcon" accept="image/*" />
+      </div>
       <div class="form-group checkbox-group">
         <input type="checkbox" id="isCumulativeChk" v-model="form.isCumulative" />
         <label for="isCumulativeChk">Cumulative Tag</label>
+
       </div>
     </div>
   </div>
@@ -29,12 +34,15 @@
 <script setup lang="ts">
 import type { TagDto } from '@/api/generated';
 import { reactive, watch } from 'vue';
+import { useTags } from '@/composables/useTags';
 
+const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 
 interface props {
   tag?: TagDto
 }
 const { tag } = defineProps<props>();
+const { uploadIconFile } = useTags();
 
 interface emits {
   close: [],
@@ -87,9 +95,25 @@ const cancel = () => {
   emit("close");
 };
 
+const uploadIcon = async (event: Event) => {
+  if (!tag) return;
+  const input = event.target as HTMLInputElement;
+  const file = input.files?.[0];
+  if (!file) return;
+  uploadIconFile(tag.id!, {file : file}).then(returnedTag =>
+    Object.assign(form, returnedTag)
+  );
+};
+
 </script>
 
 <style>
+.tag-icon {
+    width: 32px;
+    height: 32px;
+    object-fit: contain;
+}
+
 .modal-overlay {
   position: fixed;
   inset: 0;
