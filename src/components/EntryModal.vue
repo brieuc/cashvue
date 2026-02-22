@@ -78,7 +78,7 @@ const emit = defineEmits<{
   submit: [data: CreateEntryRequest]
 }>()
 
- const isPositive = ref<boolean>(false);
+const isPositive = ref<boolean>(false);
 
 const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
   title: entry.title,

@@ -16,14 +16,16 @@
       <div class="form-group">
         <input v-model="form.icon" type="text" placeholder="Icon">
       </div>
-      <div>
-        <img class="tag-icon" :src="`${uploadsUrl}/${tag!.icon}`" />
+      <div class="form-group">
+        <input v-model="form.sortingOrder" type="text" placeholder="Sorting Order">
+      </div>
+      <div v-if="tag">
+        <img class="tag-icon" :src="`${uploadsUrl}/${tag.icon}`" />
         <input type="file" @change="uploadIcon" accept="image/*" />
       </div>
       <div class="form-group checkbox-group">
         <input type="checkbox" id="isCumulativeChk" v-model="form.isCumulative" />
         <label for="isCumulativeChk">Cumulative Tag</label>
-
       </div>
     </div>
   </div>
@@ -61,7 +63,8 @@ const getFormTag = (t : TagDto) : TagDto => ({
   icon: t.icon,
   hidden: t.hidden,
   isCumulative: t.isCumulative,
-  currencyCode: t.currencyCode
+  currencyCode: t.currencyCode,
+  sortingOrder: t.sortingOrder
 });
 
 const defaultForm : TagDto = {
@@ -71,7 +74,8 @@ const defaultForm : TagDto = {
   icon: "",
   hidden: false,
   currencyCode: "",
-  isCumulative: false
+  isCumulative: false,
+  sortingOrder: undefined
 };
 
 const form = reactive<TagDto>({...defaultForm});
