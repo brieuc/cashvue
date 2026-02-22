@@ -1,6 +1,6 @@
 <template>
 <div>
-    <button v-for="period in periods" :key="period.id" type="button" @click="select(period)"
+    <button v-for="period in availablePeriods" :key="period.id" type="button" @click="select(period)"
       :class="['tag-btn', { active: selectedPeriod?.id === period.id }]">
       {{ period.title }}
     </button>
@@ -10,7 +10,7 @@
 <script setup lang="ts">
 import { type GetPeriodsParams, type PeriodDto } from '@/api/generated';
 import { usePeriods } from '@/composables/usePeriods';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, watch } from 'vue';
 
 //const selectedPeriod = ref<PeriodDto | undefined>();
 const {periods, fetchPeriods} = usePeriods();
@@ -21,7 +21,9 @@ interface Emit {
   select: [PeriodDto]
 }
 
-watch(periods, (periods) => {
+const availablePeriods = computed(() => periods.value.filter(p => !p.hidden));
+
+watch(availablePeriods, (periods) => {
   const first = periods?.[0];
   if (first) {
     console.log("emit " + JSON.stringify(first));

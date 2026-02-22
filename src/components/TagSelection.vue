@@ -24,7 +24,7 @@ const emit = defineEmits<{
 
 const {fetchTags, tags} = useTags();
 
-const availableTags = computed(() => tags.value);
+const availableTags = computed(() => tags.value.filter(t => !t.hidden));
 
 const toggleTag = (selectedTag: TagDto | undefined) => {
   if (!selectedTag)

@@ -16,6 +16,10 @@
       <div class="form-group">
         <input v-model="form.endDate" type="datetime-local">
       </div>
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="hiddenChk" v-model="form.hidden" />
+        <label for="hiddenChk">Hidden</label>
+      </div>
     </div>
   </div>
 </div>
@@ -161,6 +165,17 @@ const cancel = () => {
 .form-group textarea {
   resize: vertical;
 }
+
+.checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.checkbox-group input[type="checkbox"] {
+  width: auto;
+}
+
 
 .btn-cancel,
 .btn-submit {
