@@ -6,7 +6,7 @@
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/tags">Tags</RouterLink>
         <RouterLink to="/periods">Periods</RouterLink>
-        <RouterLink to="/recurrency">Periods</RouterLink>
+        <RouterLink to="/recurrences">Recurrences</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>

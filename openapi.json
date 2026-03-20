@@ -16,6 +16,10 @@
       "description": "API de gestion des taux de change"
     },
     {
+      "name": "Recurrences",
+      "description": "API de gestion des transactions récurrentes"
+    },
+    {
       "name": "Currencies",
       "description": "API de gestion des devises"
     },
@@ -106,6 +110,12 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Tag non trouvé"
+          },
           "200": {
             "description": "Tag mis à jour avec succès",
             "content": {
@@ -115,12 +125,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
-          },
-          "404": {
-            "description": "Tag non trouvé"
           }
         }
       },
@@ -145,11 +149,128 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Tag supprimé avec succès"
-          },
           "404": {
             "description": "Tag non trouvé"
+          },
+          "204": {
+            "description": "Tag supprimé avec succès"
+          }
+        }
+      }
+    },
+    "/recurrences/{id}": {
+      "get": {
+        "tags": [
+          "Recurrences"
+        ],
+        "summary": "Récupérer une récurrence par son ID",
+        "description": "Retourne une récurrence spécifique identifiée par son ID",
+        "operationId": "getRecurrenceById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de la récurrence à récupérer",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "404": {
+            "description": "Récurrence non trouvée"
+          },
+          "200": {
+            "description": "Récurrence trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurrenceDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Recurrences"
+        ],
+        "summary": "Mettre à jour une récurrence",
+        "description": "Met à jour une récurrence existante avec les nouvelles informations fournies",
+        "operationId": "updateRecurrence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de la récurrence à mettre à jour",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "requestBody": {
+          "description": "Nouvelles informations de la récurrence",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecurrenceDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
+          },
+          "200": {
+            "description": "Récurrence mise à jour avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurrenceDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Recurrences"
+        ],
+        "summary": "Supprimer une récurrence",
+        "description": "Supprime définitivement une récurrence existante",
+        "operationId": "deleteRecurrence",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID de la récurrence à supprimer",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "example": 1
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Récurrence supprimée avec succès"
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       }
@@ -176,9 +297,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Taux non trouvé"
-          },
           "200": {
             "description": "Taux trouvé",
             "content": {
@@ -188,6 +306,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       },
@@ -340,11 +461,11 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
           "400": {
             "description": "Données invalides"
+          },
+          "404": {
+            "description": "Période non trouvée"
           },
           "200": {
             "description": "Période mise à jour avec succès",
@@ -469,9 +590,6 @@
                 }
               }
             }
-          },  
-          "404": {
-            "description": "Entrée non trouvée"
           },
           "400": {
             "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
@@ -691,6 +809,194 @@
         }
       }
     },
+    "/recurrences": {
+      "get": {
+        "tags": [
+          "Recurrences"
+        ],
+        "summary": "Récupérer toutes les récurrences",
+        "description": "Retourne une liste paginée de récurrences filtrées selon les critères fournis",
+        "operationId": "getRecurrences",
+        "parameters": [
+          {
+            "name": "startDate",
+            "in": "query",
+            "description": "Start date filter (inclusive)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Start date filter (inclusive)",
+              "format": "date",
+              "example": "2024-01-01"
+            },
+            "example": "2024-01-01"
+          },
+          {
+            "name": "endDate",
+            "in": "query",
+            "description": "End date filter (inclusive)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "End date filter (inclusive)",
+              "format": "date",
+              "example": "2026-12-31"
+            },
+            "example": "2026-12-31"
+          },
+          {
+            "name": "tagIds",
+            "in": "query",
+            "description": "List of tag IDs to filter recurrences",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "List of tag IDs to filter recurrences",
+              "example": [1, 2, 5],
+              "items": {
+                "type": "integer",
+                "description": "List of tag IDs to filter recurrences",
+                "format": "int64"
+              }
+            },
+            "example": [1, 2, 5]
+          },
+          {
+            "name": "frequencies",
+            "in": "query",
+            "description": "Frequencies to filter recurrences",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "Frequencies to filter recurrences",
+              "example": [
+                "MONTHLY",
+                "YEARLY"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Frequencies to filter recurrences",
+                "example": "[\"MONTHLY\",\"YEARLY\"]",
+                "enum": [
+                  "DAILY",
+                  "WEEKLY",
+                  "MONTHLY",
+                  "QUARTERLY",
+                  "YEARLY",
+                  "NONE"
+                ]
+              }
+            },
+            "example": [
+              "MONTHLY",
+              "YEARLY"
+            ]
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page number (starts at 0)",
+            "required": false,
+            "schema": {
+              "maximum": 2147483647,
+              "minimum": 0,
+              "type": "integer",
+              "description": "Page number (starts at 0)",
+              "format": "int32",
+              "example": 0,
+              "default": 0
+            },
+            "example": 0
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "description": "Number of elements per page",
+            "required": false,
+            "schema": {
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer",
+              "description": "Number of elements per page",
+              "format": "int32",
+              "example": 20
+            },
+            "example": 20
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+              "example": [
+                "accountingDate:desc",
+                "title:asc"
+              ],
+              "items": {
+                "type": "string",
+                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
+                "example": "[\"accountingDate:desc\",\"title:asc\"]"
+              }
+            },
+            "example": [
+              "accountingDate:desc",
+              "title:asc"
+            ]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageImplRecurrenceDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Recurrences"
+        ],
+        "summary": "Créer une nouvelle récurrence",
+        "description": "Crée une nouvelle transaction récurrente avec les informations fournies",
+        "operationId": "createRecurrence",
+        "requestBody": {
+          "description": "Informations de la récurrence à créer",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecurrenceDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
+          "201": {
+            "description": "Récurrence créée avec succès",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecurrenceDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rates": {
       "get": {
         "tags": [
@@ -787,6 +1093,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Taux créé avec succès",
             "content": {
@@ -796,9 +1105,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -899,6 +1205,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Période créée avec succès",
             "content": {
@@ -908,9 +1217,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1470,7 +1776,7 @@
     "schemas": {
       "TagDto": {
         "required": [
-          "currencyCode",
+          "sortingOrder",
           "title"
         ],
         "type": "object",
@@ -1536,6 +1842,81 @@
           }
         ]
       },
+      "RecurrenceDto": {
+        "required": [
+          "amount",
+          "currencyCode",
+          "frequency",
+          "startDate",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the recurrence",
+            "format": "int64",
+            "example": 1
+          },
+          "modificationDate": {
+            "type": "string",
+            "description": "Last modification date (managed automatically)",
+            "format": "date-time",
+            "readOnly": true
+          },
+          "title": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Title or label of the recurrence",
+            "example": "Loyer"
+          },
+          "description": {
+            "maxLength": 1000,
+            "type": "string",
+            "description": "Detailed description of the recurrence",
+            "example": "Loyer mensuel appartement"
+          },
+          "amount": {
+            "type": "number",
+            "description": "Transaction amount (positive for credit, negative for debit)",
+            "example": 1200
+          },
+          "currencyCode": {
+            "maxLength": 3,
+            "minLength": 3,
+            "type": "string",
+            "description": "ISO 4217 currency code (3 letters)",
+            "example": "CHF"
+          },
+          "startDate": {
+            "type": "string",
+            "description": "Start date of the recurrence",
+            "format": "date",
+            "example": "2024-01-01"
+          },
+          "frequency": {
+            "type": "string",
+            "description": "Recurrence frequency",
+            "example": "MONTHLY",
+            "enum": [
+              "DAILY",
+              "WEEKLY",
+              "MONTHLY",
+              "QUARTERLY",
+              "YEARLY",
+              "NONE"
+            ]
+          },
+          "tags": {
+            "type": "array",
+            "description": "List of tags associated with this recurrence",
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          }
+        },
+        "description": "Represents a recurring financial transaction"
+      },
       "RateDto": {
         "required": [
           "rate",
@@ -1582,7 +1963,6 @@
       },
       "PeriodDto": {
         "required": [
-          "currencyCode",
           "endDate",
           "startDate",
           "title"
@@ -1678,7 +2058,6 @@
             "example": "CHF"
           },
           "tags": {
-            "uniqueItems": true,
             "type": "array",
             "description": "List of tags/labels associated with this entry",
             "example": [
@@ -1872,12 +2251,12 @@
           "last": {
             "type": "boolean"
           },
+          "first": {
+            "type": "boolean"
+          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -1935,6 +2314,52 @@
           }
         }
       },
+      "PageImplRecurrenceDto": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RecurrenceDto"
+            }
+          },
+          "pageable": {
+            "$ref": "#/components/schemas/PageableObject"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "last": {
+            "type": "boolean"
+          },
+          "first": {
+            "type": "boolean"
+          },
+          "numberOfElements": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "sort": {
+            "$ref": "#/components/schemas/SortObject"
+          },
+          "empty": {
+            "type": "boolean"
+          }
+        }
+      },
       "PageImplRateDto": {
         "type": "object",
         "properties": {
@@ -1958,12 +2383,12 @@
           "last": {
             "type": "boolean"
           },
+          "first": {
+            "type": "boolean"
+          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2004,12 +2429,12 @@
           "last": {
             "type": "boolean"
           },
+          "first": {
+            "type": "boolean"
+          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2050,12 +2475,12 @@
           "last": {
             "type": "boolean"
           },
+          "first": {
+            "type": "boolean"
+          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2096,12 +2521,12 @@
           "last": {
             "type": "boolean"
           },
+          "first": {
+            "type": "boolean"
+          },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
           },
           "size": {
             "type": "integer",

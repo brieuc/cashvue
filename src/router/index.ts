@@ -25,6 +25,11 @@ const routes: RouteRecordRaw[] = [
     component: () => import('../components/periods/PeriodList.vue'),
   },
   {
+    path: '/recurrences',
+    name: 'recurrences',
+    component: () => import('../components/recurrences/RecurrenceList.vue'),
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting
