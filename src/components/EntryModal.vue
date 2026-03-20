@@ -148,7 +148,6 @@ const handleSubmit = () => {
 
 const loadCurrencies = () => {
   const params : GetCurrenciesParams = {
-
   };
   fetchCurrencies(params);
 }

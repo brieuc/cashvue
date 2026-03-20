@@ -57,7 +57,7 @@ export type TagDto = {
    * Sort order for display
    * @minimum 0
    */
-  sortingOrder?: number;
+  sortingOrder: number;
   /**
    * ISO 4217 currency code (3 letters)
    * @minLength 3
@@ -68,6 +68,56 @@ export type TagDto = {
   isCumulative?: boolean;
   /** Whether the tag is hidden from display */
   hidden?: boolean;
+};
+
+/**
+ * Recurrence frequency
+ */
+export type RecurrenceDtoFrequency = typeof RecurrenceDtoFrequency[keyof typeof RecurrenceDtoFrequency];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const RecurrenceDtoFrequency = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  QUARTERLY: 'QUARTERLY',
+  YEARLY: 'YEARLY',
+  NONE: 'NONE',
+} as const;
+
+/**
+ * Represents a recurring financial transaction
+ */
+export type RecurrenceDto = {
+  /** Unique identifier of the recurrence */
+  id?: number;
+  /** Last modification date (managed automatically) */
+  readonly modificationDate?: string;
+  /**
+   * Title or label of the recurrence
+   * @maxLength 255
+   */
+  title: string;
+  /**
+   * Detailed description of the recurrence
+   * @maxLength 1000
+   */
+  description?: string;
+  /** Transaction amount (positive for credit, negative for debit) */
+  amount: number;
+  /**
+   * ISO 4217 currency code (3 letters)
+   * @minLength 3
+   * @maxLength 3
+   */
+  currencyCode: string;
+  /** Start date of the recurrence */
+  startDate: string;
+  /** Recurrence frequency */
+  frequency: RecurrenceDtoFrequency;
+  /** List of tags associated with this recurrence */
+  tags?: TagDto[];
 };
 
 /**
@@ -115,7 +165,6 @@ export type PeriodDto = {
    * @maxLength 3
    */
   currencyCode?: string;
-
   /** Whether the period is hidden from display */
   hidden?: boolean;
 };
@@ -225,8 +274,8 @@ export type PageImplTagDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  numberOfElements?: number;
   first?: boolean;
+  numberOfElements?: number;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -248,14 +297,28 @@ export type SortObject = {
   empty?: boolean;
 };
 
+export type PageImplRecurrenceDto = {
+  content?: RecurrenceDto[];
+  pageable?: PageableObject;
+  totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
+  first?: boolean;
+  numberOfElements?: number;
+  size?: number;
+  number?: number;
+  sort?: SortObject;
+  empty?: boolean;
+};
+
 export type PageImplRateDto = {
   content?: RateDto[];
   pageable?: PageableObject;
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  numberOfElements?: number;
   first?: boolean;
+  numberOfElements?: number;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -268,8 +331,8 @@ export type PageImplPeriodDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  numberOfElements?: number;
   first?: boolean;
+  numberOfElements?: number;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -282,8 +345,8 @@ export type PageImplEntryDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  numberOfElements?: number;
   first?: boolean;
+  numberOfElements?: number;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -296,8 +359,8 @@ export type PageImplCurrencyDto = {
   totalElements?: number;
   totalPages?: number;
   last?: boolean;
-  numberOfElements?: number;
   first?: boolean;
+  numberOfElements?: number;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -326,6 +389,57 @@ sort?: string[];
 export type UploadIconBody = {
   file: Blob;
 };
+
+export type GetRecurrencesParams = {
+/**
+ * Start date filter (inclusive)
+ */
+startDate?: string;
+/**
+ * End date filter (inclusive)
+ */
+endDate?: string;
+/**
+ * List of tag IDs to filter recurrences
+ */
+tagIds?: number[];
+/**
+ * Frequencies to filter recurrences
+ */
+frequencies?: GetRecurrencesFrequenciesItem[];
+/**
+ * Page number (starts at 0)
+ * @minimum 0
+ * @maximum 2147483647
+ */
+page?: number;
+/**
+ * Number of elements per page
+ * @minimum 1
+ * @maximum 1000
+ */
+size?: number;
+/**
+ * Sort criteria (format: 'property:direction' where direction = asc|desc)
+ */
+sort?: string[];
+};
+
+/**
+ * Frequencies to filter recurrences
+ */
+export type GetRecurrencesFrequenciesItem = typeof GetRecurrencesFrequenciesItem[keyof typeof GetRecurrencesFrequenciesItem];
+
+
+// eslint-disable-next-line @typescript-eslint/no-redeclare
+export const GetRecurrencesFrequenciesItem = {
+  DAILY: 'DAILY',
+  WEEKLY: 'WEEKLY',
+  MONTHLY: 'MONTHLY',
+  QUARTERLY: 'QUARTERLY',
+  YEARLY: 'YEARLY',
+  NONE: 'NONE',
+} as const;
 
 export type GetRatesParams = {
 /**
@@ -582,6 +696,145 @@ export const getDeleteTagUrl = (id: number,) => {
 export const deleteTag = async (id: number, options?: RequestInit): Promise<deleteTagResponse> => {
   
   return customFetch<deleteTagResponse>(getDeleteTagUrl(id),
+  {      
+    ...options,
+    method: 'DELETE'
+    
+    
+  }
+);}
+
+
+
+/**
+ * Retourne une récurrence spécifique identifiée par son ID
+ * @summary Récupérer une récurrence par son ID
+ */
+export type getRecurrenceByIdResponse200 = {
+  data: RecurrenceDto
+  status: 200
+}
+
+export type getRecurrenceByIdResponse404 = {
+  data: void
+  status: 404
+}
+    
+export type getRecurrenceByIdResponseSuccess = (getRecurrenceByIdResponse200) & {
+  headers: Headers;
+};
+export type getRecurrenceByIdResponseError = (getRecurrenceByIdResponse404) & {
+  headers: Headers;
+};
+
+export type getRecurrenceByIdResponse = (getRecurrenceByIdResponseSuccess | getRecurrenceByIdResponseError)
+
+export const getGetRecurrenceByIdUrl = (id: number,) => {
+
+
+  
+
+  return `/recurrences/${id}`
+}
+
+export const getRecurrenceById = async (id: number, options?: RequestInit): Promise<getRecurrenceByIdResponse> => {
+  
+  return customFetch<getRecurrenceByIdResponse>(getGetRecurrenceByIdUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+/**
+ * Met à jour une récurrence existante avec les nouvelles informations fournies
+ * @summary Mettre à jour une récurrence
+ */
+export type updateRecurrenceResponse200 = {
+  data: RecurrenceDto
+  status: 200
+}
+
+export type updateRecurrenceResponse400 = {
+  data: void
+  status: 400
+}
+
+export type updateRecurrenceResponse404 = {
+  data: void
+  status: 404
+}
+    
+export type updateRecurrenceResponseSuccess = (updateRecurrenceResponse200) & {
+  headers: Headers;
+};
+export type updateRecurrenceResponseError = (updateRecurrenceResponse400 | updateRecurrenceResponse404) & {
+  headers: Headers;
+};
+
+export type updateRecurrenceResponse = (updateRecurrenceResponseSuccess | updateRecurrenceResponseError)
+
+export const getUpdateRecurrenceUrl = (id: number,) => {
+
+
+  
+
+  return `/recurrences/${id}`
+}
+
+export const updateRecurrence = async (id: number,
+    recurrenceDto: NonReadonly<RecurrenceDto>, options?: RequestInit): Promise<updateRecurrenceResponse> => {
+  
+  return customFetch<updateRecurrenceResponse>(getUpdateRecurrenceUrl(id),
+  {      
+    ...options,
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      recurrenceDto,)
+  }
+);}
+
+
+
+/**
+ * Supprime définitivement une récurrence existante
+ * @summary Supprimer une récurrence
+ */
+export type deleteRecurrenceResponse204 = {
+  data: void
+  status: 204
+}
+
+export type deleteRecurrenceResponse404 = {
+  data: void
+  status: 404
+}
+    
+export type deleteRecurrenceResponseSuccess = (deleteRecurrenceResponse204) & {
+  headers: Headers;
+};
+export type deleteRecurrenceResponseError = (deleteRecurrenceResponse404) & {
+  headers: Headers;
+};
+
+export type deleteRecurrenceResponse = (deleteRecurrenceResponseSuccess | deleteRecurrenceResponseError)
+
+export const getDeleteRecurrenceUrl = (id: number,) => {
+
+
+  
+
+  return `/recurrences/${id}`
+}
+
+export const deleteRecurrence = async (id: number, options?: RequestInit): Promise<deleteRecurrenceResponse> => {
+  
+  return customFetch<deleteRecurrenceResponse>(getDeleteRecurrenceUrl(id),
   {      
     ...options,
     method: 'DELETE'
@@ -1153,6 +1406,103 @@ formData.append(`file`, uploadIconBody.file)
     ,
     body: 
       formData,
+  }
+);}
+
+
+
+/**
+ * Retourne une liste paginée de récurrences filtrées selon les critères fournis
+ * @summary Récupérer toutes les récurrences
+ */
+export type getRecurrencesResponse200 = {
+  data: PageImplRecurrenceDto
+  status: 200
+}
+    
+export type getRecurrencesResponseSuccess = (getRecurrencesResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getRecurrencesResponse = (getRecurrencesResponseSuccess)
+
+export const getGetRecurrencesUrl = (params?: GetRecurrencesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["tagIds","frequencies","sort"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/recurrences?${stringifiedParams}` : `/recurrences`
+}
+
+export const getRecurrences = async (params?: GetRecurrencesParams, options?: RequestInit): Promise<getRecurrencesResponse> => {
+  
+  return customFetch<getRecurrencesResponse>(getGetRecurrencesUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+/**
+ * Crée une nouvelle transaction récurrente avec les informations fournies
+ * @summary Créer une nouvelle récurrence
+ */
+export type createRecurrenceResponse201 = {
+  data: RecurrenceDto
+  status: 201
+}
+
+export type createRecurrenceResponse400 = {
+  data: void
+  status: 400
+}
+    
+export type createRecurrenceResponseSuccess = (createRecurrenceResponse201) & {
+  headers: Headers;
+};
+export type createRecurrenceResponseError = (createRecurrenceResponse400) & {
+  headers: Headers;
+};
+
+export type createRecurrenceResponse = (createRecurrenceResponseSuccess | createRecurrenceResponseError)
+
+export const getCreateRecurrenceUrl = () => {
+
+
+  
+
+  return `/recurrences`
+}
+
+export const createRecurrence = async (recurrenceDto: NonReadonly<RecurrenceDto>, options?: RequestInit): Promise<createRecurrenceResponse> => {
+  
+  return customFetch<createRecurrenceResponse>(getCreateRecurrenceUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      recurrenceDto,)
   }
 );}
 

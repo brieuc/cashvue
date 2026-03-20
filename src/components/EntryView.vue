@@ -16,7 +16,6 @@
     <span v-for="tag in entry.tags" :key="tag.id">
       <img class="tag-icon" :src="`${uploadsUrl}/${tag!.icon}`" />
     </span>
-
   </div>
 </template>
 
