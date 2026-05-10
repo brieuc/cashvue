@@ -163,8 +163,9 @@ export type PeriodDto = {
    * ISO 4217 currency code (3 letters)
    * @minLength 3
    * @maxLength 3
+   * @nullable
    */
-  currencyCode?: string;
+  currencyCode?: string | null;
   /** Whether the period is hidden from display */
   hidden?: boolean;
 };
@@ -271,9 +272,9 @@ export type ComputationResponseDto = {
 export type PageImplTagDto = {
   content?: TagDto[];
   pageable?: PageableObject;
-  totalElements?: number;
-  totalPages?: number;
   last?: boolean;
+  totalPages?: number;
+  totalElements?: number;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -283,26 +284,26 @@ export type PageImplTagDto = {
 };
 
 export type PageableObject = {
-  unpaged?: boolean;
   paged?: boolean;
   pageNumber?: number;
   pageSize?: number;
+  unpaged?: boolean;
   offset?: number;
   sort?: SortObject;
 };
 
 export type SortObject = {
-  unsorted?: boolean;
   sorted?: boolean;
+  unsorted?: boolean;
   empty?: boolean;
 };
 
 export type PageImplRecurrenceDto = {
   content?: RecurrenceDto[];
   pageable?: PageableObject;
-  totalElements?: number;
-  totalPages?: number;
   last?: boolean;
+  totalPages?: number;
+  totalElements?: number;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -314,9 +315,9 @@ export type PageImplRecurrenceDto = {
 export type PageImplRateDto = {
   content?: RateDto[];
   pageable?: PageableObject;
-  totalElements?: number;
-  totalPages?: number;
   last?: boolean;
+  totalPages?: number;
+  totalElements?: number;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -328,9 +329,9 @@ export type PageImplRateDto = {
 export type PageImplPeriodDto = {
   content?: PeriodDto[];
   pageable?: PageableObject;
-  totalElements?: number;
-  totalPages?: number;
   last?: boolean;
+  totalPages?: number;
+  totalElements?: number;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -342,9 +343,9 @@ export type PageImplPeriodDto = {
 export type PageImplEntryDto = {
   content?: EntryDto[];
   pageable?: PageableObject;
-  totalElements?: number;
-  totalPages?: number;
   last?: boolean;
+  totalPages?: number;
+  totalElements?: number;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -356,9 +357,9 @@ export type PageImplEntryDto = {
 export type PageImplCurrencyDto = {
   content?: CurrencyDto[];
   pageable?: PageableObject;
-  totalElements?: number;
-  totalPages?: number;
   last?: boolean;
+  totalPages?: number;
+  totalElements?: number;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -539,6 +540,17 @@ size?: number;
  * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
+};
+
+export type SimulateEntriesParams = {
+/**
+ * Date de début de la période (inclusive)
+ */
+fromDate: string;
+/**
+ * Date de fin de la période (inclusive)
+ */
+toDate: string;
 };
 
 export type GetRatesByCurrencyParams = {
@@ -1800,6 +1812,51 @@ export const createEntry = async (entryDto: NonReadonly<EntryDto>, options?: Req
 
 
 /**
+ * Crée plusieurs entrées financières en une seule transaction
+ * @summary Créer plusieurs entrées en lot
+ */
+export type createBatchResponse201 = {
+  data: EntryDto
+  status: 201
+}
+
+export type createBatchResponse400 = {
+  data: void
+  status: 400
+}
+    
+export type createBatchResponseSuccess = (createBatchResponse201) & {
+  headers: Headers;
+};
+export type createBatchResponseError = (createBatchResponse400) & {
+  headers: Headers;
+};
+
+export type createBatchResponse = (createBatchResponseSuccess | createBatchResponseError)
+
+export const getCreateBatchUrl = () => {
+
+
+  
+
+  return `/entries/batch`
+}
+
+export const createBatch = async (entryDto: NonReadonly<EntryDto[]>, options?: RequestInit): Promise<createBatchResponse> => {
+  
+  return customFetch<createBatchResponse>(getCreateBatchUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      entryDto,)
+  }
+);}
+
+
+
+/**
  * Retourne une liste paginée de toutes les devises
  * @summary Récupérer toutes les devises
  */
@@ -1936,6 +1993,50 @@ export const compute = async (computationRequestDto: ComputationRequestDto, opti
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       computationRequestDto,)
+  }
+);}
+
+
+
+/**
+ * Retourne les entrées qui seraient générées par les récurrences actives entre fromDate et toDate
+ * @summary Simuler les entrées récurrentes sur une période
+ */
+export type simulateEntriesResponse200 = {
+  data: EntryDto[]
+  status: 200
+}
+    
+export type simulateEntriesResponseSuccess = (simulateEntriesResponse200) & {
+  headers: Headers;
+};
+;
+
+export type simulateEntriesResponse = (simulateEntriesResponseSuccess)
+
+export const getSimulateEntriesUrl = (params: SimulateEntriesParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    
+    if (value !== undefined) {
+      normalizedParams.append(key, value === null ? 'null' : value.toString())
+    }
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/recurrences/simulate?${stringifiedParams}` : `/recurrences/simulate`
+}
+
+export const simulateEntries = async (params: SimulateEntriesParams, options?: RequestInit): Promise<simulateEntriesResponse> => {
+  
+  return customFetch<simulateEntriesResponse>(getSimulateEntriesUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
 );}
 

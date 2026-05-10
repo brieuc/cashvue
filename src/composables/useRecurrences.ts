@@ -1,4 +1,4 @@
-import { getRecurrences, createRecurrence, updateRecurrence, type GetRecurrencesParams, type RecurrenceDto } from "@/api/generated";
+import { getRecurrences, createRecurrence, updateRecurrence, simulateEntries, type GetRecurrencesParams, type RecurrenceDto, type SimulateEntriesParams } from "@/api/generated";
 import { ref } from "vue";
 
 const recurrences = ref<RecurrenceDto[]>([]);
@@ -23,5 +23,9 @@ export function useRecurrences() {
     return updateRecurrence(id, recurrence);
   };
 
-  return { recurrences, fetchRecurrences, addRecurrence, editRecurrence };
+  const simulate = (params: SimulateEntriesParams) => {
+    return simulateEntries(params);
+  };
+
+  return { recurrences, fetchRecurrences, addRecurrence, editRecurrence, simulate };
 }

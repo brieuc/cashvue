@@ -20,6 +20,20 @@
         <input type="checkbox" id="hiddenChk" v-model="form.hidden" />
         <label for="hiddenChk">Hidden</label>
       </div>
+
+      <hr>
+      <button class="btn-simulate" @click="simulateEntries" :disabled="!form.startDate || !form.endDate">Simuler les récurrences</button>
+
+      <div v-if="entries.length" class="entries-list">
+        <div v-for="(entry, i) in entries" :key="i" class="entry-card" @click="selected[i] = !selected[i]">
+          <input type="checkbox" v-model="selected[i]" @click.stop>
+          <div class="entry-card-content">
+            <EntryView :entry="entry" />
+          </div>
+        </div>
+        <button class="btn-create-entries" @click="handleCreate" :disabled="!hasSelected">Créer les entrées sélectionnées</button>
+      </div>
+      <p v-else-if="simulated" class="empty">Aucune entrée générée sur cette période.</p>
     </div>
   </div>
 </div>
@@ -27,8 +41,11 @@
 </template>
 
 <script setup lang="ts">
-import type { PeriodDto } from '@/api/generated';
-import { reactive, watch } from 'vue';
+import type { PeriodDto, EntryDto } from '@/api/generated';
+import { useRecurrences } from '@/composables/useRecurrences';
+import { useEntries } from '@/composables/useEntries';
+import { reactive, ref, computed, watch } from 'vue';
+import EntryView from '@/components/EntryView.vue';
 
 
 interface props {
@@ -60,7 +77,7 @@ const defaultForm : PeriodDto = {
   title: "",
   startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   endDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
-  currencyCode: "",
+  currencyCode: null,
   hidden: false
 };
 
@@ -75,6 +92,31 @@ watch(() => period, (prd) => {
 }, {immediate: true});
 
 
+
+const { simulate } = useRecurrences();
+const { addEntries } = useEntries();
+
+const entries = ref<EntryDto[]>([]);
+const selected = ref<boolean[]>([]);
+const simulated = ref(false);
+const hasSelected = computed(() => selected.value.some(Boolean));
+
+const simulateEntries = async () => {
+  const response = await simulate({
+    fromDate: form.startDate.slice(0, 10),
+    toDate: form.endDate.slice(0, 10),
+  });
+  if (response.status === 200) {
+    entries.value = response.data;
+    selected.value = entries.value.map(() => true);
+    simulated.value = true;
+  }
+};
+
+const handleCreate = async () => {
+  const toCreate = entries.value.filter((_, i) => selected.value[i]);
+  await addEntries(toCreate);
+};
 
 const handleSubmit = () => {
   const submitData : PeriodDto = {...form};
@@ -205,4 +247,27 @@ const cancel = () => {
 .btn-submit:hover {
   background: #ecf0f1;
 }
+
+.entry-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  padding: 0.75rem;
+  border: 1px solid #e1e8ed;
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  cursor: pointer;
+}
+.entry-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+.entry-card-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.entry-card .card-layout {
+  margin-bottom: 0;
+}
+.entry-card .currency { color: #2c3e50; }
 </style>

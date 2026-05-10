@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { createEntry, getEntries, updateEntry } from '@/api/generated';
+import { createEntry, createBatch, getEntries, updateEntry } from '@/api/generated';
 import type { EntryDto, GetEntriesParams } from '@/api/generated';
 
 export function useEntries() {
@@ -28,5 +28,9 @@ export function useEntries() {
     return updateEntry(id, entry)
   };
 
-  return { entries, loading, error, fetchEntries, addEntry, editEntry };
+  const addEntries = async (batch: EntryDto[]) => {
+    return createBatch(batch);
+  };
+
+  return { entries, loading, error, fetchEntries, addEntry, addEntries, editEntry };
 }
