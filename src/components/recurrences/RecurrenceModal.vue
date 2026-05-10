@@ -43,7 +43,7 @@
       <div class="form-row">
         <div class="form-group">
           <label for="startDate">Date de début</label>
-          <input id="startDate" v-model="form.startDate" type="date">
+          <input id="startDate" v-model="form.startDate" type="datetime-local">
         </div>
         <div class="form-group">
           <label for="frequency">Fréquence</label>
@@ -87,7 +87,7 @@ const getFormRecurrence = (rec: RecurrenceDto): RecurrenceDto => ({
   description: rec.description,
   amount: Math.abs(rec.amount as number),
   currencyCode: rec.currencyCode,
-  startDate: rec.startDate,
+  startDate: rec.startDate?.slice(0, 16),
   frequency: rec.frequency,
   tags: rec.tags,
 });
@@ -98,7 +98,7 @@ const defaultForm: RecurrenceDto = {
   description: '',
   amount: 0,
   currencyCode: '',
-  startDate: new Date().toISOString().slice(0, 10),
+  startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   frequency: RecurrenceDtoFrequency.MONTHLY,
   tags: [],
 };

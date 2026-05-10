@@ -6,12 +6,13 @@
   class="selected-tag-btn"
   type="button"
 >
-  {{ tag.title }} ×
+<img class="tag-icon" :src="`${uploadsUrl}/${tag!.icon}`"/>{{ tag.title }} ×
 </button>
 </template>
 
 <script setup lang="ts">
 import type { TagDto } from '@/api/generated';
+const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 
 interface Props {
   tags: Array<TagDto>
@@ -25,7 +26,18 @@ defineEmits<{
 </script>
 
 <style scoped>
+
+.tag-icon {
+    margin-right: 0.3rem;
+    border-radius: 3px;
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+}
+
 .selected-tag-btn {
+  display: inline-flex;
+  align-items: center;
   padding: 0.3rem 0.6rem;
   background: #3498db;
   color: white;

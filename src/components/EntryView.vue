@@ -7,7 +7,7 @@
     <div class="card-right">
       <span class="date">{{ formatDate(entry.accountingDate) }}</span>
       <div class="amount-line">
-        <span class="amount">{{ entry.amount }}</span>
+        <span class="amount" :class="entry.amount >= 0 ? 'positive' : 'negative'">{{ entry.amount }}</span>
         <span class="currency">{{ entry.currencyCode }}</span>
       </div>
     </div>
@@ -98,6 +98,8 @@ defineProps<props>();
   font-size: 1.25rem;
   color: #2c3e50;
 }
+.amount.positive { color: #27ae60; }
+.amount.negative { color: #e74c3c; }
 .currency {
   font-weight: 600;
   color: #27ae60;
