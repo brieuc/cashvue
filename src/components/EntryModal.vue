@@ -58,7 +58,7 @@
 
 <script setup lang="ts">
 import { reactive, onMounted, watch, onUpdated, ref, nextTick } from 'vue'
-import TagFilter from './TagFilter.vue';
+import TagFilter from './filter/TagFilter.vue';
 import type { EntryDto, GetCurrenciesParams, TagDto } from '@/api/generated';
 import type { CreateEntryRequest } from '@/types/types';
 import { useCurrencies } from '@/composables/useCurrencies';

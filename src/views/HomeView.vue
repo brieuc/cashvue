@@ -6,7 +6,7 @@
     </div>
 
     <div class="header-bar">
-      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags" :entries-updated="entriesChanged"></HeaderView>
+      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags" :search-text="searchText ":entries-updated="entriesChanged"></HeaderView>
     </div>
     <!-- Liste au milieu scrollable -->
     <div class="entry-content">
@@ -14,13 +14,14 @@
         :filtering-tags="selectedTags"
         :start-date="startDate"
         :end-date="endDate"
+        :search-text="searchText"
         @entries-changed="entriesChanged++"
       />
     </div>
 
     <!-- Tags en bas fixe -->
     <div class="tag-bar">
-      <TagFilter v-model="selectedTags" />
+      <EntryFilter v-model:search-text="searchText" v-model:tags="selectedTags" />
     </div>
   </div>
 </template>
@@ -30,7 +31,7 @@ import { type TagDto, type PeriodDto } from '@/api/generated';
 import EntryList from '@/components/EntryList.vue';
 import HeaderView from '@/components/HeaderView.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
-import TagFilter from '@/components/TagFilter.vue';
+import EntryFilter from '@/components/filter/EntryFilter.vue';
 import { ref, watch } from 'vue';
 
 
@@ -41,6 +42,7 @@ const startDate = ref<string>("2000-01-01");
 const endDate = ref<string>("2000-01-01");
 
 const entriesChanged = ref<number>(0);
+const searchText = ref<string>('');
 
 watch(selectedPeriod, (newPeriod) => {
   if (!newPeriod)

@@ -226,6 +226,8 @@ export type ComputationRequestDto = {
   endDate: string;
   /** List of tags to filter entries in the calculation */
   tags?: TagDto[];
+  /** Search text */
+  searchText?: string;
   /**
    * ISO 4217 code of the target currency for conversion (reference currency or tag currency)
    * @minLength 3
@@ -272,9 +274,9 @@ export type ComputationResponseDto = {
 export type PageImplTagDto = {
   content?: TagDto[];
   pageable?: PageableObject;
-  last?: boolean;
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -301,9 +303,9 @@ export type SortObject = {
 export type PageImplRecurrenceDto = {
   content?: RecurrenceDto[];
   pageable?: PageableObject;
-  last?: boolean;
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -315,9 +317,9 @@ export type PageImplRecurrenceDto = {
 export type PageImplRateDto = {
   content?: RateDto[];
   pageable?: PageableObject;
-  last?: boolean;
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -329,9 +331,9 @@ export type PageImplRateDto = {
 export type PageImplPeriodDto = {
   content?: PeriodDto[];
   pageable?: PageableObject;
-  last?: boolean;
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -343,9 +345,9 @@ export type PageImplPeriodDto = {
 export type PageImplEntryDto = {
   content?: EntryDto[];
   pageable?: PageableObject;
-  last?: boolean;
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -357,9 +359,9 @@ export type PageImplEntryDto = {
 export type PageImplCurrencyDto = {
   content?: CurrencyDto[];
   pageable?: PageableObject;
-  last?: boolean;
-  totalPages?: number;
   totalElements?: number;
+  totalPages?: number;
+  last?: boolean;
   first?: boolean;
   numberOfElements?: number;
   size?: number;
@@ -482,11 +484,11 @@ sort?: string[];
 
 export type GetEntriesParams = {
 /**
- * Start date of the search period (inclusive, will use start of day)
+ * Start date of the search period (inclusive)
  */
 startDate?: string;
 /**
- * End date of the search period (inclusive, will use end of day)
+ * End date of the search period (inclusive)
  */
 endDate?: string;
 /**
@@ -505,6 +507,10 @@ endAmount?: number;
  * Currency codes to filter entries (ISO 4217 codes)
  */
 currencyCodes?: string[];
+/**
+ * Text search on title and description (case-insensitive, partial match)
+ */
+searchText?: string;
 /**
  * Page number (starts at 0)
  * @minimum 0
