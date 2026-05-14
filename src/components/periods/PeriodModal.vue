@@ -66,8 +66,8 @@ const emit = defineEmits<emits>();
 const getFormPeriod = (prd : PeriodDto) : PeriodDto => ({
   id: prd.id,
   title: prd.title,
-  startDate: prd.startDate,
-  endDate: prd.endDate,
+  startDate: prd.startDate?.slice(0, 16),
+  endDate: prd.endDate?.slice(0, 16),
   currencyCode: prd.currencyCode,
   hidden: prd.hidden
 });
@@ -103,8 +103,8 @@ const hasSelected = computed(() => selected.value.some(Boolean));
 
 const simulateEntries = async () => {
   const response = await simulate({
-    fromDate: form.startDate.slice(0, 10),
-    toDate: form.endDate.slice(0, 10),
+    fromDate: form.startDate,
+    toDate: form.endDate,
   });
   if (response.status === 200) {
     entries.value = response.data;

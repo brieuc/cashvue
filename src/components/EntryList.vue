@@ -36,10 +36,11 @@ const emit = defineEmits<{
     entriesChanged : [];
 }>();
 
-const { filteringTags, startDate, endDate } = defineProps<{
+const { filteringTags, startDate, endDate, searchText } = defineProps<{
   filteringTags: TagDto[];
   startDate: string,
-  endDate: string
+  endDate: string,
+  searchText: string
 }>();
 
 const isInCurrentPeriod = (date: string) => {
@@ -64,9 +65,10 @@ const selectEntry = async (entry: EntryDto) => {
 
 const loadEntries = async () => {
   const params: GetEntriesParams = {
-      startDate: startDate.split('T')[0],
-      endDate: endDate.split('T')[0],
+      startDate: startDate,
+      endDate: endDate,
       tagIds: filteringTags.map(tagDto => tagDto.id!),
+      searchText: searchText,
       page: 0,
       size: 300
   };

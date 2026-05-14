@@ -180,9 +180,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "200": {
             "description": "Récurrence trouvée",
             "content": {
@@ -192,6 +189,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -230,6 +230,9 @@
           "400": {
             "description": "Données invalides"
           },
+          "404": {
+            "description": "Récurrence non trouvée"
+          },
           "200": {
             "description": "Récurrence mise à jour avec succès",
             "content": {
@@ -239,9 +242,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -347,9 +347,6 @@
           "400": {
             "description": "Données invalides"
           },
-          "404": {
-            "description": "Taux non trouvé"
-          },
           "200": {
             "description": "Taux mis à jour avec succès",
             "content": {
@@ -359,6 +356,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       },
@@ -461,6 +461,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "200": {
             "description": "Période mise à jour avec succès",
             "content": {
@@ -470,9 +473,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           },
           "404": {
             "description": "Période non trouvée"
@@ -578,6 +578,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
+          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -587,9 +590,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
           },
           "404": {
             "description": "Entrée non trouvée"
@@ -975,9 +975,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Récurrence créée avec succès",
             "content": {
@@ -987,6 +984,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1085,6 +1085,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Taux créé avec succès",
             "content": {
@@ -1094,9 +1097,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1195,6 +1195,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Période créée avec succès",
             "content": {
@@ -1204,9 +1207,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1223,28 +1223,26 @@
           {
             "name": "startDate",
             "in": "query",
-            "description": "Start date of the search period (inclusive, will use start of day)",
+            "description": "Start date of the search period (inclusive)",
             "required": false,
             "schema": {
               "type": "string",
-              "description": "Start date of the search period (inclusive, will use start of day)",
-              "format": "date",
-              "example": "2024-01-01"
+              "description": "Start date of the search period (inclusive)",
+              "format": "date-time"
             },
-            "example": "2024-01-01"
+            "example": "2024-01-01T00:00:00"
           },
           {
             "name": "endDate",
             "in": "query",
-            "description": "End date of the search period (inclusive, will use end of day)",
+            "description": "End date of the search period (inclusive)",
             "required": false,
             "schema": {
               "type": "string",
-              "description": "End date of the search period (inclusive, will use end of day)",
-              "format": "date",
-              "example": "2026-12-31"
+              "description": "End date of the search period (inclusive)",
+              "format": "date-time"
             },
-            "example": "2026-12-31"
+            "example": "2026-12-31T23:59:59"
           },
           {
             "name": "tagIds",
@@ -1315,6 +1313,18 @@
               "EUR",
               "USD"
             ]
+          },
+          {
+            "name": "searchText",
+            "in": "query",
+            "description": "Text search on title and description (case-insensitive, partial match)",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Text search on title and description (case-insensitive, partial match)",
+              "example": "laptop"
+            },
+            "example": "laptop"
           },
           {
             "name": "page",
@@ -1401,6 +1411,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Entrée créée avec succès",
             "content": {
@@ -1410,9 +1423,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1440,6 +1450,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Entrées créées avec succès",
             "content": {
@@ -1449,9 +1462,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1618,9 +1628,9 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "date"
+              "format": "date-time"
             },
-            "example": "2025-01-01"
+            "example": "2025-01-01T00:00:00"
           },
           {
             "name": "toDate",
@@ -1629,9 +1639,9 @@
             "required": true,
             "schema": {
               "type": "string",
-              "format": "date"
+              "format": "date-time"
             },
-            "example": "2025-01-31"
+            "example": "2025-01-31T23:59:59"
           }
         ],
         "responses": {
@@ -1799,9 +1809,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Devise non trouvée"
-          },
           "200": {
             "description": "Devise trouvée",
             "content": {
@@ -1811,6 +1818,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Devise non trouvée"
           }
         }
       },
@@ -2180,14 +2190,12 @@
           "startDate": {
             "type": "string",
             "description": "Start date of the calculation period",
-            "format": "date",
-            "example": "2024-01-01"
+            "format": "date-time"
           },
           "endDate": {
             "type": "string",
             "description": "End date of the calculation period",
-            "format": "date",
-            "example": "2024-12-31"
+            "format": "date-time"
           },
           "tags": {
             "uniqueItems": true,
@@ -2202,6 +2210,10 @@
             "items": {
               "$ref": "#/components/schemas/TagDto"
             }
+          },
+          "searchText": {
+            "type": "string",
+            "description": "Search text"
           },
           "targetCurrencyCode": {
             "maxLength": 3,
@@ -2253,14 +2265,12 @@
           "startDate": {
             "type": "string",
             "description": "Start date of the calculated period",
-            "format": "date",
-            "example": "2024-01-01"
+            "format": "date-time"
           },
           "endDate": {
             "type": "string",
             "description": "End date of the calculated period",
-            "format": "date",
-            "example": "2024-12-31"
+            "format": "date-time"
           },
           "totalAmount": {
             "type": "number",
@@ -2312,16 +2322,16 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
+          "last": {
+            "type": "boolean"
           },
           "first": {
             "type": "boolean"
@@ -2398,16 +2408,16 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
+          "last": {
+            "type": "boolean"
           },
           "first": {
             "type": "boolean"
@@ -2444,16 +2454,16 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
+          "last": {
+            "type": "boolean"
           },
           "first": {
             "type": "boolean"
@@ -2490,16 +2500,16 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
+          "last": {
+            "type": "boolean"
           },
           "first": {
             "type": "boolean"
@@ -2536,16 +2546,16 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
+          "last": {
+            "type": "boolean"
           },
           "first": {
             "type": "boolean"
@@ -2582,16 +2592,16 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
+          "last": {
+            "type": "boolean"
           },
           "first": {
             "type": "boolean"

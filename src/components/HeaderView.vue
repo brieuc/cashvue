@@ -18,12 +18,13 @@ const selectedTags = ref<TagDto[]>([]);
 interface Props {
   selectedPeriod : PeriodDto | undefined,
   selectedTags : TagDto[],
-  entriesUpdated : number
+  entriesUpdated : number,
+  searchText : string
 }
 
 const { fetchComputation, computationResponse } = useComputation();
 
-const { selectedPeriod, selectedTags, entriesUpdated } = defineProps<Props>();
+const { selectedPeriod, selectedTags, entriesUpdated, searchText } = defineProps<Props>();
 
 const totalAmount = ref<number>(0.0);
 const currency = ref<string>("");
@@ -36,6 +37,10 @@ watch(computationResponse, (computationResponse) => {
     currency.value = computationResponse.targetCurrencyCode ?? "";
     nbEntries.value = computationResponse.numberOfEntries;
   }
+});
+
+watch(() => searchText, () => {
+  getComputation(selectedPeriod, selectedTags);
 });
 
 watch(() => entriesUpdated, () => {
@@ -71,6 +76,7 @@ const getComputation = (period : PeriodDto | undefined, selectedTags : TagDto[])
     startDate: period.startDate,
     endDate: period.endDate,
     tags: selectedTags,
+    searchText: searchText,
     targetCurrencyCode: "CHF"
   }
   fetchComputation(request);
