@@ -67,7 +67,6 @@
 import { type GetCurrenciesParams, type RecurrenceDto, RecurrenceDtoFrequency } from '@/api/generated';
 import { onMounted, reactive, ref, watch } from 'vue';
 import { useCurrencies } from '@/composables/useCurrencies';
-import TagFilter from '@/components/TagFilter.vue';
 
 const { currencies, fetchCurrencies } = useCurrencies();
 interface props {
