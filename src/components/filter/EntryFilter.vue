@@ -3,7 +3,7 @@
     <div class="selected-tags-sticky">
       <SelectedTag :tags="tags" @remove="handleRemove" />
     </div>
-    <div class="tag-selection-scrollable">
+    <div class="tag-selection-scrollable" :class="{ 'search-active': expanded }">
       <template v-if="!expanded">
         <button class="search-toggle" :class="{ active: searchText.length > 0 }" @click="expanded = true">
           <span class="icon">&#128269;</span>
@@ -73,17 +73,22 @@ const handleRemove = (tagToRemove: TagDto) => {
   margin-bottom: 50px;
   min-height: 40px;
 }
+.tag-selection-scrollable.search-active {
+  margin-bottom: 0;
+}
 
 .selected-tags-sticky::-webkit-scrollbar,
 .tag-selection-scrollable::-webkit-scrollbar {
   display: none;
 }
 
+
 .search-toggle {
   position: relative;
-  width: 32px;
+  width: 52px;
   height: 32px;
-  border-radius: 50%;
+  border-radius: 16px;
+  margin-left: 4px;
   border: 1px solid #e1e8ed;
   background: #f5f5f5;
   cursor: pointer;

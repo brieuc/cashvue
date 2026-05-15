@@ -8,6 +8,10 @@
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
         <div class="form-row">
+          <div class="form-group">
+            <input v-model="form.accountingDate" type="datetime-local" required />
+          </div>
+
             <div class="form-group" style="display: flex; justify-content: space-evenly; align-items: center; padding: 0 1rem;">
             <span>
               <button
@@ -31,12 +35,9 @@
               </option>
             </select></span>
             </div>
-          <div class="form-group">
-            <input v-model="form.title" type="text" placeholder="Titre" />
-          </div>
 
           <div class="form-group">
-            <input v-model="form.accountingDate" type="datetime-local" required />
+            <input v-model="form.title" type="text" placeholder="Titre" />
           </div>
 
 
@@ -172,7 +173,7 @@ onUpdated(() => {
   align-items: flex-start;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: 0.25rem;
 }
 
 .modal {
@@ -200,13 +201,18 @@ onUpdated(() => {
 }
 
 .modal-body {
-  padding: 1.25rem;
+  padding: 1.25rem 0;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+  padding: 0 1.25rem;
+}
+
+.modal-body > .form-group {
+  padding: 0 1.25rem;
 }
 
 .form-group {
