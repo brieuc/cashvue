@@ -51,7 +51,7 @@ onMounted(() => {
   padding: 0.4rem 2rem 0.4rem 0.6rem;
   border: 1px solid #e1e8ed;
   border-radius: 8px;
-  font-size: 0.9rem;
+  font-size: 16px;
 }
 
 .clear-btn {
