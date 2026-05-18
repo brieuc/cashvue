@@ -28,6 +28,10 @@
       "description": "API de gestion des tags/étiquettes"
     },
     {
+      "name": "Tag Groups",
+      "description": "API de gestion des groupes de tags"
+    },
+    {
       "name": "Entries",
       "description": "API de gestion des entrées financières"
     },
@@ -63,6 +67,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Tag non trouvé"
+          },
           "200": {
             "description": "Tag trouvé",
             "content": {
@@ -72,9 +79,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Tag non trouvé"
           }
         }
       },
@@ -110,6 +114,9 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Tag non trouvé"
+          },
           "200": {
             "description": "Tag mis à jour avec succès",
             "content": {
@@ -122,9 +129,6 @@
           },
           "400": {
             "description": "Données invalides"
-          },
-          "404": {
-            "description": "Tag non trouvé"
           }
         }
       },
@@ -149,11 +153,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Tag supprimé avec succès"
-          },
           "404": {
             "description": "Tag non trouvé"
+          },
+          "204": {
+            "description": "Tag supprimé avec succès"
           }
         }
       }
@@ -227,12 +231,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "200": {
             "description": "Récurrence mise à jour avec succès",
             "content": {
@@ -242,6 +240,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -266,11 +270,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "204": {
             "description": "Récurrence supprimée avec succès"
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       }
@@ -297,6 +301,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Taux non trouvé"
+          },
           "200": {
             "description": "Taux trouvé",
             "content": {
@@ -306,9 +313,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Taux non trouvé"
           }
         }
       },
@@ -344,8 +348,8 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
+          "404": {
+            "description": "Taux non trouvé"
           },
           "200": {
             "description": "Taux mis à jour avec succès",
@@ -357,8 +361,8 @@
               }
             }
           },
-          "404": {
-            "description": "Taux non trouvé"
+          "400": {
+            "description": "Données invalides"
           }
         }
       },
@@ -383,11 +387,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Taux supprimé avec succès"
-          },
           "404": {
             "description": "Taux non trouvé"
+          },
+          "204": {
+            "description": "Taux supprimé avec succès"
           }
         }
       }
@@ -414,6 +418,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Période non trouvée"
+          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -423,9 +430,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Période non trouvée"
           }
         }
       },
@@ -461,9 +465,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "200": {
             "description": "Période mise à jour avec succès",
             "content": {
@@ -476,6 +477,9 @@
           },
           "404": {
             "description": "Période non trouvée"
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       },
@@ -500,11 +504,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Période supprimée avec succès"
-          },
           "404": {
             "description": "Période non trouvée"
+          },
+          "204": {
+            "description": "Période supprimée avec succès"
           }
         }
       }
@@ -581,6 +585,9 @@
           "400": {
             "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
           },
+          "404": {
+            "description": "Entrée non trouvée"
+          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -590,9 +597,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Entrée non trouvée"
           }
         }
       },
@@ -617,11 +621,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Entrée supprimée avec succès"
-          },
           "404": {
             "description": "Entrée non trouvée"
+          },
+          "204": {
+            "description": "Entrée supprimée avec succès"
           }
         }
       }
@@ -1085,9 +1089,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Taux créé avec succès",
             "content": {
@@ -1097,6 +1098,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1195,9 +1199,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Période créée avec succès",
             "content": {
@@ -1207,6 +1208,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1411,9 +1415,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Entrée créée avec succès",
             "content": {
@@ -1423,6 +1424,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1450,9 +1454,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Entrées créées avec succès",
             "content": {
@@ -1462,6 +1463,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1560,9 +1564,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Devise créée avec succès",
             "content": {
@@ -1572,6 +1573,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1596,6 +1600,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides ou taux de change manquant"
+          },
           "200": {
             "description": "Calcul effectué avec succès",
             "content": {
@@ -1605,9 +1612,86 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides ou taux de change manquant"
+          }
+        }
+      }
+    },
+    "/tag-groups": {
+      "get": {
+        "tags": [
+          "Tag Groups"
+        ],
+        "summary": "Récupérer les groupes de tags contenant au moins un des tags donnés",
+        "operationId": "getTagGroups",
+        "parameters": [
+          {
+            "name": "tagIds",
+            "in": "query",
+            "description": "List of tag IDs to filter tag groups",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "List of tag IDs to filter tag groups",
+              "example": [1, 2, 5],
+              "items": {
+                "type": "integer",
+                "description": "List of tag IDs to filter tag groups",
+                "format": "int64"
+              }
+            },
+            "example": [1, 2, 5]
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TagGroupDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/tag-groups/{id}/title-suggestions": {
+      "get": {
+        "tags": [
+          "Tag Groups"
+        ],
+        "summary": "Récupérer les suggestions de titres pour un groupe de tags, triées par popularité",
+        "operationId": "getTitleSuggestions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "ID du groupe de tags",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TagGroupTitleSuggestionDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1772,9 +1856,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Aucune période ne contient cette date"
-          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -1784,6 +1865,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Aucune période ne contient cette date"
           }
         }
       }
@@ -1809,6 +1893,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Devise non trouvée"
+          },
           "200": {
             "description": "Devise trouvée",
             "content": {
@@ -1818,9 +1905,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Devise non trouvée"
           }
         }
       },
@@ -1844,11 +1928,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Devise non trouvée"
-          },
           "204": {
             "description": "Devise supprimée avec succès"
+          },
+          "404": {
+            "description": "Devise non trouvée"
           }
         }
       }
@@ -2395,6 +2479,75 @@
             "type": "boolean"
           }
         }
+      },
+      "TagGroupDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the tag group",
+            "format": "int64",
+            "example": 1
+          },
+          "usageCount": {
+            "type": "integer",
+            "description": "Number of times this tag group has been used",
+            "format": "int32",
+            "example": 12
+          },
+          "lastUsed": {
+            "type": "string",
+            "description": "Date and time this tag group was last used",
+            "format": "date-time"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags belonging to this group",
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          }
+        },
+        "description": "Represents a group of tags frequently used together"
+      },
+      "TagGroupTitleSuggestionDto": {
+        "required": [
+          "tagGroupId",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier of the suggestion",
+            "format": "int64",
+            "example": 1
+          },
+          "tagGroupId": {
+            "type": "integer",
+            "description": "Identifier of the associated tag group",
+            "format": "int64",
+            "example": 42
+          },
+          "title": {
+            "maxLength": 255,
+            "type": "string",
+            "description": "Suggested title",
+            "example": "Groceries"
+          },
+          "usageCount": {
+            "type": "integer",
+            "description": "Number of times this suggestion has been used",
+            "format": "int32",
+            "example": 5
+          },
+          "lastUsed": {
+            "type": "string",
+            "description": "Date and time this suggestion was last used",
+            "format": "date-time"
+          }
+        },
+        "description": "Represents a suggested title for a tag group"
       },
       "PageImplRecurrenceDto": {
         "type": "object",

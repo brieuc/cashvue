@@ -8,6 +8,10 @@
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
         <div class="form-row">
+          <div class="form-group">
+            <input v-model="form.accountingDate" type="datetime-local" required />
+          </div>
+
             <div class="form-group" style="display: flex; justify-content: space-evenly; align-items: center; padding: 0 1rem;">
             <span>
               <button
@@ -31,12 +35,17 @@
               </option>
             </select></span>
             </div>
-          <div class="form-group">
-            <input v-model="form.title" type="text" placeholder="Titre" />
-          </div>
 
-          <div class="form-group">
-            <input v-model="form.accountingDate" type="datetime-local" required />
+          <div class="form-group title-group">
+            <input v-model="form.title" type="text" placeholder="Titre" @click="showSuggestions = !showSuggestions" @blur="showSuggestions = false" />
+            <div v-if="showSuggestions" class="suggestions-list">
+              <div v-for="suggestion in titleSuggestions" :key="suggestion.id"
+                :class="['suggestion-item', { 'suggestion-flash': flashedSuggestionId === suggestion.id }]"
+                @mousedown.prevent="selectSuggestion(suggestion)">
+                <span>{{ suggestion.title }}</span>
+                <span class="usage-count">{{ suggestion.usageCount }}</span>
+              </div>
+            </div>
           </div>
 
 
@@ -50,7 +59,20 @@
           <textarea v-model="form.description" rows="2" placeholder="Description"></textarea>
         </div>
 
+
         <TagFilter v-model="form.tags" />
+
+        <div v-if="form.tags?.length" class="tag-group-proposals">
+          <button v-for="group in tagGroups" :key="group.id" type="button"
+            class="tag-group-btn" @click="form.tags = group.tags ?? []">
+            <span class="tag-group-icons">
+              <img v-for="tag in group.tags" :key="tag.id"
+                :src="`${uploadsUrl}/${tag.icon}`" :alt="tag.title" class="tag-icon" />
+            </span>
+            <span class="usage-count">{{ group.usageCount }}</span>
+          </button>
+        </div>
+
       </form>
     </div>
   </div>
@@ -59,11 +81,14 @@
 <script setup lang="ts">
 import { reactive, onMounted, watch, onUpdated, ref, nextTick } from 'vue'
 import TagFilter from './filter/TagFilter.vue';
-import type { EntryDto, GetCurrenciesParams, TagDto } from '@/api/generated';
+import { type TagGroupDto, type EntryDto, type GetCurrenciesParams, type TagDto, type TagGroupTitleSuggestionDto } from '@/api/generated';
 import type { CreateEntryRequest } from '@/types/types';
 import { useCurrencies } from '@/composables/useCurrencies';
+import { useTagGroups } from '@/composables/useTagGroups';
 
+const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 const { currencies, fetchCurrencies } = useCurrencies();
+const { fetchTagGroups, fetchTitleSuggestionsForTagGroup } = useTagGroups();
 
 interface Props {
   isOpen: boolean,
@@ -79,6 +104,17 @@ const emit = defineEmits<{
 }>()
 
 const isPositive = ref<boolean>(false);
+const showSuggestions = ref<boolean>(false);
+const flashedSuggestionId = ref<number | null>(null);
+
+const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
+  flashedSuggestionId.value = suggestion.id ?? null;
+  form.title = suggestion.title;
+  setTimeout(() => {
+    showSuggestions.value = false;
+    flashedSuggestionId.value = null;
+  }, 150);
+};
 
 const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
   title: entry.title,
@@ -98,10 +134,19 @@ const defaultForm : CreateEntryRequest = {
   tags: [] as Array<TagDto>,
 };
 
+const tagGroups = ref<TagGroupDto[]>([]);
+const titleSuggestions = ref<TagGroupTitleSuggestionDto[]>([]);
 const form = reactive<CreateEntryRequest>({...defaultForm});
 
+const matchTagGroup = (groups: TagGroupDto[]): TagGroupDto | undefined => {
+  const formTagIds = form.tags?.map(t => t.id) ?? [];
+  return groups.find(g =>
+    formTagIds.every(id => g.tags?.some(t => t.id === id)) &&
+    g.tags?.length === formTagIds.length
+  );
+};
+
 watch(() => props.entry, (entry) => {
-  console.log("watch " + JSON.stringify(entry));
   if(entry) {
     Object.assign(form, getFormEntry(entry));
     isPositive.value = entry.amount > 0.0 ? true : false;
@@ -111,6 +156,21 @@ watch(() => props.entry, (entry) => {
     isPositive.value = false;
   }
 }, {immediate: true});
+
+watch(() => form.tags, (tags) => {
+  const tagIds = tags?.map(tag => tag.id).filter((id): id is number => id != null) ?? [];
+  if (tagIds.length > 0) {
+    fetchTagGroups({ tagIds }).then(data => {
+      tagGroups.value = data;
+      const match = matchTagGroup(data);
+      if (match?.id != null) {
+        fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
+          titleSuggestions.value = suggestions;
+        });
+      }
+    });
+  }
+});
 
 watch(() => props.isOpen, (open) => {
   if (open) {
@@ -172,7 +232,7 @@ onUpdated(() => {
   align-items: flex-start;
   justify-content: center;
   z-index: 1000;
-  padding: 1rem;
+  padding: 0.25rem;
 }
 
 .modal {
@@ -200,13 +260,18 @@ onUpdated(() => {
 }
 
 .modal-body {
-  padding: 1.25rem;
+  padding: 1.25rem 0;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
+  padding: 0 1.25rem;
+}
+
+.modal-body > .form-group {
+  padding: 0 1.25rem;
 }
 
 .form-group {
@@ -305,6 +370,83 @@ onUpdated(() => {
 
 .btn-submit:hover {
   background: #ecf0f1;
+}
+
+.tag-group-proposals {
+  max-height: 120px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  margin: 0 1.25rem 0.75rem;
+}
+
+.tag-group-btn {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+  border: none;
+  border-bottom: 1px solid #f0f4f8;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tag-group-icons {
+  display: flex;
+  gap: 4px;
+}
+
+.tag-group-btn:last-child {
+  border-bottom: none;
+}
+
+.tag-group-btn:hover {
+  background: #f0f4f8;
+}
+
+.usage-count {
+  color: #93c5fd;
+  font-size: 0.85rem;
+}
+
+.tag-group-btn .tag-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.title-group {
+  position: relative;
+}
+
+.suggestions-list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  max-height: 120px;
+  overflow-y: auto;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  background: white;
+  z-index: 10;
+}
+
+.suggestion-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.5rem 0.75rem;
+  cursor: pointer;
+}
+
+.suggestion-item:hover {
+  background: #f0f4f8;
+}
+
+.suggestion-flash {
+  background: #bfdbfe;
 }
 
 @media (max-width: 640px) {
