@@ -300,6 +300,39 @@ export type SortObject = {
   empty?: boolean;
 };
 
+/**
+ * Represents a group of tags frequently used together
+ */
+export type TagGroupDto = {
+  /** Unique identifier of the tag group */
+  id?: number;
+  /** Number of times this tag group has been used */
+  usageCount?: number;
+  /** Date and time this tag group was last used */
+  lastUsed?: string;
+  /** Tags belonging to this group */
+  tags?: TagDto[];
+};
+
+/**
+ * Represents a suggested title for a tag group
+ */
+export type TagGroupTitleSuggestionDto = {
+  /** Unique identifier of the suggestion */
+  id?: number;
+  /** Identifier of the associated tag group */
+  tagGroupId: number;
+  /**
+   * Suggested title
+   * @maxLength 255
+   */
+  title: string;
+  /** Number of times this suggestion has been used */
+  usageCount?: number;
+  /** Date and time this suggestion was last used */
+  lastUsed?: string;
+};
+
 export type PageImplRecurrenceDto = {
   content?: RecurrenceDto[];
   pageable?: PageableObject;
@@ -546,6 +579,13 @@ size?: number;
  * Sort criteria (format: 'property:direction' where direction = asc|desc)
  */
 sort?: string[];
+};
+
+export type GetTagGroupsParams = {
+/**
+ * List of tag IDs to filter tag groups
+ */
+tagIds?: number[];
 };
 
 export type SimulateEntriesParams = {
@@ -1999,6 +2039,91 @@ export const compute = async (computationRequestDto: ComputationRequestDto, opti
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       computationRequestDto,)
+  }
+);}
+
+
+
+/**
+ * @summary Récupérer les groupes de tags contenant au moins un des tags donnés
+ */
+export type getTagGroupsResponse200 = {
+  data: TagGroupDto[]
+  status: 200
+}
+    
+export type getTagGroupsResponseSuccess = (getTagGroupsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getTagGroupsResponse = (getTagGroupsResponseSuccess)
+
+export const getGetTagGroupsUrl = (params?: GetTagGroupsParams,) => {
+  const normalizedParams = new URLSearchParams();
+
+  Object.entries(params || {}).forEach(([key, value]) => {
+    const explodeParameters = ["tagIds"];
+
+    if (Array.isArray(value) && explodeParameters.includes(key)) {
+      value.forEach((v) => {
+        normalizedParams.append(key, v === null ? 'null' : v.toString());
+      });
+      return;
+    }
+      
+    
+  });
+
+  const stringifiedParams = normalizedParams.toString();
+
+  return stringifiedParams.length > 0 ? `/tag-groups?${stringifiedParams}` : `/tag-groups`
+}
+
+export const getTagGroups = async (params?: GetTagGroupsParams, options?: RequestInit): Promise<getTagGroupsResponse> => {
+  
+  return customFetch<getTagGroupsResponse>(getGetTagGroupsUrl(params),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+/**
+ * @summary Récupérer les suggestions de titres pour un groupe de tags, triées par popularité
+ */
+export type getTitleSuggestionsResponse200 = {
+  data: TagGroupTitleSuggestionDto[]
+  status: 200
+}
+    
+export type getTitleSuggestionsResponseSuccess = (getTitleSuggestionsResponse200) & {
+  headers: Headers;
+};
+;
+
+export type getTitleSuggestionsResponse = (getTitleSuggestionsResponseSuccess)
+
+export const getGetTitleSuggestionsUrl = (id: number,) => {
+
+
+  
+
+  return `/tag-groups/${id}/title-suggestions`
+}
+
+export const getTitleSuggestions = async (id: number, options?: RequestInit): Promise<getTitleSuggestionsResponse> => {
+  
+  return customFetch<getTitleSuggestionsResponse>(getGetTitleSuggestionsUrl(id),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
   }
 );}
 

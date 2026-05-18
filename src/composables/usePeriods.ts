@@ -2,8 +2,8 @@ import { createPeriod, getPeriods, updatePeriod, type GetPeriodsParams, type Per
 import { ref } from "vue";
 
 
-  const periods = ref<PeriodDto[]>([]);
-  const loaded = ref<boolean>(false);
+const periods = ref<PeriodDto[]>([]);
+const loaded = ref<boolean>(false);
 
 export function usePeriods() {
 

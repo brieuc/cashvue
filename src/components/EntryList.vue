@@ -168,27 +168,27 @@ onMounted(() => {
 <style scoped>
 .entries {
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 0.75rem;
 }
 .header-bar {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
 }
 h2 {
-  font-size: 1.75rem;
+  font-size: 1.25rem;
   font-weight: 600;
   margin: 0;
 }
 .add-btn {
-  width: 50px;
-  height: 50px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   background: #3498db;
   color: white;
   border: none;
-  font-size: 2rem;
+  font-size: 1.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -206,7 +206,7 @@ h2 {
 }
 .list {
   display: grid;
-  gap: 1rem;
+  gap: 0.4rem;
   grid-template-columns: 1fr;
 }
 

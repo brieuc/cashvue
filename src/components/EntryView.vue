@@ -47,28 +47,28 @@ defineProps<props>();
 <style>
 
 .tag-icon {
-    margin-left: 0.5rem;
+    margin-left: 0.25rem;
     border-radius: 3px;
-    width: 32px;
-    height: 32px;
+    width: 20px;
+    height: 20px;
     object-fit: contain;
 }
 
 .card {
   background: #fff;
   border: 1px solid #e1e8ed;
-  border-radius: 8px;
-  padding: 1rem;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
   transition: box-shadow 0.2s;
 }
 .card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 .card-layout {
   display: flex;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
 }
 .card-left {
   flex: 1;
@@ -80,22 +80,22 @@ defineProps<props>();
   gap: 0.25rem;
 }
 .date {
-  font-size: 0.85rem;
+  font-size: 0.75rem;
   color: #7f8c8d;
 }
 .desc {
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   color: #5a6c7d;
   margin: 0;
 }
 .amount-line {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.35rem;
   align-items: baseline;
 }
 .amount {
   font-weight: 600;
-  font-size: 1.25rem;
+  font-size: 1rem;
   color: #2c3e50;
 }
 .amount.positive { color: #27ae60; }
