@@ -1,5 +1,5 @@
 <template>
-<div>
+<div class="tag-list">
     <button v-for="tag in availableTags" :key="tag.id" type="button" @click="toggleTag(tag)"
       :class="['tag-btn', { active: selectedTags?.some(t => t.id === tag.id) }]">
       <img :src="`${uploadsUrl}/${tag.icon}`" :alt="tag.title" class="tag-icon" />
@@ -63,6 +63,12 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.tag-list {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.25rem;
+}
+
 .tag-btn {
   background: none;
   border: none;
@@ -75,8 +81,8 @@ onMounted(() => {
 }
 
 .tag-icon {
-  width: 24px;
-  height: 24px;
+  width: 32px;
+  height: 32px;
   object-fit: contain;
   display: block;
 }

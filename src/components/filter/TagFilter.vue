@@ -45,12 +45,15 @@ const handleRemove = (tagToRemove: TagDto) => {
 
 .tag-selection-scrollable {
   flex: 1;
-  overflow-x: auto;
-  overflow-y: hidden;
-  white-space: nowrap;
   padding-top: 0.5rem;
-  margin-bottom: 50px; /* Ajouter cette ligne */
   min-height: 40px;
+}
+
+.tag-selection-scrollable :deep(.tag-list) {
+  display: grid;
+  grid-template-rows: repeat(2, auto);
+  grid-auto-flow: column;
+  gap: 0.25rem;
 }
 
 .selected-tags-sticky::-webkit-scrollbar,
