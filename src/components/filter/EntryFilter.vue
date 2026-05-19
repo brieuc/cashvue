@@ -75,7 +75,7 @@ const handleRemove = (tagToRemove: TagDto) => {
 }
 .tag-selection-scrollable.search-active {
   margin-bottom: 0;
-}
+}n
 
 .selected-tags-sticky::-webkit-scrollbar,
 .tag-selection-scrollable::-webkit-scrollbar {

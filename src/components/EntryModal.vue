@@ -60,7 +60,9 @@
         </div>
 
 
-        <TagFilter v-model="form.tags" />
+        <div class="tag-filter-wrapper">
+          <TagFilter v-model="form.tags" />
+        </div>
 
         <div v-if="form.tags?.length" class="tag-group-proposals">
           <button v-for="group in tagGroups" :key="group.id" type="button"
@@ -166,6 +168,7 @@ watch(() => form.tags, (tags) => {
       if (match?.id != null) {
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
           titleSuggestions.value = suggestions;
+          form.title = titleSuggestions.value[0]?.title ?? ''
         });
       }
     });
@@ -240,7 +243,7 @@ onUpdated(() => {
   border-radius: 8px;
   width: 100%;
   max-width: 700px;
-  max-height: 85vh;
+  max-height: 95vh;
   overflow-y: auto;
 }
 
@@ -370,6 +373,14 @@ onUpdated(() => {
 
 .btn-submit:hover {
   background: #ecf0f1;
+}
+
+.tag-filter-wrapper {
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 0 1.25rem;
+  margin-bottom: 0.75rem;
+  max-height: calc(2 * 24px + 0.25rem + 3rem);
 }
 
 .tag-group-proposals {
