@@ -376,11 +376,7 @@ onUpdated(() => {
 }
 
 .tag-filter-wrapper {
-  overflow-x: auto;
-  overflow-y: hidden;
-  padding: 0 1.25rem;
   margin-bottom: 0.75rem;
-  max-height: calc(2 * 24px + 0.25rem + 3rem);
 }
 
 .tag-group-proposals {

@@ -62,20 +62,15 @@ const handleRemove = (tagToRemove: TagDto) => {
 }
 
 .tag-selection-scrollable {
-  flex: 1;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   gap: 0.4rem;
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: visible;
   white-space: nowrap;
-  padding-top: 0.5rem;
-  margin-bottom: 50px;
-  min-height: 40px;
+  height: 40px;
 }
-.tag-selection-scrollable.search-active {
-  margin-bottom: 0;
-}n
 
 .selected-tags-sticky::-webkit-scrollbar,
 .tag-selection-scrollable::-webkit-scrollbar {

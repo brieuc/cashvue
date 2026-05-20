@@ -34,7 +34,7 @@ const handleRemove = (tagToRemove: TagDto) => {
 
 .selected-tags-sticky {
   flex-shrink: 0;
-  padding-bottom: 0.5rem;
+  padding: 0 1.25rem 0.5rem;
   border-bottom: 1px solid #e1e8ed;
   background: white;
   height: 2rem;
@@ -45,8 +45,14 @@ const handleRemove = (tagToRemove: TagDto) => {
 
 .tag-selection-scrollable {
   flex: 1;
-  padding-top: 0.5rem;
+  overflow-x: auto;
+  overflow-y: visible;
+  padding: 0.5rem 1.25rem;
   min-height: 40px;
+}
+
+.tag-selection-scrollable::-webkit-scrollbar {
+  display: none;
 }
 
 .tag-selection-scrollable :deep(.tag-list) {
