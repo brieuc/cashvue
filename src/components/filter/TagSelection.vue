@@ -72,7 +72,7 @@ onMounted(() => {
 .tag-btn {
   background: none;
   border: none;
-  padding: 0;
+  padding: 4px;
   cursor: pointer;
 }
 
