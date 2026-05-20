@@ -64,12 +64,13 @@ const handleRemove = (tagToRemove: TagDto) => {
 .tag-selection-scrollable {
   flex-shrink: 0;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 0.4rem;
   overflow-x: auto;
   overflow-y: visible;
   white-space: nowrap;
-  height: 40px;
+  height: 60px;
+  padding-top: 0.25rem;
 }
 
 .selected-tags-sticky::-webkit-scrollbar,
