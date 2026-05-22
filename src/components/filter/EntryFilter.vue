@@ -69,7 +69,7 @@ const handleRemove = (tagToRemove: TagDto) => {
   overflow-x: auto;
   overflow-y: visible;
   white-space: nowrap;
-  height: 60px;
+  height: 80px;
   padding-top: 0.25rem;
 }
 

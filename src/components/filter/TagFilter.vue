@@ -34,10 +34,9 @@ const handleRemove = (tagToRemove: TagDto) => {
 
 .selected-tags-sticky {
   flex-shrink: 0;
-  padding: 0 1.25rem 0.5rem;
+  padding: 0.4rem 1.25rem;
   border-bottom: 1px solid #e1e8ed;
   background: white;
-  height: 2rem;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
