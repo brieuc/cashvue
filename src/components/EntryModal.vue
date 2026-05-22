@@ -36,32 +36,28 @@
             </select></span>
             </div>
 
-          <div class="form-group title-group">
-            <input v-model="form.title" type="text" placeholder="Titre" @click="showSuggestions = !showSuggestions" @blur="showSuggestions = false" />
-            <div v-if="showSuggestions" class="suggestions-list">
-              <div v-for="suggestion in titleSuggestions" :key="suggestion.id"
-                :class="['suggestion-item', { 'suggestion-flash': flashedSuggestionId === suggestion.id }]"
-                @mousedown.prevent="selectSuggestion(suggestion)">
-                <span>{{ suggestion.title }}</span>
-                <span class="usage-count">{{ suggestion.usageCount }}</span>
-              </div>
-            </div>
-          </div>
 
 
         </div>
 
-        <div class="form-row">
+        <div class="tag-filter-wrapper">
+          <TagFilter v-model="form.tags" />
+        </div>
 
+        <div class="form-group title-group">
+          <input v-model="form.title" type="text" placeholder="Titre" @click="showSuggestions = !showSuggestions" @blur="showSuggestions = false" />
+          <div v-if="showSuggestions" class="suggestions-list">
+            <div v-for="suggestion in titleSuggestions" :key="suggestion.id"
+              :class="['suggestion-item', { 'suggestion-flash': flashedSuggestionId === suggestion.id }]"
+              @mousedown.prevent="selectSuggestion(suggestion)">
+              <span>{{ suggestion.title }}</span>
+              <span class="usage-count">{{ suggestion.usageCount }}</span>
+            </div>
+          </div>
         </div>
 
         <div class="form-group">
           <textarea v-model="form.description" rows="2" placeholder="Description"></textarea>
-        </div>
-
-
-        <div class="tag-filter-wrapper">
-          <TagFilter v-model="form.tags" />
         </div>
 
         <div v-if="form.tags?.length" class="tag-group-proposals">
@@ -251,7 +247,7 @@ onUpdated(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem 1.25rem;
+  padding: 0.75rem;
   border-bottom: 1px solid #e1e8ed;
 }
 
@@ -263,22 +259,22 @@ onUpdated(() => {
 }
 
 .modal-body {
-  padding: 1.25rem 0;
+  padding: 0.75rem 0;
 }
 
 .form-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 0.75rem;
-  padding: 0 1.25rem;
+  padding: 0 0.75rem;
 }
 
 .modal-body > .form-group {
-  padding: 0 1.25rem;
+  padding: 0 0.75rem;
 }
 
 .form-group {
-  margin-bottom: 0.75rem;
+  margin-bottom: 0.4rem;
 }
 
 .form-group label {
@@ -377,6 +373,8 @@ onUpdated(() => {
 
 .tag-filter-wrapper {
   margin-bottom: 0.75rem;
+  border-top: 1px solid #e1e8ed;
+  padding-top: 0.5rem;
 }
 
 .tag-group-proposals {
