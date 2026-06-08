@@ -210,6 +210,17 @@ h2 {
   grid-template-columns: 1fr;
 }
 
+.card {
+  background: #fff;
+  border: 1px solid #e1e8ed;
+  border-radius: 6px;
+  padding: 0.4rem 0.75rem;
+  transition: box-shadow 0.2s;
+}
+.card:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
 h3 {
   font-size: 1.1rem;
   font-weight: 600;

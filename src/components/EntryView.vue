@@ -44,7 +44,7 @@ interface props {
 defineProps<props>();
 </script>
 
-<style>
+<style scoped>
 
 .tag-icon {
     margin-left: 0.25rem;
@@ -54,16 +54,6 @@ defineProps<props>();
     object-fit: contain;
 }
 
-.card {
-  background: #fff;
-  border: 1px solid #e1e8ed;
-  border-radius: 6px;
-  padding: 0.4rem 0.75rem;
-  transition: box-shadow 0.2s;
-}
-.card:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
 .card-layout {
   display: flex;
   justify-content: space-between;
@@ -102,7 +92,7 @@ defineProps<props>();
 .amount.negative { color: #e74c3c; }
 .currency {
   font-weight: 600;
-  color: #27ae60;
+  color:grey;
   font-size: 1rem;
 }
 .tags {
