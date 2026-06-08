@@ -266,8 +266,8 @@ const cancel = () => {
   display: flex;
   flex-direction: column;
 }
-.entry-card .card-layout {
+.entry-card .entry-card-content .card-layout {
   margin-bottom: 0;
 }
-.entry-card .currency { color: #2c3e50; }
+.entry-card .entry-card-content .currency { color: #2c3e50; }
 </style>

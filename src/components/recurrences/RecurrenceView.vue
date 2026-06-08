@@ -56,3 +56,50 @@ const frequencyLabel = computed(() => {
   return labels[recurrence.frequency] ?? recurrence.frequency;
 });
 </script>
+
+<style scoped>
+.card-layout {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  margin-bottom: 0.15rem;
+}
+.card-left { flex: 1; }
+.card-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+}
+.date {
+  font-size: 0.75rem;
+  color: #7f8c8d;
+}
+.desc {
+  font-size: 0.8rem;
+  color: #5a6c7d;
+  margin: 0;
+}
+.amount-line {
+  display: flex;
+  gap: 0.35rem;
+  align-items: baseline;
+}
+.amount {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #2c3e50;
+}
+.currency {
+  font-weight: 600;
+  color: black;
+  font-size: 1rem;
+}
+.tag-icon {
+  margin-left: 0.25rem;
+  border-radius: 3px;
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+</style>
