@@ -40,6 +40,8 @@ const handleRemove = (tagToRemove: TagDto) => {
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
+  min-height: 2.6rem;
+  box-sizing: border-box;
 }
 
 .tag-selection-scrollable {

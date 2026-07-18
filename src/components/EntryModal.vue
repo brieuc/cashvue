@@ -383,7 +383,7 @@ onUpdated(() => {
   overflow-y: auto;
   border: 1px solid #dfe6e9;
   border-radius: 6px;
-  margin: 0 1.25rem 0.75rem;
+  margin: 0 0.75rem 0.75rem;
 }
 
 .tag-group-btn {
@@ -429,8 +429,8 @@ onUpdated(() => {
 .suggestions-list {
   position: absolute;
   top: 100%;
-  left: 0;
-  right: 0;
+  left: 0.75rem;
+  right: 0.75rem;
   max-height: 120px;
   overflow-y: auto;
   border: 1px solid #dfe6e9;
