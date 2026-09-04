@@ -1,9 +1,13 @@
 /// <reference types="vite/client" />
 
+import router from "@/router";
+import { useAuthStore } from "@/stores/auth";
+
 export const customFetch = async <T>(
   url: string,
   options?: RequestInit & { params?: Record<string, any> }
 ): Promise<T> => {
+  const auth = useAuthStore();
   let finalUrl = `${import.meta.env.VITE_API_URL}${url}`;
 
   // Convertir les params en query string
@@ -28,10 +32,17 @@ export const customFetch = async <T>(
 
   const response = await fetch(finalUrl, {
     ...options,
-    headers: options?.body instanceof FormData
-      ? { ...options?.headers }
-      : { 'Content-Type': 'application/json', ...options?.headers },
+    headers: {
+      ...(options?.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
+      ...(auth.token ? { Authorization: `Bearer ${auth.token}` } : {}),
+      ...options?.headers,
+    },
   });
+
+  if (response.status === 403) {
+    auth.clear();
+    router.push({ name: 'login', query: { redirect: router.currentRoute.value.fullPath } });
+  }
 
   const data = response.ok ? await response.json() : undefined;
 

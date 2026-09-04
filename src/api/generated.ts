@@ -226,6 +226,8 @@ export type ComputationRequestDto = {
   endDate: string;
   /** List of tags to filter entries in the calculation */
   tags?: TagDto[];
+  /** list of currencies to filter entries in the calculation */
+  currencies?: CurrencyDto[];
   /** Search text */
   searchText?: string;
   /**
@@ -271,14 +273,23 @@ export type ComputationResponseDto = {
   computationByCurrency?: ComputationResponseDtoComputationByCurrency;
 };
 
+export type AuthenticationRequest = {
+  username?: string;
+  password?: string;
+};
+
+export type AuthenticationResponse = {
+  token?: string;
+};
+
 export type PageImplTagDto = {
   content?: TagDto[];
   pageable?: PageableObject;
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -336,11 +347,11 @@ export type TagGroupTitleSuggestionDto = {
 export type PageImplRecurrenceDto = {
   content?: RecurrenceDto[];
   pageable?: PageableObject;
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -350,11 +361,11 @@ export type PageImplRecurrenceDto = {
 export type PageImplRateDto = {
   content?: RateDto[];
   pageable?: PageableObject;
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -364,11 +375,11 @@ export type PageImplRateDto = {
 export type PageImplPeriodDto = {
   content?: PeriodDto[];
   pageable?: PageableObject;
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -378,11 +389,11 @@ export type PageImplPeriodDto = {
 export type PageImplEntryDto = {
   content?: EntryDto[];
   pageable?: PageableObject;
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -392,11 +403,11 @@ export type PageImplEntryDto = {
 export type PageImplCurrencyDto = {
   content?: CurrencyDto[];
   pageable?: PageableObject;
-  totalElements?: number;
   totalPages?: number;
+  totalElements?: number;
   last?: boolean;
-  first?: boolean;
   numberOfElements?: number;
+  first?: boolean;
   size?: number;
   number?: number;
   sort?: SortObject;
@@ -2039,6 +2050,40 @@ export const compute = async (computationRequestDto: ComputationRequestDto, opti
     headers: { 'Content-Type': 'application/json', ...options?.headers },
     body: JSON.stringify(
       computationRequestDto,)
+  }
+);}
+
+
+
+export type loginResponse200 = {
+  data: AuthenticationResponse
+  status: 200
+}
+    
+export type loginResponseSuccess = (loginResponse200) & {
+  headers: Headers;
+};
+;
+
+export type loginResponse = (loginResponseSuccess)
+
+export const getLoginUrl = () => {
+
+
+  
+
+  return `/auth/login`
+}
+
+export const login = async (authenticationRequest: AuthenticationRequest, options?: RequestInit): Promise<loginResponse> => {
+  
+  return customFetch<loginResponse>(getLoginUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      authenticationRequest,)
   }
 );}
 

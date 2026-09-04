@@ -67,9 +67,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
-          },
           "200": {
             "description": "Tag trouvé",
             "content": {
@@ -79,6 +76,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       },
@@ -114,8 +114,8 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
+          "400": {
+            "description": "Données invalides"
           },
           "200": {
             "description": "Tag mis à jour avec succès",
@@ -127,8 +127,8 @@
               }
             }
           },
-          "400": {
-            "description": "Données invalides"
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       },
@@ -153,11 +153,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
-          },
           "204": {
             "description": "Tag supprimé avec succès"
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       }
@@ -184,6 +184,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Récurrence non trouvée"
+          },
           "200": {
             "description": "Récurrence trouvée",
             "content": {
@@ -193,9 +196,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -231,6 +231,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "200": {
             "description": "Récurrence mise à jour avec succès",
             "content": {
@@ -240,9 +243,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           },
           "404": {
             "description": "Récurrence non trouvée"
@@ -270,11 +270,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Récurrence supprimée avec succès"
-          },
           "404": {
             "description": "Récurrence non trouvée"
+          },
+          "204": {
+            "description": "Récurrence supprimée avec succès"
           }
         }
       }
@@ -301,9 +301,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Taux non trouvé"
-          },
           "200": {
             "description": "Taux trouvé",
             "content": {
@@ -313,6 +310,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       },
@@ -348,8 +348,8 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Taux non trouvé"
+          "400": {
+            "description": "Données invalides"
           },
           "200": {
             "description": "Taux mis à jour avec succès",
@@ -361,8 +361,8 @@
               }
             }
           },
-          "400": {
-            "description": "Données invalides"
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       },
@@ -387,11 +387,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Taux non trouvé"
-          },
           "204": {
             "description": "Taux supprimé avec succès"
+          },
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       }
@@ -418,9 +418,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -430,6 +427,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Période non trouvée"
           }
         }
       },
@@ -465,6 +465,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "200": {
             "description": "Période mise à jour avec succès",
             "content": {
@@ -477,9 +480,6 @@
           },
           "404": {
             "description": "Période non trouvée"
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       },
@@ -504,11 +504,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
           "204": {
             "description": "Période supprimée avec succès"
+          },
+          "404": {
+            "description": "Période non trouvée"
           }
         }
       }
@@ -582,12 +582,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
-          },
-          "404": {
-            "description": "Entrée non trouvée"
-          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -597,6 +591,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
+          },
+          "404": {
+            "description": "Entrée non trouvée"
           }
         }
       },
@@ -621,11 +621,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Entrée non trouvée"
-          },
           "204": {
             "description": "Entrée supprimée avec succès"
+          },
+          "404": {
+            "description": "Entrée non trouvée"
           }
         }
       }
@@ -724,6 +724,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Tag créé avec succès",
             "content": {
@@ -733,9 +736,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -979,6 +979,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Récurrence créée avec succès",
             "content": {
@@ -988,9 +991,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1199,6 +1199,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Période créée avec succès",
             "content": {
@@ -1208,9 +1211,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1415,6 +1415,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Entrée créée avec succès",
             "content": {
@@ -1424,9 +1427,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1564,6 +1564,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Devise créée avec succès",
             "content": {
@@ -1573,9 +1576,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1600,15 +1600,45 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides ou taux de change manquant"
-          },
           "200": {
             "description": "Calcul effectué avec succès",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ComputationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Données invalides ou taux de change manquant"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "auth-controller"
+        ],
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AuthenticationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponse"
                 }
               }
             }
@@ -1856,6 +1886,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Aucune période ne contient cette date"
+          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -1865,9 +1898,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Aucune période ne contient cette date"
           }
         }
       }
@@ -1893,9 +1923,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Devise non trouvée"
-          },
           "200": {
             "description": "Devise trouvée",
             "content": {
@@ -1905,6 +1932,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Devise non trouvée"
           }
         }
       },
@@ -1928,11 +1958,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Devise supprimée avec succès"
-          },
           "404": {
             "description": "Devise non trouvée"
+          },
+          "204": {
+            "description": "Devise supprimée avec succès"
           }
         }
       }
@@ -2295,6 +2325,14 @@
               "$ref": "#/components/schemas/TagDto"
             }
           },
+          "currencies": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "list of currencies to filter entries in the calculation",
+            "items": {
+              "$ref": "#/components/schemas/CurrencyDto"
+            }
+          },
           "searchText": {
             "type": "string",
             "description": "Search text"
@@ -2394,6 +2432,25 @@
         },
         "description": "Result of aggregated amount calculation"
       },
+      "AuthenticationRequest": {
+        "type": "object",
+        "properties": {
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        }
+      },
+      "AuthenticationResponse": {
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string"
+          }
+        }
+      },
       "PageImplTagDto": {
         "type": "object",
         "properties": {
@@ -2406,23 +2463,23 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "first": {
+          "last": {
             "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2561,23 +2618,23 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "first": {
+          "last": {
             "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2607,23 +2664,23 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "first": {
+          "last": {
             "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2653,23 +2710,23 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "first": {
+          "last": {
             "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2699,23 +2756,23 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "first": {
+          "last": {
             "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
@@ -2745,23 +2802,23 @@
           "pageable": {
             "$ref": "#/components/schemas/PageableObject"
           },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
           "totalPages": {
             "type": "integer",
             "format": "int32"
           },
-          "last": {
-            "type": "boolean"
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
           },
-          "first": {
+          "last": {
             "type": "boolean"
           },
           "numberOfElements": {
             "type": "integer",
             "format": "int32"
+          },
+          "first": {
+            "type": "boolean"
           },
           "size": {
             "type": "integer",
