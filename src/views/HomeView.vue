@@ -38,8 +38,8 @@ import { ref, watch } from 'vue';
 const selectedTags = ref<Array<TagDto>>([]);
 const selectedPeriod = ref<PeriodDto | undefined>();
 
-const startDate = ref<string>("2000-01-01");
-const endDate = ref<string>("2000-01-01");
+const startDate = ref<string>("2000-01-01T00:00:00");
+const endDate = ref<string>("2000-01-01T00:00:00");
 
 const entriesChanged = ref<number>(0);
 const searchText = ref<string>('');
