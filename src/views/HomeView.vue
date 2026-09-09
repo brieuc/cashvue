@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { type TagDto, type PeriodDto } from '@/api/generated';
-import EntryList from '@/components/EntryList.vue';
+import EntryList from '@/components/entries/EntryList.vue';
 import HeaderView from '@/components/HeaderView.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
 import EntryFilter from '@/components/filter/EntryFilter.vue';

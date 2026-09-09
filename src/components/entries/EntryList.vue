@@ -9,7 +9,7 @@
     <div v-else class="list">
       <div v-for="entry in sortedEntries" :key="entry.id" class="card" @click="selectEntry(entry)"
         :class="{ 'highlight': highlightedEntryId === entry.id }" :data-entry-id="entry.id">
-        <EntryView :entry="entry"></EntryView>
+        <EntryView :entry="entry" @duplicate="handleDuplicate" @duplicate-to-now="handleDuplicateToNow"></EntryView>
       </div>
     </div>
 
@@ -22,7 +22,6 @@ import { ref, computed, onMounted, watch, watchEffect, nextTick } from 'vue'
 import { useEntries } from '@/composables/useEntries'
 import EntryModal from './EntryModal.vue'
 //import { createEntry, type EntryDto, type getEntries, type GetEntriesParams } from '@/api/generated'
-import { createEntry } from '@/api/generated'
 import type { EntryDto, GetEntriesParams, TagDto } from '@/api/generated'
 import EntryView from './EntryView.vue'
 
@@ -70,7 +69,7 @@ const loadEntries = async () => {
       tagIds: filteringTags.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: 0,
-      size: 300
+      size: 10000
   };
   await fetchEntries(params)
 }
@@ -103,6 +102,35 @@ const scrollToAndHighlight = (entryId: number) => {
   }
 };
 
+const persistNewEntry = (formData: EntryDto) => {
+  return addEntry(formData).then(response => {
+    if (response.status === 201) {
+      emit("entriesChanged");
+      // loadEntries() we can just add the entry at the beginning of the array
+      // it works only if the new entry should be in that list
+      // We could be in a period which doesn't concern the entry. In that case,
+      // we don't want to reload the list. If the entry should be in the period,
+      // for the moment we reload
+      //if (new Date(formData.accountingDate).
+      //loadEntries()
+      const newEntry = response.data;
+
+      if (isInCurrentPeriod(newEntry.accountingDate)) {
+        // Ajouter localement
+        entries.value?.push(newEntry);
+
+        // Attendre le prochain rendu puis scroller + highlight
+        nextTick(() => {
+          scrollToAndHighlight(newEntry.id);
+        });
+      } else {
+        // Optionnel : afficher un message "Entrée créée mais hors période"
+      }
+    }
+    return response
+  })
+}
+
 const handleSubmit = async (formData: EntryDto) => {
 
   console.log("handleSubmit" + JSON.stringify(formData));
@@ -123,33 +151,22 @@ const handleSubmit = async (formData: EntryDto) => {
     })
   }
   else {
-    addEntry(formData).then(response => {
+    persistNewEntry(formData).then(response => {
       if (response.status === 201) {
-        emit("entriesChanged");
         isModalOpen.value = false
-        // loadEntries() we can just add the entry at the beginning of the array
-        // it works only if the new entry should be in that list
-        // We could be in a period which doesn't concern the entry. In that case,
-        // we don't want to reload the list. If the entry should be in the period,
-        // for the moment we reload
-        //if (new Date(formData.accountingDate).
-        //loadEntries()
-        const newEntry = response.data;
-
-        if (isInCurrentPeriod(newEntry.accountingDate)) {
-          // Ajouter localement
-          entries.value?.push(newEntry);
-
-          // Attendre le prochain rendu puis scroller + highlight
-          nextTick(() => {
-            scrollToAndHighlight(newEntry.id);
-          });
-        } else {
-          // Optionnel : afficher un message "Entrée créée mais hors période"
-        }
       }
     })
   }
+};
+
+const handleDuplicate = (entry: EntryDto) => {
+  const { id, modificationDate, ...rest } = entry;
+  persistNewEntry(rest);
+};
+
+const handleDuplicateToNow = (entry: EntryDto) => {
+  const { id, modificationDate, ...rest } = entry;
+  persistNewEntry({ ...rest, accountingDate: new Date().toISOString() });
 };
 
   /*
