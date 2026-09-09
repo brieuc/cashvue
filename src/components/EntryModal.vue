@@ -44,6 +44,17 @@
           <TagFilter v-model="form.tags" />
         </div>
 
+        <div v-if="form.tags?.length && tagGroups.length" class="tag-group-proposals">
+          <button v-for="group in tagGroups" :key="group.id" type="button"
+            class="tag-group-btn" @click="selectTagGroup(group)">
+            <span class="tag-group-icons">
+              <img v-for="tag in group.tags" :key="tag.id"
+                :src="`${uploadsUrl}/${tag.icon}`" :alt="tag.title" class="tag-icon" />
+            </span>
+            <span class="usage-count">{{ group.usageCount }}</span>
+          </button>
+        </div>
+
         <div class="form-group title-group">
           <input v-model="form.title" type="text" placeholder="Titre" @click="showSuggestions = !showSuggestions" @blur="showSuggestions = false" />
           <div v-if="showSuggestions" class="suggestions-list">
@@ -60,16 +71,6 @@
           <textarea v-model="form.description" rows="2" placeholder="Description"></textarea>
         </div>
 
-        <div v-if="form.tags?.length" class="tag-group-proposals">
-          <button v-for="group in tagGroups" :key="group.id" type="button"
-            class="tag-group-btn" @click="form.tags = group.tags ?? []">
-            <span class="tag-group-icons">
-              <img v-for="tag in group.tags" :key="tag.id"
-                :src="`${uploadsUrl}/${tag.icon}`" :alt="tag.title" class="tag-icon" />
-            </span>
-            <span class="usage-count">{{ group.usageCount }}</span>
-          </button>
-        </div>
 
       </form>
     </div>
@@ -112,6 +113,11 @@ const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
     showSuggestions.value = false;
     flashedSuggestionId.value = null;
   }, 150);
+};
+
+const selectTagGroup = (tagGroup : TagGroupDto) => {
+  form.tags = tagGroup.tags ?? [];
+  tagGroups.value = [];
 };
 
 const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
@@ -158,8 +164,8 @@ watch(() => props.entry, (entry) => {
 watch(() => form.tags, (tags) => {
   const tagIds = tags?.map(tag => tag.id).filter((id): id is number => id != null) ?? [];
   if (tagIds.length > 0) {
+    // fetchTagGroups( {tagIds : tagIds} ); avoid property name when same name as value
     fetchTagGroups({ tagIds }).then(data => {
-      tagGroups.value = data;
       const match = matchTagGroup(data);
       if (match?.id != null) {
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
@@ -167,12 +173,19 @@ watch(() => form.tags, (tags) => {
           form.title = titleSuggestions.value[0]?.title ?? ''
         });
       }
+      else {
+        // We reload the tag groups even when we select a tag group from the list because
+        // this watch is called with the new tags. We should prevent that behavior by reloading
+        // the tag group array only when there is not a match.
+        tagGroups.value = data;
+      }
     });
   }
 });
 
+// Put the focus on the amount textfield when opening the modal
 watch(() => props.isOpen, (open) => {
-  if (open) {
+  if (open && !props.entry) {
     nextTick(() => {
       inputRef.value?.focus();
     });
