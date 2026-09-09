@@ -39,9 +39,9 @@ defineEmits<{
   display: inline-flex;
   align-items: center;
   padding: 0.3rem 0.6rem;
-  background: #3498db;
+  background: #83cae4;
   color: white;
-  border: 1px solid #2980b9;
+  border: 1px solid #83cae4;
   border-radius: 12px;
   cursor: pointer;
   font-size: 0.85rem;

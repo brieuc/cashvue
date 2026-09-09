@@ -45,7 +45,7 @@ import type { PeriodDto, EntryDto } from '@/api/generated';
 import { useRecurrences } from '@/composables/useRecurrences';
 import { useEntries } from '@/composables/useEntries';
 import { reactive, ref, computed, watch } from 'vue';
-import EntryView from '@/components/EntryView.vue';
+import EntryView from '@/components/entries/EntryView.vue';
 
 
 interface props {
