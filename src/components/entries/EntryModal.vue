@@ -117,6 +117,8 @@ const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
 
 const selectTagGroup = (tagGroup : TagGroupDto) => {
   form.tags = tagGroup.tags ?? [];
+  // Once we select the tag group, no need to display the list anymore
+  // See the extra workaround in the watch tags
   tagGroups.value = [];
 };
 
@@ -129,11 +131,13 @@ const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
   tags: entry.tags,
 });
 
+const getDefaultAccountingDate = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+
 const defaultForm : CreateEntryRequest = {
   title: '',
   amount: null,
   currencyCode: 'CHF',
-  accountingDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
+  accountingDate: getDefaultAccountingDate(),
   description: '',
   tags: [] as Array<TagDto>,
 };
@@ -169,8 +173,10 @@ watch(() => form.tags, (tags) => {
       const match = matchTagGroup(data);
       if (match?.id != null) {
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
+          // Only interested in replacing the title with suggestion if it is empty
+          if (form.title === '')
+              form.title = titleSuggestions.value[0]?.title ?? ''
           titleSuggestions.value = suggestions;
-          form.title = titleSuggestions.value[0]?.title ?? ''
         });
       }
       else {
@@ -186,6 +192,7 @@ watch(() => form.tags, (tags) => {
 // Put the focus on the amount textfield when opening the modal
 watch(() => props.isOpen, (open) => {
   if (open && !props.entry) {
+    form.accountingDate = getDefaultAccountingDate();
     nextTick(() => {
       inputRef.value?.focus();
     });
@@ -209,9 +216,11 @@ const handleSubmit = () => {
   // Put the right amount depending on -/+ button
   if (isPositive.value === false)
     submitData.amount = (submitData.amount ?? 0) * -1.00;
+  /*
   if (submitData.tags && submitData.tags.length === 0) {
     delete submitData.tags
   }
+  */
   emit('submit', submitData)
   // Reset the form
   Object.assign(form, defaultForm);

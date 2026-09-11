@@ -69,7 +69,7 @@ const loadEntries = async () => {
       tagIds: filteringTags.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: 0,
-      size: 10000
+      size: 100
   };
   await fetchEntries(params)
 }
