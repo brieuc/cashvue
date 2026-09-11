@@ -649,7 +649,7 @@ export type getTagByIdResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type getTagByIdResponseSuccess = (getTagByIdResponse200) & {
   headers: Headers;
 };
@@ -662,19 +662,19 @@ export type getTagByIdResponse = (getTagByIdResponseSuccess | getTagByIdResponse
 export const getGetTagByIdUrl = (id: number,) => {
 
 
-  
+
 
   return `/tags/${id}`
 }
 
 export const getTagById = async (id: number, options?: RequestInit): Promise<getTagByIdResponse> => {
-  
+
   return customFetch<getTagByIdResponse>(getGetTagByIdUrl(id),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -698,7 +698,7 @@ export type updateTagResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type updateTagResponseSuccess = (updateTagResponse200) & {
   headers: Headers;
 };
@@ -711,16 +711,16 @@ export type updateTagResponse = (updateTagResponseSuccess | updateTagResponseErr
 export const getUpdateTagUrl = (id: number,) => {
 
 
-  
+
 
   return `/tags/${id}`
 }
 
 export const updateTag = async (id: number,
     tagDto: TagDto, options?: RequestInit): Promise<updateTagResponse> => {
-  
+
   return customFetch<updateTagResponse>(getUpdateTagUrl(id),
-  {      
+  {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -744,7 +744,7 @@ export type deleteTagResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type deleteTagResponseSuccess = (deleteTagResponse204) & {
   headers: Headers;
 };
@@ -757,19 +757,19 @@ export type deleteTagResponse = (deleteTagResponseSuccess | deleteTagResponseErr
 export const getDeleteTagUrl = (id: number,) => {
 
 
-  
+
 
   return `/tags/${id}`
 }
 
 export const deleteTag = async (id: number, options?: RequestInit): Promise<deleteTagResponse> => {
-  
+
   return customFetch<deleteTagResponse>(getDeleteTagUrl(id),
-  {      
+  {
     ...options,
     method: 'DELETE'
-    
-    
+
+
   }
 );}
 
@@ -788,7 +788,7 @@ export type getRecurrenceByIdResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type getRecurrenceByIdResponseSuccess = (getRecurrenceByIdResponse200) & {
   headers: Headers;
 };
@@ -801,19 +801,19 @@ export type getRecurrenceByIdResponse = (getRecurrenceByIdResponseSuccess | getR
 export const getGetRecurrenceByIdUrl = (id: number,) => {
 
 
-  
+
 
   return `/recurrences/${id}`
 }
 
 export const getRecurrenceById = async (id: number, options?: RequestInit): Promise<getRecurrenceByIdResponse> => {
-  
+
   return customFetch<getRecurrenceByIdResponse>(getGetRecurrenceByIdUrl(id),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -837,7 +837,7 @@ export type updateRecurrenceResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type updateRecurrenceResponseSuccess = (updateRecurrenceResponse200) & {
   headers: Headers;
 };
@@ -850,16 +850,16 @@ export type updateRecurrenceResponse = (updateRecurrenceResponseSuccess | update
 export const getUpdateRecurrenceUrl = (id: number,) => {
 
 
-  
+
 
   return `/recurrences/${id}`
 }
 
 export const updateRecurrence = async (id: number,
     recurrenceDto: NonReadonly<RecurrenceDto>, options?: RequestInit): Promise<updateRecurrenceResponse> => {
-  
+
   return customFetch<updateRecurrenceResponse>(getUpdateRecurrenceUrl(id),
-  {      
+  {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -883,7 +883,7 @@ export type deleteRecurrenceResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type deleteRecurrenceResponseSuccess = (deleteRecurrenceResponse204) & {
   headers: Headers;
 };
@@ -896,19 +896,19 @@ export type deleteRecurrenceResponse = (deleteRecurrenceResponseSuccess | delete
 export const getDeleteRecurrenceUrl = (id: number,) => {
 
 
-  
+
 
   return `/recurrences/${id}`
 }
 
 export const deleteRecurrence = async (id: number, options?: RequestInit): Promise<deleteRecurrenceResponse> => {
-  
+
   return customFetch<deleteRecurrenceResponse>(getDeleteRecurrenceUrl(id),
-  {      
+  {
     ...options,
     method: 'DELETE'
-    
-    
+
+
   }
 );}
 
@@ -927,7 +927,7 @@ export type getRateByIdResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type getRateByIdResponseSuccess = (getRateByIdResponse200) & {
   headers: Headers;
 };
@@ -940,19 +940,19 @@ export type getRateByIdResponse = (getRateByIdResponseSuccess | getRateByIdRespo
 export const getGetRateByIdUrl = (id: number,) => {
 
 
-  
+
 
   return `/rates/${id}`
 }
 
 export const getRateById = async (id: number, options?: RequestInit): Promise<getRateByIdResponse> => {
-  
+
   return customFetch<getRateByIdResponse>(getGetRateByIdUrl(id),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -976,7 +976,7 @@ export type updateRateResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type updateRateResponseSuccess = (updateRateResponse200) & {
   headers: Headers;
 };
@@ -989,16 +989,16 @@ export type updateRateResponse = (updateRateResponseSuccess | updateRateResponse
 export const getUpdateRateUrl = (id: number,) => {
 
 
-  
+
 
   return `/rates/${id}`
 }
 
 export const updateRate = async (id: number,
     rateDto: NonReadonly<RateDto>, options?: RequestInit): Promise<updateRateResponse> => {
-  
+
   return customFetch<updateRateResponse>(getUpdateRateUrl(id),
-  {      
+  {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1022,7 +1022,7 @@ export type deleteRateResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type deleteRateResponseSuccess = (deleteRateResponse204) & {
   headers: Headers;
 };
@@ -1035,19 +1035,19 @@ export type deleteRateResponse = (deleteRateResponseSuccess | deleteRateResponse
 export const getDeleteRateUrl = (id: number,) => {
 
 
-  
+
 
   return `/rates/${id}`
 }
 
 export const deleteRate = async (id: number, options?: RequestInit): Promise<deleteRateResponse> => {
-  
+
   return customFetch<deleteRateResponse>(getDeleteRateUrl(id),
-  {      
+  {
     ...options,
     method: 'DELETE'
-    
-    
+
+
   }
 );}
 
@@ -1066,7 +1066,7 @@ export type getPeriodByIdResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type getPeriodByIdResponseSuccess = (getPeriodByIdResponse200) & {
   headers: Headers;
 };
@@ -1079,19 +1079,19 @@ export type getPeriodByIdResponse = (getPeriodByIdResponseSuccess | getPeriodByI
 export const getGetPeriodByIdUrl = (id: number,) => {
 
 
-  
+
 
   return `/periods/${id}`
 }
 
 export const getPeriodById = async (id: number, options?: RequestInit): Promise<getPeriodByIdResponse> => {
-  
+
   return customFetch<getPeriodByIdResponse>(getGetPeriodByIdUrl(id),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1115,7 +1115,7 @@ export type updatePeriodResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type updatePeriodResponseSuccess = (updatePeriodResponse200) & {
   headers: Headers;
 };
@@ -1128,16 +1128,16 @@ export type updatePeriodResponse = (updatePeriodResponseSuccess | updatePeriodRe
 export const getUpdatePeriodUrl = (id: number,) => {
 
 
-  
+
 
   return `/periods/${id}`
 }
 
 export const updatePeriod = async (id: number,
     periodDto: NonReadonly<PeriodDto>, options?: RequestInit): Promise<updatePeriodResponse> => {
-  
+
   return customFetch<updatePeriodResponse>(getUpdatePeriodUrl(id),
-  {      
+  {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1161,7 +1161,7 @@ export type deletePeriodResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type deletePeriodResponseSuccess = (deletePeriodResponse204) & {
   headers: Headers;
 };
@@ -1174,19 +1174,19 @@ export type deletePeriodResponse = (deletePeriodResponseSuccess | deletePeriodRe
 export const getDeletePeriodUrl = (id: number,) => {
 
 
-  
+
 
   return `/periods/${id}`
 }
 
 export const deletePeriod = async (id: number, options?: RequestInit): Promise<deletePeriodResponse> => {
-  
+
   return customFetch<deletePeriodResponse>(getDeletePeriodUrl(id),
-  {      
+  {
     ...options,
     method: 'DELETE'
-    
-    
+
+
   }
 );}
 
@@ -1205,7 +1205,7 @@ export type getEntryByIdResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type getEntryByIdResponseSuccess = (getEntryByIdResponse200) & {
   headers: Headers;
 };
@@ -1218,19 +1218,19 @@ export type getEntryByIdResponse = (getEntryByIdResponseSuccess | getEntryByIdRe
 export const getGetEntryByIdUrl = (id: number,) => {
 
 
-  
+
 
   return `/entries/${id}`
 }
 
 export const getEntryById = async (id: number, options?: RequestInit): Promise<getEntryByIdResponse> => {
-  
+
   return customFetch<getEntryByIdResponse>(getGetEntryByIdUrl(id),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1254,7 +1254,7 @@ export type updateEntryResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type updateEntryResponseSuccess = (updateEntryResponse200) & {
   headers: Headers;
 };
@@ -1267,16 +1267,16 @@ export type updateEntryResponse = (updateEntryResponseSuccess | updateEntryRespo
 export const getUpdateEntryUrl = (id: number,) => {
 
 
-  
+
 
   return `/entries/${id}`
 }
 
 export const updateEntry = async (id: number,
     entryDto: NonReadonly<EntryDto>, options?: RequestInit): Promise<updateEntryResponse> => {
-  
+
   return customFetch<updateEntryResponse>(getUpdateEntryUrl(id),
-  {      
+  {
     ...options,
     method: 'PUT',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1300,7 +1300,7 @@ export type deleteEntryResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type deleteEntryResponseSuccess = (deleteEntryResponse204) & {
   headers: Headers;
 };
@@ -1313,19 +1313,19 @@ export type deleteEntryResponse = (deleteEntryResponseSuccess | deleteEntryRespo
 export const getDeleteEntryUrl = (id: number,) => {
 
 
-  
+
 
   return `/entries/${id}`
 }
 
 export const deleteEntry = async (id: number, options?: RequestInit): Promise<deleteEntryResponse> => {
-  
+
   return customFetch<deleteEntryResponse>(getDeleteEntryUrl(id),
-  {      
+  {
     ...options,
     method: 'DELETE'
-    
-    
+
+
   }
 );}
 
@@ -1339,7 +1339,7 @@ export type getTagsResponse200 = {
   data: PageImplTagDto
   status: 200
 }
-    
+
 export type getTagsResponseSuccess = (getTagsResponse200) & {
   headers: Headers;
 };
@@ -1359,7 +1359,7 @@ export const getGetTagsUrl = (params?: GetTagsParams,) => {
       });
       return;
     }
-      
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1371,13 +1371,13 @@ export const getGetTagsUrl = (params?: GetTagsParams,) => {
 }
 
 export const getTags = async (params?: GetTagsParams, options?: RequestInit): Promise<getTagsResponse> => {
-  
+
   return customFetch<getTagsResponse>(getGetTagsUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1396,7 +1396,7 @@ export type createTagResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type createTagResponseSuccess = (createTagResponse201) & {
   headers: Headers;
 };
@@ -1409,15 +1409,15 @@ export type createTagResponse = (createTagResponseSuccess | createTagResponseErr
 export const getCreateTagUrl = () => {
 
 
-  
+
 
   return `/tags`
 }
 
 export const createTag = async (tagDto: TagDto, options?: RequestInit): Promise<createTagResponse> => {
-  
+
   return customFetch<createTagResponse>(getCreateTagUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1445,7 +1445,7 @@ export type uploadIconResponse404 = {
   data: TagDto
   status: 404
 }
-    
+
 export type uploadIconResponseSuccess = (uploadIconResponse200) & {
   headers: Headers;
 };
@@ -1458,7 +1458,7 @@ export type uploadIconResponse = (uploadIconResponseSuccess | uploadIconResponse
 export const getUploadIconUrl = (id: number,) => {
 
 
-  
+
 
   return `/tags/${id}/icon`
 }
@@ -1469,11 +1469,11 @@ export const uploadIcon = async (id: number,
 formData.append(`file`, uploadIconBody.file)
 
   return customFetch<uploadIconResponse>(getUploadIconUrl(id),
-  {      
+  {
     ...options,
     method: 'POST'
     ,
-    body: 
+    body:
       formData,
   }
 );}
@@ -1488,7 +1488,7 @@ export type getRecurrencesResponse200 = {
   data: PageImplRecurrenceDto
   status: 200
 }
-    
+
 export type getRecurrencesResponseSuccess = (getRecurrencesResponse200) & {
   headers: Headers;
 };
@@ -1508,7 +1508,7 @@ export const getGetRecurrencesUrl = (params?: GetRecurrencesParams,) => {
       });
       return;
     }
-      
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1520,13 +1520,13 @@ export const getGetRecurrencesUrl = (params?: GetRecurrencesParams,) => {
 }
 
 export const getRecurrences = async (params?: GetRecurrencesParams, options?: RequestInit): Promise<getRecurrencesResponse> => {
-  
+
   return customFetch<getRecurrencesResponse>(getGetRecurrencesUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1545,7 +1545,7 @@ export type createRecurrenceResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type createRecurrenceResponseSuccess = (createRecurrenceResponse201) & {
   headers: Headers;
 };
@@ -1558,15 +1558,15 @@ export type createRecurrenceResponse = (createRecurrenceResponseSuccess | create
 export const getCreateRecurrenceUrl = () => {
 
 
-  
+
 
   return `/recurrences`
 }
 
 export const createRecurrence = async (recurrenceDto: NonReadonly<RecurrenceDto>, options?: RequestInit): Promise<createRecurrenceResponse> => {
-  
+
   return customFetch<createRecurrenceResponse>(getCreateRecurrenceUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1585,7 +1585,7 @@ export type getRatesResponse200 = {
   data: PageImplRateDto
   status: 200
 }
-    
+
 export type getRatesResponseSuccess = (getRatesResponse200) & {
   headers: Headers;
 };
@@ -1605,7 +1605,7 @@ export const getGetRatesUrl = (params?: GetRatesParams,) => {
       });
       return;
     }
-      
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1617,13 +1617,13 @@ export const getGetRatesUrl = (params?: GetRatesParams,) => {
 }
 
 export const getRates = async (params?: GetRatesParams, options?: RequestInit): Promise<getRatesResponse> => {
-  
+
   return customFetch<getRatesResponse>(getGetRatesUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1642,7 +1642,7 @@ export type createRateResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type createRateResponseSuccess = (createRateResponse201) & {
   headers: Headers;
 };
@@ -1655,15 +1655,15 @@ export type createRateResponse = (createRateResponseSuccess | createRateResponse
 export const getCreateRateUrl = () => {
 
 
-  
+
 
   return `/rates`
 }
 
 export const createRate = async (rateDto: NonReadonly<RateDto>, options?: RequestInit): Promise<createRateResponse> => {
-  
+
   return customFetch<createRateResponse>(getCreateRateUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1682,7 +1682,7 @@ export type getPeriodsResponse200 = {
   data: PageImplPeriodDto
   status: 200
 }
-    
+
 export type getPeriodsResponseSuccess = (getPeriodsResponse200) & {
   headers: Headers;
 };
@@ -1702,7 +1702,7 @@ export const getGetPeriodsUrl = (params?: GetPeriodsParams,) => {
       });
       return;
     }
-      
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1714,13 +1714,13 @@ export const getGetPeriodsUrl = (params?: GetPeriodsParams,) => {
 }
 
 export const getPeriods = async (params?: GetPeriodsParams, options?: RequestInit): Promise<getPeriodsResponse> => {
-  
+
   return customFetch<getPeriodsResponse>(getGetPeriodsUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1739,7 +1739,7 @@ export type createPeriodResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type createPeriodResponseSuccess = (createPeriodResponse201) & {
   headers: Headers;
 };
@@ -1752,15 +1752,15 @@ export type createPeriodResponse = (createPeriodResponseSuccess | createPeriodRe
 export const getCreatePeriodUrl = () => {
 
 
-  
+
 
   return `/periods`
 }
 
 export const createPeriod = async (periodDto: NonReadonly<PeriodDto>, options?: RequestInit): Promise<createPeriodResponse> => {
-  
+
   return customFetch<createPeriodResponse>(getCreatePeriodUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1779,7 +1779,7 @@ export type getEntriesResponse200 = {
   data: PageImplEntryDto
   status: 200
 }
-    
+
 export type getEntriesResponseSuccess = (getEntriesResponse200) & {
   headers: Headers;
 };
@@ -1799,7 +1799,7 @@ export const getGetEntriesUrl = (params?: GetEntriesParams,) => {
       });
       return;
     }
-      
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1811,13 +1811,13 @@ export const getGetEntriesUrl = (params?: GetEntriesParams,) => {
 }
 
 export const getEntries = async (params?: GetEntriesParams, options?: RequestInit): Promise<getEntriesResponse> => {
-  
+
   return customFetch<getEntriesResponse>(getGetEntriesUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1836,7 +1836,7 @@ export type createEntryResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type createEntryResponseSuccess = (createEntryResponse201) & {
   headers: Headers;
 };
@@ -1849,15 +1849,15 @@ export type createEntryResponse = (createEntryResponseSuccess | createEntryRespo
 export const getCreateEntryUrl = () => {
 
 
-  
+
 
   return `/entries`
 }
 
 export const createEntry = async (entryDto: NonReadonly<EntryDto>, options?: RequestInit): Promise<createEntryResponse> => {
-  
+
   return customFetch<createEntryResponse>(getCreateEntryUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1881,7 +1881,7 @@ export type createBatchResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type createBatchResponseSuccess = (createBatchResponse201) & {
   headers: Headers;
 };
@@ -1894,15 +1894,15 @@ export type createBatchResponse = (createBatchResponseSuccess | createBatchRespo
 export const getCreateBatchUrl = () => {
 
 
-  
+
 
   return `/entries/batch`
 }
 
 export const createBatch = async (entryDto: NonReadonly<EntryDto[]>, options?: RequestInit): Promise<createBatchResponse> => {
-  
+
   return customFetch<createBatchResponse>(getCreateBatchUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -1921,7 +1921,7 @@ export type getCurrenciesResponse200 = {
   data: PageImplCurrencyDto
   status: 200
 }
-    
+
 export type getCurrenciesResponseSuccess = (getCurrenciesResponse200) & {
   headers: Headers;
 };
@@ -1941,7 +1941,7 @@ export const getGetCurrenciesUrl = (params?: GetCurrenciesParams,) => {
       });
       return;
     }
-      
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -1953,13 +1953,13 @@ export const getGetCurrenciesUrl = (params?: GetCurrenciesParams,) => {
 }
 
 export const getCurrencies = async (params?: GetCurrenciesParams, options?: RequestInit): Promise<getCurrenciesResponse> => {
-  
+
   return customFetch<getCurrenciesResponse>(getGetCurrenciesUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -1978,7 +1978,7 @@ export type createCurrencyResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type createCurrencyResponseSuccess = (createCurrencyResponse201) & {
   headers: Headers;
 };
@@ -1991,15 +1991,15 @@ export type createCurrencyResponse = (createCurrencyResponseSuccess | createCurr
 export const getCreateCurrencyUrl = () => {
 
 
-  
+
 
   return `/currencies`
 }
 
 export const createCurrency = async (currencyDto: CurrencyDto, options?: RequestInit): Promise<createCurrencyResponse> => {
-  
+
   return customFetch<createCurrencyResponse>(getCreateCurrencyUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -2023,7 +2023,7 @@ export type computeResponse400 = {
   data: void
   status: 400
 }
-    
+
 export type computeResponseSuccess = (computeResponse200) & {
   headers: Headers;
 };
@@ -2036,15 +2036,15 @@ export type computeResponse = (computeResponseSuccess | computeResponseError)
 export const getComputeUrl = () => {
 
 
-  
+
 
   return `/computation`
 }
 
 export const compute = async (computationRequestDto: ComputationRequestDto, options?: RequestInit): Promise<computeResponse> => {
-  
+
   return customFetch<computeResponse>(getComputeUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -2059,7 +2059,7 @@ export type loginResponse200 = {
   data: AuthenticationResponse
   status: 200
 }
-    
+
 export type loginResponseSuccess = (loginResponse200) & {
   headers: Headers;
 };
@@ -2070,15 +2070,15 @@ export type loginResponse = (loginResponseSuccess)
 export const getLoginUrl = () => {
 
 
-  
+
 
   return `/auth/login`
 }
 
 export const login = async (authenticationRequest: AuthenticationRequest, options?: RequestInit): Promise<loginResponse> => {
-  
+
   return customFetch<loginResponse>(getLoginUrl(),
-  {      
+  {
     ...options,
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...options?.headers },
@@ -2096,7 +2096,7 @@ export type getTagGroupsResponse200 = {
   data: TagGroupDto[]
   status: 200
 }
-    
+
 export type getTagGroupsResponseSuccess = (getTagGroupsResponse200) & {
   headers: Headers;
 };
@@ -2116,8 +2116,8 @@ export const getGetTagGroupsUrl = (params?: GetTagGroupsParams,) => {
       });
       return;
     }
-      
-    
+
+
   });
 
   const stringifiedParams = normalizedParams.toString();
@@ -2126,13 +2126,13 @@ export const getGetTagGroupsUrl = (params?: GetTagGroupsParams,) => {
 }
 
 export const getTagGroups = async (params?: GetTagGroupsParams, options?: RequestInit): Promise<getTagGroupsResponse> => {
-  
+
   return customFetch<getTagGroupsResponse>(getGetTagGroupsUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -2145,7 +2145,7 @@ export type getTitleSuggestionsResponse200 = {
   data: TagGroupTitleSuggestionDto[]
   status: 200
 }
-    
+
 export type getTitleSuggestionsResponseSuccess = (getTitleSuggestionsResponse200) & {
   headers: Headers;
 };
@@ -2156,19 +2156,19 @@ export type getTitleSuggestionsResponse = (getTitleSuggestionsResponseSuccess)
 export const getGetTitleSuggestionsUrl = (id: number,) => {
 
 
-  
+
 
   return `/tag-groups/${id}/title-suggestions`
 }
 
 export const getTitleSuggestions = async (id: number, options?: RequestInit): Promise<getTitleSuggestionsResponse> => {
-  
+
   return customFetch<getTitleSuggestionsResponse>(getGetTitleSuggestionsUrl(id),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -2182,7 +2182,7 @@ export type simulateEntriesResponse200 = {
   data: EntryDto[]
   status: 200
 }
-    
+
 export type simulateEntriesResponseSuccess = (simulateEntriesResponse200) & {
   headers: Headers;
 };
@@ -2194,7 +2194,7 @@ export const getSimulateEntriesUrl = (params: SimulateEntriesParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -2206,13 +2206,13 @@ export const getSimulateEntriesUrl = (params: SimulateEntriesParams,) => {
 }
 
 export const simulateEntries = async (params: SimulateEntriesParams, options?: RequestInit): Promise<simulateEntriesResponse> => {
-  
+
   return customFetch<simulateEntriesResponse>(getSimulateEntriesUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -2226,7 +2226,7 @@ export type getRatesByCurrencyResponse200 = {
   data: RateDto[]
   status: 200
 }
-    
+
 export type getRatesByCurrencyResponseSuccess = (getRatesByCurrencyResponse200) & {
   headers: Headers;
 };
@@ -2247,7 +2247,7 @@ export const getGetRatesByCurrencyUrl = (currencyCode: string,
       });
       return;
     }
-      
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -2260,13 +2260,13 @@ export const getGetRatesByCurrencyUrl = (currencyCode: string,
 
 export const getRatesByCurrency = async (currencyCode: string,
     params?: GetRatesByCurrencyParams, options?: RequestInit): Promise<getRatesByCurrencyResponse> => {
-  
+
   return customFetch<getRatesByCurrencyResponse>(getGetRatesByCurrencyUrl(currencyCode,params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -2285,7 +2285,7 @@ export type getPeriodByDateResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type getPeriodByDateResponseSuccess = (getPeriodByDateResponse200) & {
   headers: Headers;
 };
@@ -2299,7 +2299,7 @@ export const getGetPeriodByDateUrl = (params: GetPeriodByDateParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    
+
     if (value !== undefined) {
       normalizedParams.append(key, value === null ? 'null' : value.toString())
     }
@@ -2311,13 +2311,13 @@ export const getGetPeriodByDateUrl = (params: GetPeriodByDateParams,) => {
 }
 
 export const getPeriodByDate = async (params: GetPeriodByDateParams, options?: RequestInit): Promise<getPeriodByDateResponse> => {
-  
+
   return customFetch<getPeriodByDateResponse>(getGetPeriodByDateUrl(params),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -2336,7 +2336,7 @@ export type getCurrencyByCodeResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type getCurrencyByCodeResponseSuccess = (getCurrencyByCodeResponse200) & {
   headers: Headers;
 };
@@ -2349,19 +2349,19 @@ export type getCurrencyByCodeResponse = (getCurrencyByCodeResponseSuccess | getC
 export const getGetCurrencyByCodeUrl = (code: string,) => {
 
 
-  
+
 
   return `/currencies/${code}`
 }
 
 export const getCurrencyByCode = async (code: string, options?: RequestInit): Promise<getCurrencyByCodeResponse> => {
-  
+
   return customFetch<getCurrencyByCodeResponse>(getGetCurrencyByCodeUrl(code),
-  {      
+  {
     ...options,
     method: 'GET'
-    
-    
+
+
   }
 );}
 
@@ -2380,7 +2380,7 @@ export type deleteCurrencyResponse404 = {
   data: void
   status: 404
 }
-    
+
 export type deleteCurrencyResponseSuccess = (deleteCurrencyResponse204) & {
   headers: Headers;
 };
@@ -2393,18 +2393,18 @@ export type deleteCurrencyResponse = (deleteCurrencyResponseSuccess | deleteCurr
 export const getDeleteCurrencyUrl = (code: string,) => {
 
 
-  
+
 
   return `/currencies/${code}`
 }
 
 export const deleteCurrency = async (code: string, options?: RequestInit): Promise<deleteCurrencyResponse> => {
-  
+
   return customFetch<deleteCurrencyResponse>(getDeleteCurrencyUrl(code),
-  {      
+  {
     ...options,
     method: 'DELETE'
-    
-    
+
+
   }
 );}
