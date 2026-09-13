@@ -8,36 +8,26 @@
       </div>
       <form @submit.prevent="handleSubmit" class="modal-body">
         <div class="form-row">
-          <div class="form-group">
-            <input v-model="form.accountingDate" type="datetime-local" required />
-          </div>
+          <input v-model="form.accountingDate" type="datetime-local" required class="date-input" />
 
-            <div class="form-group" style="display: flex; justify-content: space-evenly; align-items: center; padding: 0 1rem;">
-            <span>
-              <button
-                  type="button"
-                  class="amount-toggle"
-                  :class="isPositive ? 'positive' : 'negative'"
-                  @click="isPositive = !isPositive">
-                  {{ isPositive ? '+' : '−' }}
-              </button>
-            </span>
-            <span><input v-model.number="form.amount"
-              type="number"
-              inputmode="decimal"
-              step="any"
-              class="amount-input"
-              ref="inputRef"/>
-            </span>
-            <span><select v-model="form.currencyCode" required>
-              <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
-                {{ currency.code }}
-              </option>
-            </select></span>
-            </div>
-
-
-
+          <button
+              type="button"
+              class="amount-toggle"
+              :class="isPositive ? 'positive' : 'negative'"
+              @click="isPositive = !isPositive">
+              {{ isPositive ? '+' : '−' }}
+          </button>
+          <input v-model.number="form.amount"
+            type="number"
+            inputmode="decimal"
+            step="any"
+            class="amount-input"
+            ref="inputRef"/>
+          <select v-model="form.currencyCode" required class="currency-select">
+            <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
+              {{ currency.code }}
+            </option>
+          </select>
         </div>
 
         <div class="tag-filter-wrapper">
@@ -285,10 +275,34 @@ onUpdated(() => {
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
   padding: 0 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.date-input,
+.currency-select {
+  padding: 0.4rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.date-input:focus,
+.currency-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.date-input {
+  flex: 1 1 100px;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
 }
 
 .modal-body > .form-group {
@@ -336,24 +350,34 @@ onUpdated(() => {
 }
 
 .amount-toggle {
-  width: 2.5rem;
-  height: 2.5rem; /* même hauteur qu'un input standard */
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
   border: none;
   border-radius: 4px;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: bold;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.form-group input.amount-input {
-  font-size: 1.75rem;
+.amount-input {
+  font-size: 1.3rem;
   font-weight: 600;
   text-align: right;
-  width: 8ch;
-  padding: 0.5rem 0.75rem;
-  height: 3rem;
+  width: 6ch;
+  flex: 0 0 auto;
+  padding: 0.4rem 0.5rem;
+  height: 2.25rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.amount-input:focus {
+  outline: none;
+  border-color: #3498db;
 }
 
 .amount-toggle.positive {
@@ -476,9 +500,4 @@ onUpdated(() => {
   background: #bfdbfe;
 }
 
-@media (max-width: 640px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
-}
 </style>
