@@ -114,9 +114,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "200": {
             "description": "Tag mis à jour avec succès",
             "content": {
@@ -126,6 +123,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           },
           "404": {
             "description": "Tag non trouvé"
@@ -184,9 +184,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "200": {
             "description": "Récurrence trouvée",
             "content": {
@@ -196,6 +193,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -234,6 +234,9 @@
           "400": {
             "description": "Données invalides"
           },
+          "404": {
+            "description": "Récurrence non trouvée"
+          },
           "200": {
             "description": "Récurrence mise à jour avec succès",
             "content": {
@@ -243,9 +246,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -351,6 +351,9 @@
           "400": {
             "description": "Données invalides"
           },
+          "404": {
+            "description": "Taux non trouvé"
+          },
           "200": {
             "description": "Taux mis à jour avec succès",
             "content": {
@@ -360,9 +363,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Taux non trouvé"
           }
         }
       },
@@ -698,7 +698,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageImplTagDto"
+                  "$ref": "#/components/schemas/PagedModelTagDto"
                 }
               }
             }
@@ -953,7 +953,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageImplRecurrenceDto"
+                  "$ref": "#/components/schemas/PagedModelRecurrenceDto"
                 }
               }
             }
@@ -979,9 +979,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Récurrence créée avec succès",
             "content": {
@@ -991,6 +988,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1063,7 +1063,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageImplRateDto"
+                  "$ref": "#/components/schemas/PagedModelRateDto"
                 }
               }
             }
@@ -1173,7 +1173,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageImplPeriodDto"
+                  "$ref": "#/components/schemas/PagedModelPeriodDto"
                 }
               }
             }
@@ -1389,7 +1389,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageImplEntryDto"
+                  "$ref": "#/components/schemas/PagedModelEntryDto"
                 }
               }
             }
@@ -1415,9 +1415,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Entrée créée avec succès",
             "content": {
@@ -1427,6 +1424,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1538,7 +1538,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PageImplCurrencyDto"
+                  "$ref": "#/components/schemas/PagedModelCurrencyDto"
                 }
               }
             }
@@ -1657,20 +1657,16 @@
           {
             "name": "tagIds",
             "in": "query",
-            "description": "List of tag IDs to filter tag groups",
+            "description": "IDs des tags à filtrer",
             "required": false,
             "schema": {
               "uniqueItems": true,
               "type": "array",
-              "description": "List of tag IDs to filter tag groups",
-              "example": [1, 2, 5],
               "items": {
                 "type": "integer",
-                "description": "List of tag IDs to filter tag groups",
                 "format": "int64"
               }
-            },
-            "example": [1, 2, 5]
+            }
           }
         ],
         "responses": {
@@ -1690,7 +1686,7 @@
         }
       }
     },
-    "/tag-groups/{id}/title-suggestions": {
+    "/tag-groups/{tagGroupId}/title-suggestions": {
       "get": {
         "tags": [
           "Tag Groups"
@@ -1699,7 +1695,7 @@
         "operationId": "getTitleSuggestions",
         "parameters": [
           {
-            "name": "id",
+            "name": "tagGroupId",
             "in": "path",
             "description": "ID du groupe de tags",
             "required": true,
@@ -1923,6 +1919,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Devise non trouvée"
+          },
           "200": {
             "description": "Devise trouvée",
             "content": {
@@ -1932,9 +1931,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Devise non trouvée"
           }
         }
       },
@@ -2451,7 +2447,28 @@
           }
         }
       },
-      "PageImplTagDto": {
+      "PageMetadata": {
+        "type": "object",
+        "properties": {
+          "size": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "number": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "PagedModelTagDto": {
         "type": "object",
         "properties": {
           "content": {
@@ -2460,80 +2477,8 @@
               "$ref": "#/components/schemas/TagDto"
             }
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "empty": {
-            "type": "boolean"
-          }
-        }
-      },
-      "PageableObject": {
-        "type": "object",
-        "properties": {
-          "paged": {
-            "type": "boolean"
-          },
-          "pageNumber": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "pageSize": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "unpaged": {
-            "type": "boolean"
-          },
-          "offset": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          }
-        }
-      },
-      "SortObject": {
-        "type": "object",
-        "properties": {
-          "sorted": {
-            "type": "boolean"
-          },
-          "unsorted": {
-            "type": "boolean"
-          },
-          "empty": {
-            "type": "boolean"
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
           }
         }
       },
@@ -2606,7 +2551,7 @@
         },
         "description": "Represents a suggested title for a tag group"
       },
-      "PageImplRecurrenceDto": {
+      "PagedModelRecurrenceDto": {
         "type": "object",
         "properties": {
           "content": {
@@ -2615,44 +2560,12 @@
               "$ref": "#/components/schemas/RecurrenceDto"
             }
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "empty": {
-            "type": "boolean"
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
           }
         }
       },
-      "PageImplRateDto": {
+      "PagedModelRateDto": {
         "type": "object",
         "properties": {
           "content": {
@@ -2661,44 +2574,12 @@
               "$ref": "#/components/schemas/RateDto"
             }
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "empty": {
-            "type": "boolean"
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
           }
         }
       },
-      "PageImplPeriodDto": {
+      "PagedModelPeriodDto": {
         "type": "object",
         "properties": {
           "content": {
@@ -2707,44 +2588,12 @@
               "$ref": "#/components/schemas/PeriodDto"
             }
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "empty": {
-            "type": "boolean"
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
           }
         }
       },
-      "PageImplEntryDto": {
+      "PagedModelEntryDto": {
         "type": "object",
         "properties": {
           "content": {
@@ -2753,44 +2602,12 @@
               "$ref": "#/components/schemas/EntryDto"
             }
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "empty": {
-            "type": "boolean"
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
           }
         }
       },
-      "PageImplCurrencyDto": {
+      "PagedModelCurrencyDto": {
         "type": "object",
         "properties": {
           "content": {
@@ -2799,40 +2616,8 @@
               "$ref": "#/components/schemas/CurrencyDto"
             }
           },
-          "pageable": {
-            "$ref": "#/components/schemas/PageableObject"
-          },
-          "totalPages": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalElements": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "last": {
-            "type": "boolean"
-          },
-          "numberOfElements": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "first": {
-            "type": "boolean"
-          },
-          "size": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "number": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "sort": {
-            "$ref": "#/components/schemas/SortObject"
-          },
-          "empty": {
-            "type": "boolean"
+          "page": {
+            "$ref": "#/components/schemas/PageMetadata"
           }
         }
       }

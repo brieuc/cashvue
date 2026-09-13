@@ -1,22 +1,25 @@
 import { ref } from 'vue';
 import { createEntry, createBatch, getEntries, updateEntry } from '@/api/generated';
-import type { EntryDto, GetEntriesParams } from '@/api/generated';
+import type { EntryDto, GetEntriesParams, PageMetadata } from '@/api/generated';
 
 export function useEntries() {
   const entries = ref<EntryDto[]>([]);
-  const loading = ref(false);
   const error = ref<string | null>(null);
+  const currentPage = ref<PageMetadata>();
 
-  const fetchEntries = async (params : GetEntriesParams) => {
-    loading.value = true;
+  const fetchEntries = async (params : GetEntriesParams, reload : boolean) => {
     error.value = null;
     try {
       const response = await getEntries(params);
-      entries.value = (response.data.content as EntryDto[]) || [];
+      const content = response.data.content ?? [];
+      currentPage.value = response.data.page;
+      if (reload) {
+        entries.value = content;
+      } else {
+        entries.value = entries.value.concat(content);
+      }
     } catch (e) {
       error.value = 'Erreur lors du chargement ' + e;
-    } finally {
-      loading.value = false;
     }
   };
 
@@ -32,5 +35,5 @@ export function useEntries() {
     return createBatch(batch);
   };
 
-  return { entries, loading, error, fetchEntries, addEntry, addEntries, editEntry };
+  return { entries, currentPage, error, fetchEntries, addEntry, addEntries, editEntry };
 }

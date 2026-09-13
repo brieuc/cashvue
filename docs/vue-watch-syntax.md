@@ -96,6 +96,48 @@ watch(() => state.count, (newCount) => {
 })
 ```
 
+## ⚠️ Common Trap: Getter Returning a Ref Instead of Its Value
+
+```typescript
+const entries = ref<EntryDto[]>([])
+
+// ❌ Never re-triggers after the first (immediate) run
+watch(() => entries, (entries) => {
+  console.log('entries changed', entries.value.length)
+}, { immediate: true })
+```
+
+Here `entries` is already a `ref`. The getter `() => entries` returns **the ref object itself**, not its content. That ref object is created once and its identity **never changes** for the whole lifetime of the component — only `entries.value` (the array inside it) changes over time.
+
+`watch` decides whether to re-run the callback by comparing what the getter returns between two executions. Since the getter always returns the exact same object reference, Vue sees "no change" every time, no matter how many times `entries.value` is reassigned or mutated. Only the `immediate: true` initial call ever fires.
+
+Note the callback parameter is named `entries` too, shadowing the outer variable — since the getter returned the ref itself, that parameter *is* the ref, so `entries.value.length` inside the callback still "works" and doesn't throw. That's exactly what makes this bug sneaky: the code runs without errors, it just silently never reacts again.
+
+### The fix: two valid options
+
+```typescript
+// ✅ Option 1 - pass the ref directly (Vue unwraps .value automatically,
+// both for comparison and for the callback argument)
+watch(entries, (newEntries) => {
+  console.log('entries changed', newEntries.length)
+}, { immediate: true })
+
+// ✅ Option 2 - getter that reads .value explicitly
+watch(() => entries.value, (newEntries) => {
+  console.log('entries changed', newEntries.length)
+}, { immediate: true })
+```
+
+Bonus with Option 1: a `ref` whose value is an object/array automatically gets **deep** watching in Vue 3. So it reacts both to reassignment (`entries.value = newArray`) and to in-place mutation (`entries.value.push(item)`), with no extra `{ deep: true }` needed.
+
+### Rule of thumb
+
+| Getter | What Vue compares | Re-triggers on `.value` change? |
+|---|---|---|
+| `() => myRef` | The ref object itself (never changes identity) | ❌ Never |
+| `() => myRef.value` | The current value inside the ref | ✅ Yes |
+| `myRef` (no getter, passed directly) | Vue unwraps `.value` for you | ✅ Yes (+ deep if object/array) |
+
 ## Stopping a Watcher
 
 ```typescript
