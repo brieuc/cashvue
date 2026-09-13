@@ -4,13 +4,15 @@
       <h2>Mes Dépenses</h2>
       <button class="add-btn" @click="isModalOpen = true, selectedEntry = null">+</button>
     </div>
-    <p v-if="loading" class="empty"></p>
-    <p v-else-if="!entries?.length" class="empty">Aucune dépense</p>
+    <p v-if="!entries?.length" class="empty">Aucune dépense</p>
     <div v-else class="list">
       <div v-for="entry in sortedEntries" :key="entry.id" class="card" @click="selectEntry(entry)"
         :class="{ 'highlight': highlightedEntryId === entry.id }" :data-entry-id="entry.id">
         <EntryView :entry="entry" @duplicate="handleDuplicate" @duplicate-to-now="handleDuplicateToNow"></EntryView>
       </div>
+    </div>
+    <div v-if="hasMorePage" class="load-more">
+      <button class="load-more-btn" @click="loadNextPage">Load next page</button>
     </div>
 
     <EntryModal :is-open="isModalOpen" :entry="selectedEntry" @close="isModalOpen = false" @submit="handleSubmit" />
@@ -25,11 +27,13 @@ import EntryModal from './EntryModal.vue'
 import type { EntryDto, GetEntriesParams, TagDto } from '@/api/generated'
 import EntryView from './EntryView.vue'
 
-const { entries, loading, error, fetchEntries, addEntry, editEntry } = useEntries()
+const { entries, currentPage, error, fetchEntries, addEntry, editEntry } = useEntries()
 //const entries = ref<Entry[]>([])
 const isModalOpen = ref(false)
 const selectedEntry = ref<EntryDto | null>(null);
 const highlightedEntryId = ref<number | null>(null);
+const hasMorePage = ref(false);
+const paginationSize = 100;
 
 const emit = defineEmits<{
     entriesChanged : [];
@@ -49,7 +53,7 @@ const isInCurrentPeriod = (date: string) => {
     return entryDate >= start && entryDate <= end;
 };
 
-
+// Useful to sort the inserted entries, besides fetching sorted entries from the back-end
 const sortedEntries = computed(() => {
   if (!entries.value) return []
   return [...entries.value].sort((a, b) => {
@@ -63,24 +67,59 @@ const selectEntry = async (entry: EntryDto) => {
 };
 
 const loadEntries = async () => {
+  // Faire une gestion des pages
   const params: GetEntriesParams = {
       startDate: startDate,
       endDate: endDate,
       tagIds: filteringTags.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: 0,
-      size: 100
+      size: paginationSize,
+      sort: ["accountingDate:desc"]
   };
-  await fetchEntries(params)
+
+  await fetchEntries(params, true);
+
+  // size : 100 // number of elements asked
+  // number : 2 // page asked (from 0)
+  // totalElements : 10 // total nb of elements
+  // totalPages : 1 // total number of pages
 }
 
+watch(entries, (newEntries) => {
+  console.log("watch entries")
+  const totalElements = currentPage.value?.totalElements;
+  if (totalElements != null && newEntries.length < totalElements) {
+    hasMorePage.value = true;
+    console.log("has more page")
+  }
+  else {
+    hasMorePage.value = false;
+  }
+}, {immediate : true});
+
 watchEffect(async() => {
-  // runs only once before 3.5
-  // re-runs when the "foo" prop changes in 3.5+
-  //console.log("entry list new tags : " + filteringTags);
-  //console.log("period startDate : " + startDate + " endDate : " + endDate);
+  // depuis vue 3.5, le compuilateur destruture les props en ref. Toutes les refs
+  // qui sont lues (filteringTags, startDate, endDate) dans la méthode déclenche le reload
   loadEntries();
 })
+
+const loadNextPage = async () => {
+  const nextPage = (currentPage.value?.number ?? 0) + 1;
+
+  const params: GetEntriesParams = {
+      startDate: startDate,
+      endDate: endDate,
+      tagIds: filteringTags.map(tagDto => tagDto.id!),
+      searchText: searchText,
+      page: nextPage,
+      size: paginationSize,
+      sort: ["accountingDate:desc"]
+  };
+
+  await fetchEntries(params, false);
+};
+
 /*
 watch(filteringTags, (newValue) => {
   console.log("entry list new tags : " + newValue);
@@ -247,6 +286,28 @@ h3 {
 
 .card.highlight {
   animation: flash 1.5s ease-out;
+}
+
+.load-more {
+  display: flex;
+  justify-content: center;
+  margin-top: 0.75rem;
+}
+
+.load-more-btn {
+  padding: 0.5rem 1.25rem;
+  border: 1px solid #d6e9f8;
+  border-radius: 6px;
+  background: transparent;
+  color: #5dade2;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: background 0.2s, border-color 0.2s;
+}
+
+.load-more-btn:hover {
+  background: #f0f8ff;
+  border-color: #aed6f1;
 }
 
 @keyframes flash {
