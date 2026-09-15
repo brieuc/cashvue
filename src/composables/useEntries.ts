@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import { createEntry, createBatch, getEntries, updateEntry } from '@/api/generated';
+import { createEntry, createBatch, getEntries, updateEntry, deleteEntry } from '@/api/generated';
 import type { EntryDto, GetEntriesParams, PageMetadata } from '@/api/generated';
 
 export function useEntries() {
@@ -35,5 +35,9 @@ export function useEntries() {
     return createBatch(batch);
   };
 
-  return { entries, currentPage, error, fetchEntries, addEntry, addEntries, editEntry };
+  const removeEntry = async (id: number) => {
+    return deleteEntry(id);
+  };
+
+  return { entries, currentPage, error, fetchEntries, addEntry, addEntries, editEntry, removeEntry };
 }
