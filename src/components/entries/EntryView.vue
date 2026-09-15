@@ -24,6 +24,7 @@
       <div v-if="showMenu" class="actions-menu" @click.stop>
         <button type="button" class="menu-item" @click="onDuplicate">Dupliquer</button>
         <button type="button" class="menu-item" @click="onDuplicateToNow">Dupliquer à maintenant</button>
+        <button type="button" class="menu-item" @click="onDelete">Supprimer</button>
       </div>
     </div>
   </div>
@@ -57,6 +58,7 @@ const props = defineProps<props>();
 const emit = defineEmits<{
   duplicate: [entry: EntryDto]
   duplicateToNow: [entry: EntryDto]
+  delete: [entry: EntryDto]
 }>();
 
 const toggleMenu = () => {
@@ -75,6 +77,11 @@ const onDuplicate = () => {
 const onDuplicateToNow = () => {
   closeMenu();
   emit('duplicateToNow', props.entry);
+};
+
+const onDelete = () => {
+  closeMenu();
+  emit('delete', props.entry);
 };
 
 onMounted(() => document.addEventListener('click', closeMenu));

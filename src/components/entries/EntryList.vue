@@ -8,7 +8,11 @@
     <div v-else class="list">
       <div v-for="entry in sortedEntries" :key="entry.id" class="card" @click="selectEntry(entry)"
         :class="{ 'highlight': highlightedEntryId === entry.id }" :data-entry-id="entry.id">
-        <EntryView :entry="entry" @duplicate="handleDuplicate" @duplicate-to-now="handleDuplicateToNow"></EntryView>
+        <EntryView :entry="entry"
+          @duplicate="handleDuplicate"
+          @duplicate-to-now="handleDuplicateToNow"
+          @delete="handleDelete">
+        </EntryView>
       </div>
     </div>
     <div v-if="hasMorePage" class="load-more">
@@ -27,7 +31,7 @@ import EntryModal from './EntryModal.vue'
 import type { EntryDto, GetEntriesParams, TagDto } from '@/api/generated'
 import EntryView from './EntryView.vue'
 
-const { entries, currentPage, error, fetchEntries, addEntry, editEntry } = useEntries()
+const { entries, currentPage, error, fetchEntries, addEntry, editEntry, removeEntry } = useEntries()
 //const entries = ref<Entry[]>([])
 const isModalOpen = ref(false)
 const selectedEntry = ref<EntryDto | null>(null);
@@ -206,6 +210,18 @@ const handleDuplicate = (entry: EntryDto) => {
 const handleDuplicateToNow = (entry: EntryDto) => {
   const { id, modificationDate, ...rest } = entry;
   persistNewEntry({ ...rest, accountingDate: new Date().toISOString() });
+};
+
+const handleDelete = (entry: EntryDto) => {
+  removeEntry(entry.id!).then(response => {
+    if (response.status === 204) {
+      emit("entriesChanged");
+      const index = entries.value.findIndex(e => e.id === entry.id);
+      if (index != -1) {
+        entries.value.splice(index, 1);
+      }
+    }
+  });
 };
 
   /*

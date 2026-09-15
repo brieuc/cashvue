@@ -44,7 +44,7 @@ export const customFetch = async <T>(
     router.push({ name: 'login', query: { redirect: router.currentRoute.value.fullPath } });
   }
 
-  const data = response.ok ? await response.json() : undefined;
+  const data = response.ok && response.status !== 204 ? await response.json() : undefined;
 
   return {
     data,

@@ -81,6 +81,8 @@ const handleSelectPeriod = (period: PeriodDto) => {
 }
 
 .header-bar {
+  flex-shrink: 0;
+  height: 4.5rem;
   border-bottom: 1px solid #e1e8ed;
 }
 
