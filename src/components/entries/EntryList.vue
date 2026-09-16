@@ -1,13 +1,9 @@
 <template>
   <div class="entries">
-    <div class="header-bar">
-      <h2>Mes Dépenses</h2>
-      <button class="add-btn" @click="isModalOpen = true, selectedEntry = null">+</button>
-    </div>
     <p v-if="!entries?.length" class="empty">Aucune dépense</p>
     <div v-else class="list">
       <div v-for="entry in sortedEntries" :key="entry.id" class="card" @click="selectEntry(entry)"
-        :class="{ 'highlight': highlightedEntryId === entry.id }" :data-entry-id="entry.id">
+        :class="{ 'highlight': highlightedEntryId === entry.id, 'future': isFuture(entry.accountingDate) }" :data-entry-id="entry.id">
         <EntryView :entry="entry"
           @duplicate="handleDuplicate"
           @duplicate-to-now="handleDuplicateToNow"
@@ -17,6 +13,10 @@
     </div>
     <div v-if="hasMorePage" class="load-more">
       <button class="load-more-btn" @click="loadNextPage">Load next page</button>
+    </div>
+
+    <div class="fab-wrapper">
+      <button class="add-btn" @click="isModalOpen = true, selectedEntry = null">+</button>
     </div>
 
     <EntryModal :is-open="isModalOpen" :entry="selectedEntry" @close="isModalOpen = false" @submit="handleSubmit" />
@@ -49,6 +49,8 @@ const { filteringTags, startDate, endDate, searchText } = defineProps<{
   endDate: string,
   searchText: string
 }>();
+
+const isFuture = (date: string) => new Date(date).getTime() > Date.now();
 
 const isInCurrentPeriod = (date: string) => {
     const entryDate = new Date(date);
@@ -239,6 +241,9 @@ onMounted(() => {
 
 <style scoped>
 .entries {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
   margin: 0 auto;
   padding: 0.75rem;
 }
@@ -253,7 +258,17 @@ h2 {
   font-weight: 600;
   margin: 0;
 }
+.fab-wrapper {
+  position: sticky;
+  bottom: 0.25rem;
+  margin-top: auto;
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 0.25rem;
+  pointer-events: none;
+}
 .add-btn {
+  pointer-events: auto;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -266,6 +281,7 @@ h2 {
   align-items: center;
   justify-content: center;
   line-height: 1;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   transition: background 0.2s;
 }
 .add-btn:hover {
@@ -302,6 +318,10 @@ h3 {
 
 .card.highlight {
   animation: flash 1.5s ease-out;
+}
+
+.card.future {
+  background: #d6e9f8;
 }
 
 .load-more {
