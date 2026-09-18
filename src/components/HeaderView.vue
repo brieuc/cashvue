@@ -50,13 +50,13 @@ interface PanelDescriptor {
   key: string,
   component: Component,
   props: Record<string, unknown>,
-  currency: string,
+  currency: string | null
 }
 
-const currency = defineModel('currency', { type: String, default: 'CHF' });
+const currency = defineModel<string | null>('currency', { default: null });
 
 const absoluteAmount = (amount: number | undefined) => {
-  const value = amount ?? 0.0;
+  const value = amount ?? 0.0
   return value < 0.0 ? value * -1.0 : value;
 };
 
@@ -70,7 +70,7 @@ const panels = computed<PanelDescriptor[]>(() => {
         totalAmount: absoluteAmount(totalComputation.value?.totalAmount),
         currency: totalComputation.value?.targetCurrencyCode ?? '',
       },
-      currency: 'CHF',
+      currency: null,
     },
   ];
 
@@ -113,7 +113,7 @@ watch(() => toDateOnly, () => {
 })
 
 watch([activeIndex, panels], ([index, currentPanels]) => {
-  currency.value = currentPanels[index]?.currency ?? 'CHF';
+  currency.value = currentPanels[index]?.currency ?? null;
 }, { immediate: true });
 
 const getComputation = (period : PeriodDto | undefined, selectedTags : TagDto[]) => {
