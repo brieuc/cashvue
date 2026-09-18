@@ -63,9 +63,12 @@ const isInCurrentPeriod = (date: string) => {
 // Useful to sort the inserted entries, besides fetching sorted entries from the back-end
 const filteredSortedEntries = computed(() => {
   if (!entries.value) return []
-  return [...entries.value].filter(e => e.currencyCode == filteringCurrency).sort((a, b) => {
+  const sortedEntries = [...entries.value].sort((a, b) => {
     return new Date(b.accountingDate).getTime() - new Date(a.accountingDate).getTime()
-  })
+  });
+  if (filteringCurrency)
+    return sortedEntries.filter(e => e.currencyCode == filteringCurrency)
+  return sortedEntries;
 })
 
 const selectEntry = async (entry: EntryDto) => {
