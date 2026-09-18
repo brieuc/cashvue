@@ -2,7 +2,7 @@
   <div class="entries">
     <p v-if="!entries?.length" class="empty">Aucune dépense</p>
     <div v-else class="list">
-      <div v-for="entry in sortedEntries" :key="entry.id" class="card" @click="selectEntry(entry)"
+      <div v-for="entry in filteredSortedEntries" :key="entry.id" class="card" @click="selectEntry(entry)"
         :class="{ 'highlight': highlightedEntryId === entry.id, 'future': isFuture(entry.accountingDate) }" :data-entry-id="entry.id">
         <EntryView :entry="entry"
           @duplicate="handleDuplicate"
@@ -43,11 +43,12 @@ const emit = defineEmits<{
     entriesChanged : [];
 }>();
 
-const { filteringTags, startDate, endDate, searchText } = defineProps<{
-  filteringTags: TagDto[];
+const { tags, startDate, endDate, searchText, filteringCurrency } = defineProps<{
+  tags: TagDto[];
   startDate: string,
   endDate: string,
-  searchText: string
+  searchText: string,
+  filteringCurrency: string // not for the request, only to filter the current entries
 }>();
 
 const isFuture = (date: string) => new Date(date).getTime() > Date.now();
@@ -60,9 +61,9 @@ const isInCurrentPeriod = (date: string) => {
 };
 
 // Useful to sort the inserted entries, besides fetching sorted entries from the back-end
-const sortedEntries = computed(() => {
+const filteredSortedEntries = computed(() => {
   if (!entries.value) return []
-  return [...entries.value].sort((a, b) => {
+  return [...entries.value].filter(e => e.currencyCode == filteringCurrency).sort((a, b) => {
     return new Date(b.accountingDate).getTime() - new Date(a.accountingDate).getTime()
   })
 })
@@ -77,7 +78,7 @@ const loadEntries = async () => {
   const params: GetEntriesParams = {
       startDate: startDate,
       endDate: endDate,
-      tagIds: filteringTags.map(tagDto => tagDto.id!),
+      tagIds: tags.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: 0,
       size: paginationSize,
@@ -106,7 +107,7 @@ watch(entries, (newEntries) => {
 
 watchEffect(async() => {
   // depuis vue 3.5, le compuilateur destruture les props en ref. Toutes les refs
-  // qui sont lues (filteringTags, startDate, endDate) dans la méthode déclenche le reload
+  // qui sont lues (tags, startDate, endDate) dans la méthode déclenche le reload
   loadEntries();
 })
 
@@ -116,7 +117,7 @@ const loadNextPage = async () => {
   const params: GetEntriesParams = {
       startDate: startDate,
       endDate: endDate,
-      tagIds: filteringTags.map(tagDto => tagDto.id!),
+      tagIds: tags.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: nextPage,
       size: paginationSize,
@@ -127,7 +128,7 @@ const loadNextPage = async () => {
 };
 
 /*
-watch(filteringTags, (newValue) => {
+watch(tags, (newValue) => {
   console.log("entry list new tags : " + newValue);
 });
 */

@@ -1,5 +1,10 @@
 <template>
-<div>
+<div class="period-row">
+    <button type="button" class="today-toggle" :class="{ active: toDateOnly }" @click="toDateOnly = !toDateOnly">
+      <span class="toggle-track"><span class="toggle-thumb"></span></span>
+      à ce jour
+    </button>
+    <span class="divider"></span>
     <button v-for="period in availablePeriods" :key="period.id" type="button" @click="select(period)"
       :class="['tag-btn', { active: selectedPeriod?.id === period.id }]">
       {{ period.title }}
@@ -16,6 +21,7 @@ import { computed, onMounted, watch } from 'vue';
 const {periods, fetchPeriods} = usePeriods();
 
 const selectedPeriod = defineModel({type: Object, default: () => ({}) });
+const toDateOnly = defineModel('toDate', {type: Boolean, default: false});
 
 interface Emit {
   select: [PeriodDto]
@@ -68,3 +74,62 @@ onMounted(() => {
 
 </script>
 
+<style scoped>
+.period-row {
+  display: flex;
+  align-items: center;
+}
+
+.today-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: none;
+  border: none;
+  padding: 0.4rem 0.2rem;
+  cursor: pointer;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #7f8c8d;
+  transition: color 0.2s;
+}
+
+.today-toggle.active {
+  color: #2c3e50;
+}
+
+.toggle-track {
+  display: inline-flex;
+  align-items: center;
+  width: 30px;
+  height: 18px;
+  border-radius: 999px;
+  background: #d0d7de;
+  padding: 2px;
+  transition: background 0.2s;
+}
+
+.today-toggle.active .toggle-track {
+  background: #3498db;
+}
+
+.toggle-thumb {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: white;
+  transition: transform 0.2s;
+}
+
+.today-toggle.active .toggle-thumb {
+  transform: translateX(12px);
+}
+
+.divider {
+  width: 1px;
+  height: 1.25rem;
+  background: #e1e8ed;
+  margin: 0 0.6rem;
+  flex-shrink: 0;
+}
+</style>

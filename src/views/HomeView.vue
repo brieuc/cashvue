@@ -2,19 +2,20 @@
   <div class="app-layout">
     <!-- Period en haut fixe -->
     <div class="period-bar">
-      <PeriodSelection v-model="selectedPeriod" />
+      <PeriodSelection v-model="selectedPeriod" v-model:to-date="toDateOnly" />
     </div>
 
     <div class="header-bar">
-      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags" :search-text="searchText ":entries-updated="entriesChanged"></HeaderView>
+      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags" :search-text="searchText" :entries-updated="entriesChanged" :to-date-only="toDateOnly" v-model:currency="activeCurrency"></HeaderView>
     </div>
     <!-- Liste au milieu scrollable -->
     <div class="entry-content">
       <EntryList
-        :filtering-tags="selectedTags"
+        :tags="selectedTags"
         :start-date="startDate"
         :end-date="endDate"
         :search-text="searchText"
+        :filtering-currency="activeCurrency"
         @entries-changed="entriesChanged++"
       />
     </div>
@@ -32,11 +33,14 @@ import EntryList from '@/components/entries/EntryList.vue';
 import HeaderView from '@/components/HeaderView.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
 import EntryFilter from '@/components/filter/EntryFilter.vue';
+import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import { ref, watch } from 'vue';
 
 
 const selectedTags = ref<Array<TagDto>>([]);
 const selectedPeriod = ref<PeriodDto | undefined>();
+const toDateOnly = ref<boolean>(false);
+const activeCurrency = ref<string>('CHF');
 
 const startDate = ref<string>("2000-01-01T00:00:00");
 const endDate = ref<string>("2000-01-01T00:00:00");
@@ -44,12 +48,12 @@ const endDate = ref<string>("2000-01-01T00:00:00");
 const entriesChanged = ref<number>(0);
 const searchText = ref<string>('');
 
-watch(selectedPeriod, (newPeriod) => {
+watch([selectedPeriod, toDateOnly], ([newPeriod, toDateOnlyValue]) => {
   if (!newPeriod)
     return;
   console.log("HomeView newPeriod " + JSON.stringify(newPeriod));
   startDate.value = newPeriod.startDate;
-  endDate.value = newPeriod!.endDate;
+  endDate.value = toDateOnlyValue ? effectiveEndDate(newPeriod)! : newPeriod.endDate;
 });
 
 /*

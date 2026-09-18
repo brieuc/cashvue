@@ -26,22 +26,22 @@
 <script setup lang="ts">
 import { type TagDto, type PeriodDto, type ComputationRequestDto } from '@/api/generated';
 import { useComputation } from '@/composables/useComputation';
+import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import { computed, ref, watch, type Component } from 'vue';
 import HeaderTotalPanel from './header/HeaderTotalPanel.vue';
-import HeaderToDatePanel from './header/HeaderToDatePanel.vue';
 import HeaderCurrencyPanel from './header/HeaderCurrencyPanel.vue';
 
 interface Props {
   selectedPeriod : PeriodDto | undefined,
   selectedTags : TagDto[],
   entriesUpdated : number,
-  searchText : string
+  searchText : string,
+  toDateOnly : boolean
 }
 
-const { selectedPeriod, selectedTags, entriesUpdated, searchText } = defineProps<Props>();
+const { selectedPeriod, selectedTags, entriesUpdated, searchText, toDateOnly } = defineProps<Props>();
 
 const { fetchComputation: fetchTotalComputation, computationResponse: totalComputation } = useComputation();
-const { fetchComputation: fetchToDateComputation, computationResponse: toDateComputation } = useComputation();
 
 const scrollContainer = ref<HTMLElement>();
 const activeIndex = ref(0);
@@ -50,13 +50,10 @@ interface PanelDescriptor {
   key: string,
   component: Component,
   props: Record<string, unknown>,
+  currency: string,
 }
 
-const isPeriodOngoing = computed(() => {
-  if (!selectedPeriod?.endDate)
-    return false;
-  return new Date(selectedPeriod.endDate).getTime() > Date.now();
-});
+const currency = defineModel('currency', { type: String, default: 'CHF' });
 
 const absoluteAmount = (amount: number | undefined) => {
   const value = amount ?? 0.0;
@@ -73,20 +70,9 @@ const panels = computed<PanelDescriptor[]>(() => {
         totalAmount: absoluteAmount(totalComputation.value?.totalAmount),
         currency: totalComputation.value?.targetCurrencyCode ?? '',
       },
+      currency: 'CHF',
     },
   ];
-
-  if (isPeriodOngoing.value && toDateComputation.value) {
-    result.push({
-      key: 'to-date',
-      component: HeaderToDatePanel,
-      props: {
-        nbEntries: toDateComputation.value?.numberOfEntries,
-        totalAmount: absoluteAmount(toDateComputation.value?.totalAmount),
-        currency: toDateComputation.value?.targetCurrencyCode ?? '',
-      },
-    });
-  }
 
   const byCurrency = totalComputation.value?.computationByCurrency ?? {};
   Object.keys(byCurrency).sort().forEach((currencyCode) => {
@@ -99,6 +85,7 @@ const panels = computed<PanelDescriptor[]>(() => {
         nbEntries: detail.numberOfEntries,
         totalAmount: absoluteAmount(detail.totalAmount),
       },
+      currency: currencyCode,
     });
   });
 
@@ -121,10 +108,13 @@ watch(() => selectedTags, (tags) => {
   getComputation(selectedPeriod, tags);
 })
 
-// Local datetime string ("YYYY-MM-DDTHH:mm:ss") matching the format used for period dates.
-const nowAsPeriodDate = () => {
-  return new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 19);
-};
+watch(() => toDateOnly, () => {
+  getComputation(selectedPeriod, selectedTags);
+})
+
+watch([activeIndex, panels], ([index, currentPanels]) => {
+  currency.value = currentPanels[index]?.currency ?? 'CHF';
+}, { immediate: true });
 
 const getComputation = (period : PeriodDto | undefined, selectedTags : TagDto[]) => {
   if (!period)
@@ -132,19 +122,12 @@ const getComputation = (period : PeriodDto | undefined, selectedTags : TagDto[])
 
   const request : ComputationRequestDto = {
     startDate: period.startDate,
-    endDate: period.endDate,
+    endDate: toDateOnly ? effectiveEndDate(period)! : period.endDate,
     tags: selectedTags,
     searchText: searchText,
     targetCurrencyCode: "CHF"
   }
   fetchTotalComputation(request);
-
-  if (new Date(period.endDate).getTime() > Date.now()) {
-    fetchToDateComputation({
-      ...request,
-      endDate: nowAsPeriodDate(),
-    });
-  }
 }
 
 const onScroll = () => {
