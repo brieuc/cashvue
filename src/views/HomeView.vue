@@ -82,16 +82,19 @@ watch(selectedTagFromTagGrid, (tag) => {
   if (!tag) return;
   const alreadySelected = selectedTags.value.some((t) => t.id === tag.id);
   if (!alreadySelected) {
-    selectedTags.value.push(tag);
+    // On remplace le tableau au lieu de le muter (push) : les watchers sur selectedTags
+    // (HeaderView, targetCurrencyCode...) sont superficiels et ne réagissent qu'à un
+    // changement de référence, pas à une mutation en place.
+    selectedTags.value = [...selectedTags.value, tag];
   }
 });
 
-watch(selectedTags, (tags) => {
-  if (!tags || tags.length === 0) {
+watch(() => selectedTags, (tags) => {
+  if (!tags || tags.value.length === 0) {
     targetCurrencyCode.value = "CHF";
     return;
   }
-  const tagsWithCurrency = tags.filter((t) => t.currencyCode != null);
+  const tagsWithCurrency = tags.value.filter((t) => t.currencyCode != null);
   const lastTag = tagsWithCurrency.length > 0 ? tagsWithCurrency[tagsWithCurrency.length - 1] : undefined;
   const nextCurrency = lastTag?.currencyCode ?? "CHF";
   targetCurrencyCode.value = nextCurrency;
