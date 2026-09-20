@@ -2,12 +2,24 @@
   <div class="app-layout">
     <!-- Period en haut fixe -->
     <div class="period-bar">
-      <PeriodSelection v-model="selectedPeriod" v-model:to-date="toDateOnly" />
+      <PeriodSelection
+        v-model="selectedPeriod"
+        v-model:to-date="toDateOnly"
+      />
     </div>
 
     <div class="header-bar">
-      <HeaderView :selected-period="selectedPeriod" :selected-tags="selectedTags" :search-text="searchText" :entries-updated="entriesChanged" :to-date-only="toDateOnly" v-model:currency="activeCurrency"></HeaderView>
+      <HeaderView
+        :selected-period="selectedPeriod"
+        :selected-tags="selectedTags"
+        :search-text="searchText"
+        :entries-updated="entriesChanged"
+        :to-date-only="toDateOnly"
+        :target-currency-code="targetCurrencyCode"
+        v-model:currency="activeCurrency">
+      </HeaderView>
     </div>
+
     <!-- Liste au milieu scrollable -->
     <div class="entry-content">
       <EntryList
@@ -41,12 +53,24 @@ const selectedTags = ref<Array<TagDto>>([]);
 const selectedPeriod = ref<PeriodDto | undefined>();
 const toDateOnly = ref<boolean>(false);
 const activeCurrency = ref<string>('CHF');
+const targetCurrencyCode = ref<string>('CHF');
 
 const startDate = ref<string>("2000-01-01T00:00:00");
 const endDate = ref<string>("2000-01-01T00:00:00");
 
 const entriesChanged = ref<number>(0);
 const searchText = ref<string>('');
+
+watch(selectedTags, (tags) => {
+  if (!tags || tags.length === 0) {
+    targetCurrencyCode.value = "CHF";
+    return;
+  }
+  const tagsWithCurrency = tags.filter((t) => t.currencyCode != null);
+  const lastTag = tagsWithCurrency.length > 0 ? tagsWithCurrency[tagsWithCurrency.length - 1] : undefined;
+  const nextCurrency = lastTag?.currencyCode ?? "CHF";
+  targetCurrencyCode.value = nextCurrency;
+});
 
 watch([selectedPeriod, toDateOnly], ([newPeriod, toDateOnlyValue]) => {
   if (!newPeriod)

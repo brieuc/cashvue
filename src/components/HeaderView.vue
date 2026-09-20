@@ -36,10 +36,11 @@ interface Props {
   selectedTags : TagDto[],
   entriesUpdated : number,
   searchText : string,
-  toDateOnly : boolean
+  toDateOnly : boolean,
+  targetCurrencyCode: string,
 }
 
-const { selectedPeriod, selectedTags, entriesUpdated, searchText, toDateOnly } = defineProps<Props>();
+const { selectedPeriod, selectedTags, entriesUpdated, searchText, toDateOnly, targetCurrencyCode } = defineProps<Props>();
 
 const { fetchComputation: fetchTotalComputation, computationResponse: totalComputation } = useComputation();
 
@@ -125,7 +126,7 @@ const getComputation = (period : PeriodDto | undefined, selectedTags : TagDto[])
     endDate: toDateOnly ? effectiveEndDate(period)! : period.endDate,
     tags: selectedTags,
     searchText: searchText,
-    targetCurrencyCode: "CHF"
+    targetCurrencyCode: targetCurrencyCode
   }
   fetchTotalComputation(request);
 }
