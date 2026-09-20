@@ -273,6 +273,15 @@ export type ComputationResponseDto = {
   computationByCurrency?: ComputationResponseDtoComputationByCurrency;
 };
 
+/**
+ * Aggregated amount for a specific tag
+ */
+export type TagAmountDto = {
+  tag?: TagDto;
+  /** Total amount aggregated for this tag */
+  amount?: number;
+};
+
 export type AuthenticationRequest = {
   username?: string;
   password?: string;
@@ -1982,6 +1991,51 @@ export const getComputeUrl = () => {
 export const compute = async (computationRequestDto: ComputationRequestDto, options?: RequestInit): Promise<computeResponse> => {
   
   return customFetch<computeResponse>(getComputeUrl(),
+  {      
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(
+      computationRequestDto,)
+  }
+);}
+
+
+
+/**
+ * Calcule, pour chaque tag présent dans les entrées filtrées, la somme des montants convertis dans la devise cible
+ * @summary Calculer la somme par tag avec conversion de devises
+ */
+export type computeTagAmountsResponse200 = {
+  data: TagAmountDto
+  status: 200
+}
+
+export type computeTagAmountsResponse400 = {
+  data: void
+  status: 400
+}
+    
+export type computeTagAmountsResponseSuccess = (computeTagAmountsResponse200) & {
+  headers: Headers;
+};
+export type computeTagAmountsResponseError = (computeTagAmountsResponse400) & {
+  headers: Headers;
+};
+
+export type computeTagAmountsResponse = (computeTagAmountsResponseSuccess | computeTagAmountsResponseError)
+
+export const getComputeTagAmountsUrl = () => {
+
+
+  
+
+  return `/computation/tag-amounts`
+}
+
+export const computeTagAmounts = async (computationRequestDto: ComputationRequestDto, options?: RequestInit): Promise<computeTagAmountsResponse> => {
+  
+  return customFetch<computeTagAmountsResponse>(getComputeTagAmountsUrl(),
   {      
     ...options,
     method: 'POST',

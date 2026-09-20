@@ -23,12 +23,24 @@
     <!-- Liste au milieu scrollable -->
     <div class="entry-content">
       <EntryList
+        v-if="!showTagGrid"
         :tags="selectedTags"
         :start-date="startDate"
         :end-date="endDate"
         :search-text="searchText"
         :filtering-currency="activeCurrency"
         @entries-changed="entriesChanged++"
+        @toggle-view="showTagGrid = true"
+      />
+      <TagGrid
+        v-else
+        :tags="selectedTags"
+        :start-date="startDate"
+        :end-date="endDate"
+        :search-text="searchText"
+        :target-currency-code="targetCurrencyCode"
+        @toggle-view="showTagGrid = false"
+        v-model="selectedTagFromTagGrid"
       />
     </div>
 
@@ -47,6 +59,7 @@ import PeriodSelection from '@/components/PeriodSelection.vue';
 import EntryFilter from '@/components/filter/EntryFilter.vue';
 import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import { ref, watch } from 'vue';
+import TagGrid from '@/components/grid/tagGrid.vue';
 
 
 const selectedTags = ref<Array<TagDto>>([]);
@@ -54,12 +67,23 @@ const selectedPeriod = ref<PeriodDto | undefined>();
 const toDateOnly = ref<boolean>(false);
 const activeCurrency = ref<string>('CHF');
 const targetCurrencyCode = ref<string>('CHF');
+const showTagGrid = ref<boolean>(false);
+const selectedTagFromTagGrid = ref<TagDto>();
+
 
 const startDate = ref<string>("2000-01-01T00:00:00");
 const endDate = ref<string>("2000-01-01T00:00:00");
 
 const entriesChanged = ref<number>(0);
 const searchText = ref<string>('');
+
+watch(selectedTagFromTagGrid, (tag) => {
+  if (!tag) return;
+  const alreadySelected = selectedTags.value.some((t) => t.id === tag.id);
+  if (!alreadySelected) {
+    selectedTags.value.push(tag);
+  }
+});
 
 watch(selectedTags, (tags) => {
   if (!tags || tags.length === 0) {
@@ -79,6 +103,8 @@ watch([selectedPeriod, toDateOnly], ([newPeriod, toDateOnlyValue]) => {
   startDate.value = newPeriod.startDate;
   endDate.value = toDateOnlyValue ? effectiveEndDate(newPeriod)! : newPeriod.endDate;
 });
+
+
 
 /*
 const handleSelectPeriod = (period: PeriodDto) => {
