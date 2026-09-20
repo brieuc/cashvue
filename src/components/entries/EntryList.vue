@@ -16,6 +16,7 @@
     </div>
 
     <div class="fab-wrapper">
+      <button class="toggle-btn" @click="emit('toggleView')" aria-label="Voir les tags">🏷</button>
       <button class="add-btn" @click="isModalOpen = true, selectedEntry = null">+</button>
     </div>
 
@@ -41,6 +42,7 @@ const paginationSize = 100;
 
 const emit = defineEmits<{
     entriesChanged : [];
+    toggleView : [];
 }>();
 
 const { tags, startDate, endDate, searchText, filteringCurrency } = defineProps<{
@@ -268,18 +270,17 @@ h2 {
   margin-top: auto;
   display: flex;
   justify-content: flex-end;
+  align-items: center;
+  gap: 0.5rem;
   padding-right: 0.25rem;
   pointer-events: none;
 }
-.add-btn {
+.add-btn, .toggle-btn {
   pointer-events: auto;
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: #3498db;
-  color: white;
   border: none;
-  font-size: 1.5rem;
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -288,8 +289,20 @@ h2 {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
   transition: background 0.2s;
 }
+.add-btn {
+  background: #3498db;
+  color: white;
+  font-size: 1.5rem;
+}
 .add-btn:hover {
   background: #2980b9;
+}
+.toggle-btn {
+  background: #ecf0f1;
+  font-size: 1.1rem;
+}
+.toggle-btn:hover {
+  background: #dfe4e6;
 }
 .empty {
   text-align: center;
