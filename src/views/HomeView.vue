@@ -58,8 +58,9 @@ import HeaderView from '@/components/HeaderView.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
 import EntryFilter from '@/components/filter/EntryFilter.vue';
 import { effectiveEndDate } from '@/composables/useEffectivePeriod';
+import TagGrid from '@/components/grid/TagGrid.vue';
 import { ref, watch } from 'vue';
-import TagGrid from '@/components/grid/tagGrid.vue';
+
 
 
 const selectedTags = ref<Array<TagDto>>([]);
