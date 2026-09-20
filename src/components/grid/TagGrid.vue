@@ -53,7 +53,7 @@ const selectTagAmount = (tagAmountDto: TagAmountDto) => {
 
 const sortedTagAmounts = computed(() => {
   if (!tagAmounts.value) return [];
-      return [...tagAmounts.value].sort((a, b) => Number(b.amount ?? 0) - Number(a.amount ?? 0));
+      return [...tagAmounts.value].sort((a, b) => Number(a.amount ?? 0) - Number(b.amount ?? 0));
 });
 
 watchEffect(async () => {
