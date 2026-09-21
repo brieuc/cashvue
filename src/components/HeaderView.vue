@@ -107,7 +107,7 @@ watch(() => selectedPeriod, (period) => {
 
 watch(() => selectedTags, (tags) => {
   getComputation(selectedPeriod, tags);
-})
+}, {deep : true})
 
 watch(() => toDateOnly, () => {
   getComputation(selectedPeriod, selectedTags);

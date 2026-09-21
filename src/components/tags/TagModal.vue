@@ -19,6 +19,14 @@
       <div class="form-group">
         <input v-model="form.sortingOrder" type="text" placeholder="Sorting Order">
       </div>
+      <div class="form-group">
+        <select v-model="form.currencyCode" class="currency-select">
+            <option :value="undefined">—</option>
+            <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
+                {{ currency.code }}
+            </option>
+        </select>
+      </div>
       <div v-if="tag">
         <img class="tag-icon" :src="`${uploadsUrl}/${tag.icon}`" />
         <input type="file" @change="uploadIcon" accept="image/*" />
@@ -34,11 +42,14 @@
 </template>
 
 <script setup lang="ts">
-import type { TagDto } from '@/api/generated';
-import { reactive, watch } from 'vue';
+import type { GetCurrenciesParams, TagDto } from '@/api/generated';
+import { computed, onMounted, reactive, watch } from 'vue';
 import { useTags } from '@/composables/useTags';
+import { useCurrencies } from '@/composables/useCurrencies';
 
 const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
+
+const { currencies, fetchCurrencies } = useCurrencies();
 
 interface props {
   tag?: TagDto
@@ -73,13 +84,12 @@ const defaultForm : TagDto = {
   description: "",
   icon: "",
   hidden: false,
-  currencyCode: "",
+  currencyCode: undefined,
   isCumulative: false,
   sortingOrder: undefined
 };
 
 const form = reactive<TagDto>({...defaultForm});
-
 
 watch(() => tag, (t) => {
   if (t)
@@ -87,8 +97,6 @@ watch(() => tag, (t) => {
   else
     Object.assign(form, defaultForm);
 }, {immediate: true});
-
-
 
 const handleSubmit = () => {
   const submitData : TagDto = {...form};
@@ -109,9 +117,35 @@ const uploadIcon = async (event: Event) => {
   );
 };
 
+const loadCurrencies = () => {
+  const params : GetCurrenciesParams = {
+  };
+  fetchCurrencies(params);
+}
+
+onMounted(() => {
+  loadCurrencies();
+})
+
 </script>
 
 <style>
+.clear-btn {
+  position: absolute;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+}
+
 .tag-icon {
     width: 32px;
     height: 32px;
