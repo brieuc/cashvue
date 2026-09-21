@@ -85,7 +85,7 @@ watch(selectedTagFromTagGrid, (tag) => {
     // On remplace le tableau au lieu de le muter (push) : les watchers sur selectedTags
     // (HeaderView, targetCurrencyCode...) sont superficiels et ne réagissent qu'à un
     // changement de référence, pas à une mutation en place.
-    selectedTags.value = [...selectedTags.value, tag];
+    selectedTags.value.push(tag);
   }
 });
 
@@ -98,7 +98,7 @@ watch(() => selectedTags, (tags) => {
   const lastTag = tagsWithCurrency.length > 0 ? tagsWithCurrency[tagsWithCurrency.length - 1] : undefined;
   const nextCurrency = lastTag?.currencyCode ?? "CHF";
   targetCurrencyCode.value = nextCurrency;
-});
+}, {deep : true});
 
 watch([selectedPeriod, toDateOnly], ([newPeriod, toDateOnlyValue]) => {
   if (!newPeriod)
