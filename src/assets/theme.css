@@ -473,45 +473,45 @@ nav a.router-link-active {
 
 /* Base : lignes de tags d'une entrée et d'une récurrence (20px avant) */
 .tag-icon {
-  width: 26px !important;
-  height: 26px !important;
+  width: 24px !important;
+  height: 24px !important;
 }
 
 /* Sélecteur de tags, barre du bas et modale d'entrée (32px avant) */
 .tag-list .tag-icon {
-  width: 42px !important;
-  height: 42px !important;
+  width: 36px !important;
+  height: 36px !important;
 }
 
 /* Grille de tags : l'icône est le sujet de la carte (32px avant) */
 .grid .card .tag-icon {
-  width: 44px !important;
-  height: 44px !important;
+  width: 38px !important;
+  height: 38px !important;
 }
 
 /* Aperçu dans la modale de tag — seule image enfant directe (32px avant) */
 .modal-body > div > .tag-icon {
-  width: 44px !important;
-  height: 44px !important;
+  width: 38px !important;
+  height: 38px !important;
 }
 
 /* Page Tags (24px avant) */
 .tag-title .tag-icon {
-  width: 32px !important;
-  height: 32px !important;
+  width: 28px !important;
+  height: 28px !important;
 }
 
 /* Puces sélectionnées / exclues (16px avant) */
 .selected-tag-btn .tag-icon,
 .excluded-tag-btn .tag-icon {
-  width: 22px !important;
-  height: 22px !important;
+  width: 20px !important;
+  height: 20px !important;
 }
 
 /* Groupes de tags proposés dans la modale d'entrée (20px avant) */
 .tag-group-btn .tag-icon {
-  width: 26px !important;
-  height: 26px !important;
+  width: 24px !important;
+  height: 24px !important;
 }
 
 .tag-btn.active .tag-icon {
