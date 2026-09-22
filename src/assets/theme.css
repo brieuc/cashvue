@@ -1,150 +1,949 @@
+/* =========================================================================
+   CASHVUE — thème « Nocturne »
+   Surcouche purement visuelle : aucune structure HTML n'est modifiée.
+   Beaucoup de règles portent !important car elles écrasent les styles
+   `scoped` des SFC, dont la spécificité (.classe[data-v-x]) est supérieure.
+   ========================================================================= */
+
 :root {
-  --color-bg:          #f0f4ff;
-  --color-surface:     #ffffff;
-  --color-border:      #dde3f0;
-  --color-border-focus: #a5b4fc;
+  color-scheme: dark;
 
-  --color-text:        #2d3561;
-  --color-text-muted:  #7c85b0;
+  /* --- Fonds ------------------------------------------------------------ */
+  --c-void:        #07080d;
+  --c-bg:          #0a0c13;
+  --c-raised:      #11141e;
+  --c-sunken:      #060710;
 
-  --color-primary:     #818cf8;
-  --color-primary-hover: #6366f1;
-  --color-primary-light: #e0e7ff;
+  /* Verre : dégradé subtil pour donner du volume sans ombre portée */
+  --glass:         linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
+  --glass-hover:   linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.03));
+  --glass-flat:    rgba(255,255,255,.045);
 
-  --color-positive:    #6ee7b7;
-  --color-negative:    #fca5a5;
+  /* --- Traits ----------------------------------------------------------- */
+  --line:          rgba(255,255,255,.075);
+  --line-strong:   rgba(255,255,255,.14);
 
-  --color-nav-bg:      #e8eeff;
-  --color-nav-text:    #5b6aad;
-  --color-nav-active:  #4f46e5;
+  /* --- Texte ------------------------------------------------------------ */
+  --c-text:        #e9ecf6;
+  --c-text-soft:   #a8b0c7;
+  --c-text-muted:  #6d7591;
 
-  --color-filter-bg:   #eef0ff;
-  --color-filter-border: #dde3f0;
+  /* --- Accents ---------------------------------------------------------- */
+  --c-accent:      #45e3ff;
+  --c-accent-2:    #8b7bff;
+  --c-accent-dim:  rgba(69,227,255,.14);
+  --c-accent-line: rgba(69,227,255,.42);
 
-  --radius-sm: 6px;
-  --radius-md: 10px;
-  --shadow-sm: 0 1px 3px rgba(99,102,241,0.06), 0 1px 2px rgba(99,102,241,0.04);
-  --shadow-md: 0 4px 12px rgba(99,102,241,0.1);
+  --c-positive:    #3ee8a5;
+  --c-negative:    #ff5f87;
+  --c-warn:        #ffb454;
+
+  /* --- Rayons ----------------------------------------------------------- */
+  --r-xs: 6px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --r-pill: 999px;
+
+  /* --- Lumière ---------------------------------------------------------- */
+  --glow:        0 0 0 1px var(--c-accent-line), 0 0 18px -4px rgba(69,227,255,.5);
+  --lift:        0 10px 30px -12px rgba(0,0,0,.9);
+  --lift-strong: 0 24px 60px -20px rgba(0,0,0,.95);
+
+  /* --- Typo ------------------------------------------------------------- */
+  --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'JetBrains Mono', Menlo, monospace;
+}
+
+/* =========================================================================
+   1. Fond global
+   ========================================================================= */
+
+html {
+  background: var(--c-void);
 }
 
 body {
-  background: var(--color-bg);
-  color: var(--color-text);
+  background-color: var(--c-bg);
+  /* Deux halos très diffus : la seule « couleur » du fond */
+  background-image:
+    radial-gradient(1100px 700px at 12% -8%,  rgba(69,227,255,.10), transparent 60%),
+    radial-gradient(900px 700px at 105% 108%, rgba(139,123,255,.12), transparent 62%);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  color: var(--c-text);
+  letter-spacing: -0.005em;
 }
 
-/* Nav */
-header {
-  background: var(--color-nav-bg);
-  border-bottom: 1px solid var(--color-border);
-  padding: 0.6rem 1rem;
-  box-shadow: var(--shadow-sm);
+::selection {
+  background: rgba(69,227,255,.28);
+  color: #fff;
 }
+
+/* =========================================================================
+   2. Typographie
+   ========================================================================= */
+
+h1, h2, h3, h4 {
+  color: var(--c-text);
+  letter-spacing: -0.022em;
+  font-weight: 600;
+}
+
+h1 {
+  font-size: 1.6rem;
+  font-weight: 300;
+  letter-spacing: -0.04em;
+}
+
+/* `body` en préfixe : theme.css est importé avant les règles de main.css,
+   il faut donc reprendre la main en spécificité. */
+body a {
+  color: var(--c-accent);
+}
+
+body a:hover {
+  opacity: 1;
+  color: #8af2ff;
+}
+
+/* Les vues Tag/Period utilisent un style inline `color: cadetblue`
+   qu'on ne peut neutraliser qu'en !important. */
+[style*="cadetblue"] {
+  color: var(--c-text-muted) !important;
+  font-size: 0.85rem;
+}
+
+.app-version {
+  font-family: var(--font-mono);
+  color: var(--c-text-muted);
+  opacity: 0.35 !important;
+  letter-spacing: 0.05em;
+}
+
+/* =========================================================================
+   3. Barre de navigation
+   ========================================================================= */
+
+header {
+  background: rgba(10,12,19,.72);
+  -webkit-backdrop-filter: saturate(160%) blur(14px);
+  backdrop-filter: saturate(160%) blur(14px);
+  border-bottom: 1px solid var(--line);
+  padding: 0.55rem 0.9rem;
+}
+
+nav {
+  display: flex;
+  gap: 0.15rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+nav::-webkit-scrollbar { display: none; }
 
 nav a {
-  color: var(--color-nav-text);
+  position: relative;
+  color: var(--c-text-muted);
+  font-size: 0.82rem;
   font-weight: 500;
-  font-size: 0.9rem;
-  padding: 0.3rem 0.65rem;
-  border-radius: var(--radius-sm);
-  transition: background 0.15s, color 0.15s;
+  letter-spacing: 0.01em;
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  transition: color .18s ease, background .18s ease;
 }
 
 nav a:hover {
-  background: var(--color-primary-light);
-  color: var(--color-primary-hover);
-  opacity: 1;
+  color: var(--c-text);
+  background: rgba(255,255,255,.05);
 }
 
 nav a.router-link-active {
-  color: var(--color-nav-active);
-  font-weight: 700;
+  color: #041018;
+  background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2));
+  font-weight: 600;
+  box-shadow: 0 0 20px -6px rgba(69,227,255,.7);
 }
 
-/* Entry filter bar */
-.entry-filter {
-  background: var(--color-filter-bg);
-  border: 1px solid var(--color-filter-border);
-  border-radius: var(--radius-md);
-  padding: 0.5rem 0.75rem;
-  margin-bottom: 0.75rem;
+/* =========================================================================
+   4. Ossature de la page d'accueil
+   ========================================================================= */
+
+.period-bar {
+  background: rgba(10,12,19,.8) !important;
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--line) !important;
+  padding: 0.5rem 0.75rem !important;
 }
 
-.entry-filter .selected-tags-sticky {
-  background: transparent;
-  border-bottom-color: var(--color-filter-border);
+.app-layout > .header-bar {
+  border-bottom: 1px solid var(--line) !important;
 }
 
-.entry-filter .search-toggle {
-  background: #fff;
-  border-color: var(--color-border);
+.tag-bar {
+  background: rgba(8,10,16,.88) !important;
+  -webkit-backdrop-filter: blur(16px);
+  backdrop-filter: blur(16px);
+  border-top: 1px solid var(--line) !important;
 }
 
-.entry-filter .search-toggle.active {
-  background: var(--color-primary-light);
-  border-color: var(--color-primary);
+/* Marge d'air sur les pages de liste (Tags / Périodes / Récurrences) */
+#app > .header-bar {
+  padding: 1.5rem 0.9rem 0.25rem !important;
+  margin-bottom: 0.75rem !important;
 }
 
-.entry-filter .close-btn {
-  background: #fff;
-  border-color: var(--color-border);
+/* =========================================================================
+   5. Bandeau des totaux (carrousel)
+   ========================================================================= */
+
+.header-view {
+  position: relative;
+  background:
+    linear-gradient(115deg, #17123f 0%, #0d2448 48%, #06303f 100%) !important;
+  overflow: hidden;
 }
 
-/* Cards */
+/* Halo diagonal : donne de la profondeur au bandeau */
+.header-view::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(520px 130px at 88% 0%, rgba(69,227,255,.26), transparent 70%),
+    radial-gradient(420px 150px at 4% 100%, rgba(139,123,255,.24), transparent 70%);
+}
+
+.header-view > * {
+  position: relative;
+  z-index: 1;
+}
+
+.header-panel {
+  padding: 0 1rem !important;
+}
+
+.header-panel h2 {
+  font-size: 1.05rem !important;
+  font-weight: 500 !important;
+  letter-spacing: -0.02em;
+}
+
+/* Le montant (2e span) : chiffres monospacés, alignés en colonne */
+.header-panel > span:last-child h2,
+.header-panel-row > span:last-child h2 {
+  font-family: var(--font-mono);
+  font-weight: 600 !important;
+  font-size: 1.15rem !important;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Le compteur d'entrées passe au second plan */
+.header-panel > span:first-child h2,
+.header-panel-row > span:first-child h2 {
+  color: rgba(255,255,255,.62);
+  font-size: 0.8rem !important;
+  font-weight: 400 !important;
+  text-transform: lowercase;
+  letter-spacing: 0.04em;
+}
+
+.header-panel-label {
+  font-family: var(--font-mono);
+  font-size: 0.6rem !important;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.5) !important;
+}
+
+.header-dots {
+  padding-bottom: 0.4rem !important;
+}
+
+.header-dot {
+  width: 14px !important;
+  height: 3px !important;
+  border-radius: var(--r-pill) !important;
+  background: rgba(255,255,255,.22) !important;
+  transition: background .2s ease, width .2s ease;
+}
+
+.header-dot.active {
+  width: 22px !important;
+  background: var(--c-accent) !important;
+  box-shadow: 0 0 10px -1px rgba(69,227,255,.9);
+}
+
+/* =========================================================================
+   6. Sélecteur de période
+   ========================================================================= */
+
+.period-row .tag-btn {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: var(--c-text-muted) !important;
+  border-radius: var(--r-pill) !important;
+  padding: 0.3rem 0.8rem !important;
+  font-size: 0.8rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em;
+  transition: color .18s ease, background .18s ease, border-color .18s ease;
+}
+
+.period-row .tag-btn:hover {
+  color: var(--c-text) !important;
+  background: rgba(255,255,255,.05) !important;
+}
+
+.period-row .tag-btn.active {
+  color: var(--c-accent) !important;
+  background: var(--c-accent-dim) !important;
+  border-color: var(--c-accent-line) !important;
+}
+
+.today-toggle {
+  color: var(--c-text-muted) !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.01em;
+}
+
+.today-toggle.active {
+  color: var(--c-accent) !important;
+}
+
+.toggle-track {
+  background: rgba(255,255,255,.12) !important;
+  width: 28px !important;
+  height: 16px !important;
+}
+
+.today-toggle.active .toggle-track {
+  background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2)) !important;
+  box-shadow: 0 0 12px -2px rgba(69,227,255,.8);
+}
+
+.toggle-thumb {
+  width: 12px !important;
+  height: 12px !important;
+  background: #0a0c13 !important;
+}
+
+.today-toggle.active .toggle-thumb {
+  background: #fff !important;
+  transform: translateX(12px) !important;
+}
+
+.divider {
+  background: var(--line) !important;
+  height: 1rem !important;
+}
+
+/* =========================================================================
+   7. Cartes
+   ========================================================================= */
+
 .card {
-  background: var(--color-surface);
-  border: 1px solid var(--color-border);
-  border-radius: var(--radius-md);
-  box-shadow: var(--shadow-sm);
+  background: var(--glass) !important;
+  border: 1px solid var(--line) !important;
+  border-bottom: 1px solid var(--line) !important;
+  border-radius: var(--r-md) !important;
+  padding: 0.7rem 0.85rem !important;
+  box-shadow: none !important;
+  transition: background .18s ease, border-color .18s ease, transform .18s ease;
 }
 
 .card:hover {
-  box-shadow: var(--shadow-md);
+  background: var(--glass-hover) !important;
+  border-color: var(--line-strong) !important;
 }
 
-/* Inputs */
-input, select, textarea {
-  background: var(--color-surface);
-  border-color: var(--color-border);
-  color: var(--color-text);
-  border-radius: var(--radius-sm);
+/* Espacement sur les pages de liste ; les grilles gèrent leur propre gap */
+.card {
+  margin: 0 0.9rem 0.4rem !important;
 }
 
-input:focus, select:focus, textarea:focus {
-  border-color: var(--color-border-focus) !important;
-  box-shadow: 0 0 0 3px rgba(165,180,252,0.2);
+.list > .card,
+.grid > .card {
+  margin: 0 !important;
 }
 
-/* Amounts */
-.amount.positive { color: #059669; }
-.amount.negative { color: #e11d48; }
-.currency        { color: #059669; }
+/* Entrée à venir : liseré accentué à gauche plutôt qu'un aplat bleu */
+.card.future {
+  background: linear-gradient(90deg, rgba(139,123,255,.16), rgba(255,255,255,.02) 40%) !important;
+  border-color: rgba(139,123,255,.28) !important;
+}
 
-/* Dates / muted text */
-.date, .desc { color: var(--color-text-muted); }
+/* L'animation `flash` des SFC est renommée par le compilateur scoped :
+   on la remplace entièrement. */
+.card.highlight {
+  animation: cv-flash 1.5s ease-out !important;
+}
 
-/* Add button */
+@keyframes cv-flash {
+  0%, 100% { background: var(--glass-flat); box-shadow: none; }
+  30%      { background: rgba(62,232,165,.16); box-shadow: 0 0 0 1px rgba(62,232,165,.5); }
+  65%      { background: var(--glass-flat); box-shadow: none; }
+  80%      { background: rgba(62,232,165,.12); }
+}
+
+.empty {
+  color: var(--c-text-muted) !important;
+  font-size: 0.85rem;
+  letter-spacing: 0.02em;
+}
+
+/* =========================================================================
+   8. Contenu d'une entrée
+   ========================================================================= */
+
+.card-left h3,
+.tag-grid-view h3 {
+  font-size: 0.95rem !important;
+  font-weight: 500 !important;
+  color: var(--c-text) !important;
+  letter-spacing: -0.012em;
+}
+
+.desc {
+  color: var(--c-text-muted) !important;
+  font-size: 0.78rem !important;
+}
+
+.date {
+  color: var(--c-text-muted) !important;
+  font-family: var(--font-mono);
+  font-size: 0.66rem !important;
+  letter-spacing: 0.01em;
+}
+
+/* Chiffres : monospace tabulaire, la signature « instrument de mesure » */
+.amount,
+.currency {
+  font-family: var(--font-mono);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+}
+
+.amount {
+  font-weight: 600 !important;
+  font-size: 0.98rem !important;
+  color: var(--c-text) !important;
+}
+
+.amount.positive { color: var(--c-positive) !important; }
+.amount.negative { color: var(--c-negative) !important; }
+
+.currency {
+  color: var(--c-text-muted) !important;
+  font-size: 0.66rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.1em;
+}
+
+/* =========================================================================
+   9. Icônes de tag
+   ========================================================================= */
+
+/* Les icônes sont des PNG pensés pour un fond clair : on leur donne une
+   plaque claire pour qu'elles restent lisibles sur le thème sombre. */
+.tag-icon {
+  border-radius: var(--r-xs) !important;
+  background: rgba(255,255,255,.9);
+  padding: 2px;
+  box-shadow: 0 0 0 1px rgba(255,255,255,.12);
+}
+
+.tag-btn.active .tag-icon {
+  background: #fff;
+  box-shadow:
+    0 0 0 1px var(--c-accent),
+    0 0 14px -2px rgba(69,227,255,.95);
+  filter: none !important;
+}
+
+.tag-selection-scrollable .tag-btn {
+  border-radius: var(--r-sm) !important;
+  transition: transform .15s ease;
+}
+
+.tag-selection-scrollable .tag-btn:active {
+  transform: scale(0.92);
+}
+
+/* =========================================================================
+   10. Grille de tags
+   ========================================================================= */
+
+.grid {
+  gap: 0.5rem !important;
+}
+
+.grid > .card {
+  padding: 0.9rem 0.5rem !important;
+}
+
+.tag-grid-view .amount.negative {
+  color: var(--c-text) !important;
+}
+
+/* =========================================================================
+   11. Boutons flottants
+   ========================================================================= */
+
+.add-btn,
+.toggle-btn {
+  border-radius: var(--r-pill) !important;
+  box-shadow: var(--lift) !important;
+  transition: transform .16s ease, box-shadow .16s ease, background .16s ease;
+}
+
 .add-btn {
-  background: var(--color-primary) !important;
+  background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2)) !important;
+  color: #04121a !important;
+  border: none !important;
+  font-weight: 400 !important;
+  box-shadow: 0 8px 26px -8px rgba(69,227,255,.85) !important;
 }
 
 .add-btn:hover {
-  background: var(--color-primary-hover) !important;
+  background: linear-gradient(135deg, #6aeaff, #a396ff) !important;
+  transform: translateY(-1px);
 }
 
-/* Modal buttons */
-.btn-submit { color: var(--color-primary-hover) !important; }
-.btn-cancel { color: var(--color-primary-hover) !important; }
-
-/* Tag selection active glow */
-.tag-btn.active .tag-icon {
-  filter: drop-shadow(0 0 4px var(--color-primary)) drop-shadow(0 0 8px var(--color-primary-light));
+.add-btn:active,
+.toggle-btn:active {
+  transform: scale(0.94);
 }
 
-/* Suggestions */
+.toggle-btn {
+  background: rgba(20,24,36,.9) !important;
+  color: var(--c-text-soft) !important;
+  border: 1px solid var(--line-strong) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.toggle-btn:hover {
+  background: rgba(30,36,54,.95) !important;
+  color: var(--c-text) !important;
+}
+
+.load-more-btn {
+  background: transparent !important;
+  border: 1px solid var(--line) !important;
+  border-radius: var(--r-pill) !important;
+  color: var(--c-text-muted) !important;
+  font-size: 0.78rem !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 0.5rem 1.4rem !important;
+}
+
+.load-more-btn:hover {
+  background: var(--c-accent-dim) !important;
+  border-color: var(--c-accent-line) !important;
+  color: var(--c-accent) !important;
+}
+
+/* =========================================================================
+   12. Barre de filtres
+   ========================================================================= */
+
+.entry-filter .selected-tags-sticky,
+.tag-filter .selected-tags-sticky {
+  background: transparent !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.mode-toggle {
+  background: rgba(255,255,255,.05) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--c-text-muted) !important;
+  border-radius: var(--r-pill) !important;
+  font-size: 0.7rem !important;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.28rem 0.7rem !important;
+}
+
+.mode-toggle.excluding {
+  background: rgba(255,95,135,.14) !important;
+  border-color: rgba(255,95,135,.4) !important;
+  color: var(--c-negative) !important;
+}
+
+.search-toggle,
+.close-btn {
+  background: rgba(255,255,255,.05) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--c-text-soft) !important;
+}
+
+.search-toggle {
+  border-radius: var(--r-pill) !important;
+}
+
+.search-toggle.active {
+  background: var(--c-accent-dim) !important;
+  border-color: var(--c-accent-line) !important;
+}
+
+.search-toggle .icon {
+  filter: grayscale(1) brightness(2.4);
+  opacity: .85;
+}
+
+.search-toggle.active .icon {
+  filter: none;
+  opacity: 1;
+}
+
+.badge {
+  background: var(--c-accent) !important;
+  border-color: var(--c-bg) !important;
+  box-shadow: 0 0 10px rgba(69,227,255,.9);
+}
+
+/* Chips de tags sélectionnés / exclus */
+.selected-tag-btn {
+  background: var(--c-accent-dim) !important;
+  border: 1px solid var(--c-accent-line) !important;
+  color: var(--c-accent) !important;
+  border-radius: var(--r-pill) !important;
+  font-size: 0.78rem !important;
+  padding: 0.25rem 0.6rem !important;
+}
+
+.selected-tag-btn:hover {
+  background: rgba(69,227,255,.22) !important;
+  border-color: var(--c-accent) !important;
+}
+
+.excluded-tag-btn {
+  background: rgba(255,95,135,.14) !important;
+  border: 1px solid rgba(255,95,135,.4) !important;
+  color: var(--c-negative) !important;
+  border-radius: var(--r-pill) !important;
+  font-size: 0.78rem !important;
+  padding: 0.25rem 0.6rem !important;
+}
+
+.excluded-tag-btn:hover {
+  background: rgba(255,95,135,.24) !important;
+  border-color: var(--c-negative) !important;
+}
+
+.selected-tag-btn .tag-icon,
+.excluded-tag-btn .tag-icon {
+  padding: 1px;
+  border-radius: 4px !important;
+}
+
+/* =========================================================================
+   13. Champs de saisie
+   ========================================================================= */
+
+input,
+select,
+textarea {
+  background: rgba(255,255,255,.04) !important;
+  border: 1px solid var(--line) !important;
+  color: var(--c-text) !important;
+  border-radius: var(--r-sm) !important;
+  font-family: inherit;
+  transition: border-color .16s ease, background .16s ease, box-shadow .16s ease;
+}
+
+/* Règle historique de main.css : 8px rendait les champs illisibles.
+   16px évite en plus le zoom automatique sur iOS. */
+body input[type="text"] {
+  font-size: 16px;
+}
+
+input::placeholder,
+textarea::placeholder {
+  color: var(--c-text-muted);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+  outline: none;
+  border-color: var(--c-accent-line) !important;
+  background: rgba(255,255,255,.06) !important;
+  box-shadow: 0 0 0 3px rgba(69,227,255,.13);
+}
+
+option {
+  background: var(--c-raised);
+  color: var(--c-text);
+}
+
+input[type="checkbox"] {
+  accent-color: var(--c-accent);
+  width: 1rem;
+  height: 1rem;
+}
+
+input[type="file"] {
+  color: var(--c-text-muted) !important;
+  font-size: 0.78rem;
+  background: transparent !important;
+  border: 1px dashed var(--line-strong) !important;
+  padding: 0.5rem !important;
+}
+
+/* Le sélecteur de date natif s'affiche en clair sans cette inversion */
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  opacity: .5;
+}
+
+:focus-visible {
+  outline: 2px solid var(--c-accent);
+  outline-offset: 2px;
+}
+
+/* =========================================================================
+   14. Modales
+   ========================================================================= */
+
+.modal-overlay {
+  background: rgba(4,5,10,.72) !important;
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  align-items: center !important;
+}
+
+.modal {
+  background: var(--c-raised) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--lift-strong) !important;
+  overflow: hidden;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--line) !important;
+  background: rgba(255,255,255,.02);
+}
+
+.modal-header h2 {
+  font-size: 0.82rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-text-soft) !important;
+}
+
+.btn-cancel,
+.btn-submit {
+  background: transparent !important;
+  border-radius: var(--r-pill) !important;
+  font-size: 0.82rem !important;
+  letter-spacing: 0.02em;
+}
+
+.btn-cancel {
+  color: var(--c-text-muted) !important;
+}
+
+.btn-cancel:hover {
+  background: rgba(255,255,255,.06) !important;
+  color: var(--c-text) !important;
+}
+
+.btn-submit {
+  color: var(--c-accent) !important;
+  font-weight: 600 !important;
+}
+
+.btn-submit:hover {
+  background: var(--c-accent-dim) !important;
+}
+
+.amount-input {
+  font-family: var(--font-mono) !important;
+  font-variant-numeric: tabular-nums;
+  /* Le `ch` du monospace est plus étroit que celui d'Inter : sans cet
+     élargissement, la largeur de 6ch du SFC tronque « 1450.00 ». */
+  width: 8ch !important;
+}
+
+.amount-toggle {
+  border-radius: var(--r-sm) !important;
+  font-weight: 600 !important;
+}
+
+.amount-toggle.positive {
+  background-color: rgba(62,232,165,.18) !important;
+  color: var(--c-positive) !important;
+  box-shadow: inset 0 0 0 1px rgba(62,232,165,.45);
+}
+
+.amount-toggle.negative {
+  background-color: rgba(255,95,135,.18) !important;
+  color: var(--c-negative) !important;
+  box-shadow: inset 0 0 0 1px rgba(255,95,135,.45);
+}
+
+.tag-filter-wrapper {
+  border-top: 1px solid var(--line) !important;
+}
+
+/* =========================================================================
+   15. Menus, suggestions, propositions
+   ========================================================================= */
+
+.actions-btn {
+  color: var(--c-text-muted) !important;
+  border-radius: var(--r-xs) !important;
+}
+
+.actions-btn:hover {
+  color: var(--c-accent) !important;
+}
+
+.actions-menu {
+  background: var(--c-raised) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: var(--r-md) !important;
+  box-shadow: var(--lift-strong) !important;
+}
+
+.menu-item {
+  color: var(--c-text-soft) !important;
+  font-size: 0.85rem !important;
+}
+
+.menu-item:hover {
+  background: rgba(255,255,255,.06) !important;
+  color: var(--c-text) !important;
+}
+
+.suggestions-list,
+.tag-group-proposals {
+  background: var(--c-raised) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: var(--r-md) !important;
+  box-shadow: var(--lift) !important;
+}
+
+.suggestion-item {
+  color: var(--c-text-soft);
+  font-size: 0.88rem;
+}
+
+.suggestion-item:hover,
+.tag-group-btn:hover {
+  background: rgba(255,255,255,.06) !important;
+}
+
 .suggestion-flash {
-  background: var(--color-primary-light) !important;
+  background: var(--c-accent-dim) !important;
+  box-shadow: inset 2px 0 0 var(--c-accent);
 }
 
-.suggestion-item:hover, .tag-group-btn:hover {
-  background: var(--color-primary-light) !important;
+.tag-group-btn {
+  background: transparent !important;
+  border-bottom: 1px solid var(--line) !important;
+}
+
+.usage-count {
+  color: var(--c-text-muted) !important;
+  font-family: var(--font-mono);
+  font-size: 0.7rem !important;
+}
+
+/* =========================================================================
+   16. Connexion
+   ========================================================================= */
+
+.login-card {
+  background: var(--glass) !important;
+  border: 1px solid var(--line-strong) !important;
+  border-radius: var(--r-lg) !important;
+  box-shadow: var(--lift-strong);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+
+.login-card label {
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-text-muted);
+}
+
+.login-card button {
+  background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2));
+  color: #04121a;
+  border: none;
+  border-radius: var(--r-pill);
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  transition: filter .16s ease;
+}
+
+.login-card button:hover:not(:disabled) {
+  filter: brightness(1.12);
+}
+
+.login-card button:disabled {
+  opacity: .5;
+  cursor: default;
+}
+
+.error {
+  color: var(--c-negative);
+  font-size: 0.82rem;
+}
+
+/* =========================================================================
+   17. Barres de défilement
+   ========================================================================= */
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,.14) transparent;
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 4px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,.14);
+  border-radius: var(--r-pill);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255,255,255,.26);
+}
+
+.period-bar::-webkit-scrollbar-thumb {
+  background: var(--c-accent-line) !important;
+}
+
+/* =========================================================================
+   18. Accessibilité : mouvement réduit
+   ========================================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
