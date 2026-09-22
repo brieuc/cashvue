@@ -39,10 +39,9 @@
   --c-warn:        #ffb454;
 
   /* --- Plaque des icônes de tag ----------------------------------------
-     Monte l'alpha si tes icônes sont sombres et manquent de lisibilité,
-     descends-le si les plaques ressortent encore trop. Voir section 9. */
-  --tag-plate:        rgba(222,230,246,.46);
-  --tag-plate-active: rgba(232,240,255,.62);
+     Transparente : les icônes actuelles sont des PNG opaques qui portent
+     déjà leur fond. Voir section 9 pour le cas où il faut la rallumer. */
+  --tag-plate: transparent;
 
   /* --- Rayons ----------------------------------------------------------- */
   --r-xs: 6px;
@@ -452,21 +451,73 @@ nav a.router-link-active {
    9. Icônes de tag
    ========================================================================= */
 
-/* Les PNG sont transparents et dessinés pour un fond clair : sans plaque,
-   un glyphe sombre disparaît. La plaque est donc volontairement sourde —
-   assez claire pour que le tracé se détache, assez éteinte pour ne pas
-   trouer le thème. Teinte froide plutôt que blanc pur : elle se fond dans
-   les surfaces en verre au lieu de les percer.
-   Un seul curseur à régler : --tag-plate. */
+/* Les icônes sont des PNG opaques et pleins : elles apportent leur propre
+   fond et se détachent seules sur le thème sombre. Aucune plaque, donc —
+   elle n'ajouterait qu'un liseré clair parasite autour de chaque icône,
+   et des barres grises sur les icônes non carrées (object-fit: contain).
+   Seul l'arrondi est repris, pour s'accorder aux cartes.
+
+   Si tu ajoutes un jour une icône au tracé transparent, elle disparaîtra
+   sur le fond sombre : passe alors --tag-plate à rgba(222,230,246,.46).
+   Au-delà de ~.62 la plaque redevient un carré blanc criard. */
 .tag-icon {
   border-radius: var(--r-xs) !important;
   background: var(--tag-plate);
-  padding: 2px;
+}
+
+/* --- Tailles ------------------------------------------------------------
+   `.tag-icon` sert à cinq échelles différentes selon le contexte : on pose
+   une taille de base, puis on surcharge par conteneur. Les sélecteurs sont
+   plus spécifiques que la base, donc ils l'emportent entre eux.
+   Échelle d'origine → nouvelle : 16→22, 20→26, 24→32, 32→42/44. */
+
+/* Base : lignes de tags d'une entrée et d'une récurrence (20px avant) */
+.tag-icon {
+  width: 26px !important;
+  height: 26px !important;
+}
+
+/* Sélecteur de tags, barre du bas et modale d'entrée (32px avant) */
+.tag-list .tag-icon {
+  width: 42px !important;
+  height: 42px !important;
+}
+
+/* Grille de tags : l'icône est le sujet de la carte (32px avant) */
+.grid .card .tag-icon {
+  width: 44px !important;
+  height: 44px !important;
+}
+
+/* Aperçu dans la modale de tag — seule image enfant directe (32px avant) */
+.modal-body > div > .tag-icon {
+  width: 44px !important;
+  height: 44px !important;
+}
+
+/* Page Tags (24px avant) */
+.tag-title .tag-icon {
+  width: 32px !important;
+  height: 32px !important;
+}
+
+/* Puces sélectionnées / exclues (16px avant) */
+.selected-tag-btn .tag-icon,
+.excluded-tag-btn .tag-icon {
+  width: 22px !important;
+  height: 22px !important;
+}
+
+/* Groupes de tags proposés dans la modale d'entrée (20px avant) */
+.tag-group-btn .tag-icon {
+  width: 26px !important;
+  height: 26px !important;
 }
 
 .tag-btn.active .tag-icon {
-  background: var(--tag-plate-active);
-  box-shadow: 0 0 0 1px var(--c-accent-line);
+  box-shadow:
+    0 0 0 1px var(--c-accent),
+    0 0 12px -3px rgba(69,227,255,.8);
   filter: none !important;
 }
 
@@ -564,6 +615,12 @@ nav a.router-link-active {
   border-bottom: 1px solid var(--line) !important;
 }
 
+/* Hauteur figée à 2rem dans le SFC : les puces agrandies y seraient
+   rognées. (Le conteneur de TagFilter est en min-height, il suit seul.) */
+.entry-filter .selected-tags-sticky {
+  height: 3rem !important;
+}
+
 .mode-toggle {
   background: rgba(255,255,255,.05) !important;
   border: 1px solid var(--line) !important;
@@ -642,13 +699,9 @@ nav a.router-link-active {
   border-color: var(--c-negative) !important;
 }
 
-/* 16px sur une puce déjà teintée : à cette taille le tracé ne porte plus,
-   la plaque doit remonter un peu pour rester lisible. */
 .selected-tag-btn .tag-icon,
 .excluded-tag-btn .tag-icon {
-  padding: 1px;
   border-radius: 4px !important;
-  background: var(--tag-plate-active);
 }
 
 /* =========================================================================
