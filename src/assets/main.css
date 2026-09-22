@@ -1,4 +1,5 @@
 @import './base.css';
+@import './theme.css';
 
 input[type="text"] {
   font-size: 8px;
