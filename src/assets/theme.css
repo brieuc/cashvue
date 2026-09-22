@@ -1,42 +1,44 @@
 /* =========================================================================
-   CASHVUE — thème « Nocturne »
+   CASHVUE — thème « Clair »
    Surcouche purement visuelle : aucune structure HTML n'est modifiée.
    Beaucoup de règles portent !important car elles écrasent les styles
    `scoped` des SFC, dont la spécificité (.classe[data-v-x]) est supérieure.
    ========================================================================= */
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
   /* --- Fonds ------------------------------------------------------------ */
-  --c-void:        #07080d;
-  --c-bg:          #0a0c13;
-  --c-raised:      #11141e;
-  --c-sunken:      #060710;
+  --c-void:        #eef1f8;
+  --c-bg:          #f5f7fc;
+  --c-raised:      #ffffff;
+  --c-sunken:      #e9edf6;
 
-  /* Verre : dégradé subtil pour donner du volume sans ombre portée */
-  --glass:         linear-gradient(180deg, rgba(255,255,255,.055), rgba(255,255,255,.018));
-  --glass-hover:   linear-gradient(180deg, rgba(255,255,255,.085), rgba(255,255,255,.03));
-  --glass-flat:    rgba(255,255,255,.045);
+  /* Surfaces : blanc très légèrement dégradé, le volume vient de l'ombre */
+  --glass:         linear-gradient(180deg, #ffffff, #fbfcff);
+  --glass-hover:   linear-gradient(180deg, #ffffff, #ffffff);
+  --glass-flat:    #ffffff;
 
   /* --- Traits ----------------------------------------------------------- */
-  --line:          rgba(255,255,255,.075);
-  --line-strong:   rgba(255,255,255,.14);
+  --line:          rgba(24,32,56,.09);
+  --line-strong:   rgba(24,32,56,.16);
 
   /* --- Texte ------------------------------------------------------------ */
-  --c-text:        #e9ecf6;
-  --c-text-soft:   #a8b0c7;
-  --c-text-muted:  #6d7591;
+  --c-text:        #171d33;
+  --c-text-soft:   #4a5472;
+  --c-text-muted:  #7b849e;
 
-  /* --- Accents ---------------------------------------------------------- */
-  --c-accent:      #45e3ff;
-  --c-accent-2:    #8b7bff;
-  --c-accent-dim:  rgba(69,227,255,.14);
-  --c-accent-line: rgba(69,227,255,.42);
+  /* --- Accents ----------------------------------------------------------
+     Le cyan clair du thème sombre passait sous le seuil de lisibilité sur
+     blanc : il est descendu en luminosité pour tenir le contraste. */
+  --c-accent:      #0c87aa;
+  --c-accent-2:    #6a5cf0;
+  --c-accent-dim:  rgba(12,135,170,.10);
+  --c-accent-line: rgba(12,135,170,.34);
 
-  --c-positive:    #3ee8a5;
-  --c-negative:    #ff5f87;
-  --c-warn:        #ffb454;
+  --c-positive:    #0b9d6d;
+  --c-negative:    #d4365e;
+  --c-warn:        #b8700c;
 
   /* --- Plaque des icônes de tag ----------------------------------------
      Transparente : les icônes actuelles sont des PNG opaques qui portent
@@ -50,10 +52,13 @@
   --r-lg: 20px;
   --r-pill: 999px;
 
-  /* --- Lumière ---------------------------------------------------------- */
-  --glow:        0 0 0 1px var(--c-accent-line), 0 0 18px -4px rgba(69,227,255,.5);
-  --lift:        0 10px 30px -12px rgba(0,0,0,.9);
-  --lift-strong: 0 24px 60px -20px rgba(0,0,0,.95);
+  /* --- Ombres ------------------------------------------------------------
+     En thème clair c'est l'ombre, et non plus l'éclaircissement du fond,
+     qui sépare les plans. Elles restent basses et très diffuses. */
+  --glow:        0 0 0 1px var(--c-accent-line), 0 0 14px -4px rgba(12,135,170,.4);
+  --lift:        0 6px 20px -8px rgba(23,32,64,.22);
+  --lift-strong: 0 24px 50px -18px rgba(23,32,64,.3);
+  --hairline:    0 1px 2px rgba(23,32,64,.05);
 
   /* --- Typo ------------------------------------------------------------- */
   --font-mono: ui-monospace, 'SF Mono', SFMono-Regular, 'JetBrains Mono', Menlo, monospace;
@@ -71,8 +76,8 @@ body {
   background-color: var(--c-bg);
   /* Deux halos très diffus : la seule « couleur » du fond */
   background-image:
-    radial-gradient(1100px 700px at 12% -8%,  rgba(69,227,255,.10), transparent 60%),
-    radial-gradient(900px 700px at 105% 108%, rgba(139,123,255,.12), transparent 62%);
+    radial-gradient(1100px 700px at 12% -8%,  rgba(12,135,170,.09), transparent 60%),
+    radial-gradient(900px 700px at 105% 108%, rgba(106,92,240,.10), transparent 62%);
   background-attachment: fixed;
   background-repeat: no-repeat;
   color: var(--c-text);
@@ -80,8 +85,8 @@ body {
 }
 
 ::selection {
-  background: rgba(69,227,255,.28);
-  color: #fff;
+  background: rgba(12,135,170,.18);
+  color: var(--c-text);
 }
 
 /* =========================================================================
@@ -108,7 +113,7 @@ body a {
 
 body a:hover {
   opacity: 1;
-  color: #8af2ff;
+  color: #0a6d8a;
 }
 
 /* Les vues Tag/Period utilisent un style inline `color: cadetblue`
@@ -121,7 +126,7 @@ body a:hover {
 .app-version {
   font-family: var(--font-mono);
   color: var(--c-text-muted);
-  opacity: 0.35 !important;
+  opacity: 0.45 !important;
   letter-spacing: 0.05em;
 }
 
@@ -130,7 +135,7 @@ body a:hover {
    ========================================================================= */
 
 header {
-  background: rgba(10,12,19,.72);
+  background: rgba(255,255,255,.78);
   -webkit-backdrop-filter: saturate(160%) blur(14px);
   backdrop-filter: saturate(160%) blur(14px);
   border-bottom: 1px solid var(--line);
@@ -160,14 +165,14 @@ nav a {
 
 nav a:hover {
   color: var(--c-text);
-  background: rgba(255,255,255,.05);
+  background: rgba(24,32,56,.05);
 }
 
 nav a.router-link-active {
-  color: #041018;
+  color: #fff;
   background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2));
   font-weight: 600;
-  box-shadow: 0 0 20px -6px rgba(69,227,255,.7);
+  box-shadow: 0 6px 16px -6px rgba(12,135,170,.6);
 }
 
 /* =========================================================================
@@ -175,7 +180,7 @@ nav a.router-link-active {
    ========================================================================= */
 
 .period-bar {
-  background: rgba(10,12,19,.8) !important;
+  background: rgba(255,255,255,.82) !important;
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
   border-bottom: 1px solid var(--line) !important;
@@ -187,7 +192,7 @@ nav a.router-link-active {
 }
 
 .tag-bar {
-  background: rgba(8,10,16,.88) !important;
+  background: rgba(255,255,255,.9) !important;
   -webkit-backdrop-filter: blur(16px);
   backdrop-filter: blur(16px);
   border-top: 1px solid var(--line) !important;
@@ -203,10 +208,12 @@ nav a.router-link-active {
    5. Bandeau des totaux (carrousel)
    ========================================================================= */
 
+/* Le bandeau reste saturé : sur une interface claire, c'est lui qui ancre
+   l'écran et donne au total sa valeur de titre. Texte blanc conservé. */
 .header-view {
   position: relative;
   background:
-    linear-gradient(115deg, #17123f 0%, #0d2448 48%, #06303f 100%) !important;
+    linear-gradient(115deg, #5b4ae0 0%, #1d7fb8 52%, #10a3b8 100%) !important;
   overflow: hidden;
 }
 
@@ -217,8 +224,8 @@ nav a.router-link-active {
   inset: 0;
   pointer-events: none;
   background:
-    radial-gradient(520px 130px at 88% 0%, rgba(69,227,255,.26), transparent 70%),
-    radial-gradient(420px 150px at 4% 100%, rgba(139,123,255,.24), transparent 70%);
+    radial-gradient(520px 130px at 88% 0%, rgba(255,255,255,.22), transparent 70%),
+    radial-gradient(420px 150px at 4% 100%, rgba(255,255,255,.14), transparent 70%);
 }
 
 .header-view > * {
@@ -230,7 +237,10 @@ nav a.router-link-active {
   padding: 0 1rem !important;
 }
 
+/* Le blanc doit être explicite : la règle globale `h1..h4` pose une
+   couleur, qui l'emporte sur le blanc hérité de `.header-panel`. */
 .header-panel h2 {
+  color: #fff !important;
   font-size: 1.05rem !important;
   font-weight: 500 !important;
   letter-spacing: -0.02em;
@@ -248,7 +258,7 @@ nav a.router-link-active {
 /* Le compteur d'entrées passe au second plan */
 .header-panel > span:first-child h2,
 .header-panel-row > span:first-child h2 {
-  color: rgba(255,255,255,.62);
+  color: rgba(255,255,255,.72) !important;
   font-size: 0.8rem !important;
   font-weight: 400 !important;
   text-transform: lowercase;
@@ -260,7 +270,7 @@ nav a.router-link-active {
   font-size: 0.6rem !important;
   letter-spacing: 0.22em;
   text-transform: uppercase;
-  color: rgba(255,255,255,.5) !important;
+  color: rgba(255,255,255,.62) !important;
 }
 
 .header-dots {
@@ -271,14 +281,14 @@ nav a.router-link-active {
   width: 14px !important;
   height: 3px !important;
   border-radius: var(--r-pill) !important;
-  background: rgba(255,255,255,.22) !important;
+  background: rgba(255,255,255,.3) !important;
   transition: background .2s ease, width .2s ease;
 }
 
+/* Sur fond saturé, le blanc porte mieux que l'accent */
 .header-dot.active {
   width: 22px !important;
-  background: var(--c-accent) !important;
-  box-shadow: 0 0 10px -1px rgba(69,227,255,.9);
+  background: #fff !important;
 }
 
 /* =========================================================================
@@ -299,7 +309,7 @@ nav a.router-link-active {
 
 .period-row .tag-btn:hover {
   color: var(--c-text) !important;
-  background: rgba(255,255,255,.05) !important;
+  background: rgba(24,32,56,.05) !important;
 }
 
 .period-row .tag-btn.active {
@@ -319,20 +329,21 @@ nav a.router-link-active {
 }
 
 .toggle-track {
-  background: rgba(255,255,255,.12) !important;
+  background: rgba(24,32,56,.16) !important;
   width: 28px !important;
   height: 16px !important;
 }
 
 .today-toggle.active .toggle-track {
   background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2)) !important;
-  box-shadow: 0 0 12px -2px rgba(69,227,255,.8);
+  box-shadow: 0 2px 8px -2px rgba(12,135,170,.6);
 }
 
 .toggle-thumb {
   width: 12px !important;
   height: 12px !important;
-  background: #0a0c13 !important;
+  background: #fff !important;
+  box-shadow: 0 1px 2px rgba(23,32,64,.25);
 }
 
 .today-toggle.active .toggle-thumb {
@@ -355,13 +366,14 @@ nav a.router-link-active {
   border-bottom: 1px solid var(--line) !important;
   border-radius: var(--r-md) !important;
   padding: 0.7rem 0.85rem !important;
-  box-shadow: none !important;
-  transition: background .18s ease, border-color .18s ease, transform .18s ease;
+  box-shadow: var(--hairline) !important;
+  transition: box-shadow .18s ease, border-color .18s ease, transform .18s ease;
 }
 
 .card:hover {
   background: var(--glass-hover) !important;
   border-color: var(--line-strong) !important;
+  box-shadow: 0 6px 18px -10px rgba(23,32,64,.28) !important;
 }
 
 /* Espacement sur les pages de liste ; les grilles gèrent leur propre gap */
@@ -376,8 +388,8 @@ nav a.router-link-active {
 
 /* Entrée à venir : liseré accentué à gauche plutôt qu'un aplat bleu */
 .card.future {
-  background: linear-gradient(90deg, rgba(139,123,255,.16), rgba(255,255,255,.02) 40%) !important;
-  border-color: rgba(139,123,255,.28) !important;
+  background: linear-gradient(90deg, rgba(106,92,240,.12), #ffffff 42%) !important;
+  border-color: rgba(106,92,240,.26) !important;
 }
 
 /* L'animation `flash` des SFC est renommée par le compilateur scoped :
@@ -387,10 +399,10 @@ nav a.router-link-active {
 }
 
 @keyframes cv-flash {
-  0%, 100% { background: var(--glass-flat); box-shadow: none; }
-  30%      { background: rgba(62,232,165,.16); box-shadow: 0 0 0 1px rgba(62,232,165,.5); }
-  65%      { background: var(--glass-flat); box-shadow: none; }
-  80%      { background: rgba(62,232,165,.12); }
+  0%, 100% { background: var(--glass-flat); box-shadow: var(--hairline); }
+  30%      { background: rgba(11,157,109,.14); box-shadow: 0 0 0 1px rgba(11,157,109,.4); }
+  65%      { background: var(--glass-flat); box-shadow: var(--hairline); }
+  80%      { background: rgba(11,157,109,.1); }
 }
 
 .empty {
@@ -452,14 +464,14 @@ nav a.router-link-active {
    ========================================================================= */
 
 /* Les icônes sont des PNG opaques et pleins : elles apportent leur propre
-   fond et se détachent seules sur le thème sombre. Aucune plaque, donc —
-   elle n'ajouterait qu'un liseré clair parasite autour de chaque icône,
-   et des barres grises sur les icônes non carrées (object-fit: contain).
+   fond et se détachent seules. Aucune plaque, donc — elle n'ajouterait
+   qu'un liseré parasite autour de chaque icône, et des barres sur les
+   icônes non carrées (object-fit: contain).
    Seul l'arrondi est repris, pour s'accorder aux cartes.
 
-   Si tu ajoutes un jour une icône au tracé transparent, elle disparaîtra
-   sur le fond sombre : passe alors --tag-plate à rgba(222,230,246,.46).
-   Au-delà de ~.62 la plaque redevient un carré blanc criard. */
+   --tag-plate n'a plus d'utilité en thème clair (le fond de l'app fait
+   déjà office de plaque) mais reste en place au cas où tu repasserais
+   sur un fond sombre. */
 .tag-icon {
   border-radius: var(--r-xs) !important;
   background: var(--tag-plate);
@@ -468,19 +480,18 @@ nav a.router-link-active {
 /* --- Tailles ------------------------------------------------------------
    `.tag-icon` sert à cinq échelles différentes selon le contexte : on pose
    une taille de base, puis on surcharge par conteneur. Les sélecteurs sont
-   plus spécifiques que la base, donc ils l'emportent entre eux.
-   Échelle d'origine → nouvelle : 16→22, 20→26, 24→32, 32→42/44. */
+   plus spécifiques que la base, donc ils l'emportent entre eux. */
 
 /* Base : lignes de tags d'une entrée et d'une récurrence (20px avant) */
 .tag-icon {
-  width: 24px !important;
-  height: 24px !important;
+  width: 22px !important;
+  height: 22px !important;
 }
 
 /* Sélecteur de tags, barre du bas et modale d'entrée (32px avant) */
 .tag-list .tag-icon {
-  width: 36px !important;
-  height: 36px !important;
+  width: 34px !important;
+  height: 34px !important;
 }
 
 /* Grille de tags : l'icône est le sujet de la carte (32px avant) */
@@ -514,10 +525,11 @@ nav a.router-link-active {
   height: 24px !important;
 }
 
+/* Sur fond clair un anneau franc porte mieux qu'un halo diffus */
 .tag-btn.active .tag-icon {
   box-shadow:
-    0 0 0 1px var(--c-accent),
-    0 0 12px -3px rgba(69,227,255,.8);
+    0 0 0 2px var(--c-accent),
+    0 2px 8px -2px rgba(12,135,170,.5);
   filter: none !important;
 }
 
@@ -559,14 +571,14 @@ nav a.router-link-active {
 
 .add-btn {
   background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2)) !important;
-  color: #04121a !important;
+  color: #fff !important;
   border: none !important;
   font-weight: 400 !important;
-  box-shadow: 0 8px 26px -8px rgba(69,227,255,.85) !important;
+  box-shadow: 0 8px 22px -8px rgba(12,135,170,.7) !important;
 }
 
 .add-btn:hover {
-  background: linear-gradient(135deg, #6aeaff, #a396ff) !important;
+  background: linear-gradient(135deg, #0f9ec5, #7d6ff5) !important;
   transform: translateY(-1px);
 }
 
@@ -576,21 +588,19 @@ nav a.router-link-active {
 }
 
 .toggle-btn {
-  background: rgba(20,24,36,.9) !important;
+  background: #fff !important;
   color: var(--c-text-soft) !important;
   border: 1px solid var(--line-strong) !important;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
 }
 
 .toggle-btn:hover {
-  background: rgba(30,36,54,.95) !important;
+  background: #f7f9fe !important;
   color: var(--c-text) !important;
 }
 
 .load-more-btn {
   background: transparent !important;
-  border: 1px solid var(--line) !important;
+  border: 1px solid var(--line-strong) !important;
   border-radius: var(--r-pill) !important;
   color: var(--c-text-muted) !important;
   font-size: 0.78rem !important;
@@ -622,8 +632,8 @@ nav a.router-link-active {
 }
 
 .mode-toggle {
-  background: rgba(255,255,255,.05) !important;
-  border: 1px solid var(--line) !important;
+  background: #fff !important;
+  border: 1px solid var(--line-strong) !important;
   color: var(--c-text-muted) !important;
   border-radius: var(--r-pill) !important;
   font-size: 0.7rem !important;
@@ -633,15 +643,15 @@ nav a.router-link-active {
 }
 
 .mode-toggle.excluding {
-  background: rgba(255,95,135,.14) !important;
-  border-color: rgba(255,95,135,.4) !important;
+  background: rgba(212,54,94,.1) !important;
+  border-color: rgba(212,54,94,.36) !important;
   color: var(--c-negative) !important;
 }
 
 .search-toggle,
 .close-btn {
-  background: rgba(255,255,255,.05) !important;
-  border: 1px solid var(--line) !important;
+  background: #fff !important;
+  border: 1px solid var(--line-strong) !important;
   color: var(--c-text-soft) !important;
 }
 
@@ -654,9 +664,10 @@ nav a.router-link-active {
   border-color: var(--c-accent-line) !important;
 }
 
+/* L'emoji loupe est désaturé au repos pour ne pas jurer avec l'accent */
 .search-toggle .icon {
-  filter: grayscale(1) brightness(2.4);
-  opacity: .85;
+  filter: grayscale(1);
+  opacity: .45;
 }
 
 .search-toggle.active .icon {
@@ -665,9 +676,8 @@ nav a.router-link-active {
 }
 
 .badge {
-  background: var(--c-accent) !important;
-  border-color: var(--c-bg) !important;
-  box-shadow: 0 0 10px rgba(69,227,255,.9);
+  background: var(--c-negative) !important;
+  border-color: #fff !important;
 }
 
 /* Chips de tags sélectionnés / exclus */
@@ -681,13 +691,13 @@ nav a.router-link-active {
 }
 
 .selected-tag-btn:hover {
-  background: rgba(69,227,255,.22) !important;
+  background: rgba(12,135,170,.18) !important;
   border-color: var(--c-accent) !important;
 }
 
 .excluded-tag-btn {
-  background: rgba(255,95,135,.14) !important;
-  border: 1px solid rgba(255,95,135,.4) !important;
+  background: rgba(212,54,94,.1) !important;
+  border: 1px solid rgba(212,54,94,.36) !important;
   color: var(--c-negative) !important;
   border-radius: var(--r-pill) !important;
   font-size: 0.78rem !important;
@@ -695,7 +705,7 @@ nav a.router-link-active {
 }
 
 .excluded-tag-btn:hover {
-  background: rgba(255,95,135,.24) !important;
+  background: rgba(212,54,94,.18) !important;
   border-color: var(--c-negative) !important;
 }
 
@@ -711,8 +721,8 @@ nav a.router-link-active {
 input,
 select,
 textarea {
-  background: rgba(255,255,255,.04) !important;
-  border: 1px solid var(--line) !important;
+  background: #fff !important;
+  border: 1px solid var(--line-strong) !important;
   color: var(--c-text) !important;
   border-radius: var(--r-sm) !important;
   font-family: inherit;
@@ -734,13 +744,12 @@ input:focus,
 select:focus,
 textarea:focus {
   outline: none;
-  border-color: var(--c-accent-line) !important;
-  background: rgba(255,255,255,.06) !important;
-  box-shadow: 0 0 0 3px rgba(69,227,255,.13);
+  border-color: var(--c-accent) !important;
+  box-shadow: 0 0 0 3px rgba(12,135,170,.14);
 }
 
 option {
-  background: var(--c-raised);
+  background: #fff;
   color: var(--c-text);
 }
 
@@ -758,11 +767,11 @@ input[type="file"] {
   padding: 0.5rem !important;
 }
 
-/* Le sélecteur de date natif s'affiche en clair sans cette inversion */
+/* L'icône native du sélecteur de date est déjà sombre : pas d'inversion
+   en thème clair, on se contente de l'atténuer. */
 input[type="datetime-local"]::-webkit-calendar-picker-indicator,
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(1);
-  opacity: .5;
+  opacity: .45;
 }
 
 :focus-visible {
@@ -775,15 +784,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    ========================================================================= */
 
 .modal-overlay {
-  background: rgba(4,5,10,.72) !important;
-  -webkit-backdrop-filter: blur(10px) saturate(140%);
-  backdrop-filter: blur(10px) saturate(140%);
+  background: rgba(23,32,64,.36) !important;
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
   align-items: center !important;
 }
 
 .modal {
   background: var(--c-raised) !important;
-  border: 1px solid var(--line-strong) !important;
+  border: 1px solid var(--line) !important;
   border-radius: var(--r-lg) !important;
   box-shadow: var(--lift-strong) !important;
   overflow: hidden;
@@ -791,7 +800,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .modal-header {
   border-bottom: 1px solid var(--line) !important;
-  background: rgba(255,255,255,.02);
+  background: rgba(24,32,56,.02);
 }
 
 .modal-header h2 {
@@ -815,7 +824,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .btn-cancel:hover {
-  background: rgba(255,255,255,.06) !important;
+  background: rgba(24,32,56,.06) !important;
   color: var(--c-text) !important;
 }
 
@@ -831,9 +840,20 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 .amount-input {
   font-family: var(--font-mono) !important;
   font-variant-numeric: tabular-nums;
-  /* Le `ch` du monospace est plus étroit que celui d'Inter : sans cet
-     élargissement, la largeur de 6ch du SFC tronque « 1450.00 ». */
-  width: 8ch !important;
+  /* Le `ch` du monospace est plus étroit que celui d'Inter, et le champ
+     est en border-box : ses 18px de padding + bordure se déduisent de la
+     largeur. 6ch (SFC) puis 8ch tronquaient « 1450.00 » ; 10ch laisse
+     passer 8 chiffres, soit le plus grand montant réaliste. */
+  width: 10ch !important;
+}
+
+/* WebKit réserve la gouttière du spinner même quand il est invisible, ce
+   qui rognait le montant. Le bouton +/− rend ces flèches inutiles. */
+.amount-input::-webkit-inner-spin-button,
+.amount-input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  appearance: none;
+  margin: 0;
 }
 
 .amount-toggle {
@@ -842,15 +862,15 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .amount-toggle.positive {
-  background-color: rgba(62,232,165,.18) !important;
+  background-color: rgba(11,157,109,.14) !important;
   color: var(--c-positive) !important;
-  box-shadow: inset 0 0 0 1px rgba(62,232,165,.45);
+  box-shadow: inset 0 0 0 1px rgba(11,157,109,.4);
 }
 
 .amount-toggle.negative {
-  background-color: rgba(255,95,135,.18) !important;
+  background-color: rgba(212,54,94,.14) !important;
   color: var(--c-negative) !important;
-  box-shadow: inset 0 0 0 1px rgba(255,95,135,.45);
+  box-shadow: inset 0 0 0 1px rgba(212,54,94,.4);
 }
 
 .tag-filter-wrapper {
@@ -872,7 +892,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .actions-menu {
   background: var(--c-raised) !important;
-  border: 1px solid var(--line-strong) !important;
+  border: 1px solid var(--line) !important;
   border-radius: var(--r-md) !important;
   box-shadow: var(--lift-strong) !important;
 }
@@ -883,14 +903,14 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .menu-item:hover {
-  background: rgba(255,255,255,.06) !important;
+  background: rgba(24,32,56,.05) !important;
   color: var(--c-text) !important;
 }
 
 .suggestions-list,
 .tag-group-proposals {
   background: var(--c-raised) !important;
-  border: 1px solid var(--line-strong) !important;
+  border: 1px solid var(--line) !important;
   border-radius: var(--r-md) !important;
   box-shadow: var(--lift) !important;
 }
@@ -902,7 +922,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .suggestion-item:hover,
 .tag-group-btn:hover {
-  background: rgba(255,255,255,.06) !important;
+  background: rgba(24,32,56,.05) !important;
 }
 
 .suggestion-flash {
@@ -926,12 +946,10 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    ========================================================================= */
 
 .login-card {
-  background: var(--glass) !important;
-  border: 1px solid var(--line-strong) !important;
+  background: var(--c-raised) !important;
+  border: 1px solid var(--line) !important;
   border-radius: var(--r-lg) !important;
   box-shadow: var(--lift-strong);
-  -webkit-backdrop-filter: blur(20px);
-  backdrop-filter: blur(20px);
 }
 
 .login-card label {
@@ -943,7 +961,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 .login-card button {
   background: linear-gradient(135deg, var(--c-accent), var(--c-accent-2));
-  color: #04121a;
+  color: #fff;
   border: none;
   border-radius: var(--r-pill);
   font-weight: 600;
@@ -952,7 +970,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 .login-card button:hover:not(:disabled) {
-  filter: brightness(1.12);
+  filter: brightness(1.08);
 }
 
 .login-card button:disabled {
@@ -971,7 +989,7 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255,255,255,.14) transparent;
+  scrollbar-color: rgba(24,32,56,.2) transparent;
 }
 
 ::-webkit-scrollbar {
@@ -984,12 +1002,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255,255,255,.14);
+  background: rgba(24,32,56,.2);
   border-radius: var(--r-pill);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255,255,255,.26);
+  background: rgba(24,32,56,.34);
 }
 
 .period-bar::-webkit-scrollbar-thumb {
