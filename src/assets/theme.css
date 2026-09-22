@@ -38,6 +38,12 @@
   --c-negative:    #ff5f87;
   --c-warn:        #ffb454;
 
+  /* --- Plaque des icônes de tag ----------------------------------------
+     Monte l'alpha si tes icônes sont sombres et manquent de lisibilité,
+     descends-le si les plaques ressortent encore trop. Voir section 9. */
+  --tag-plate:        rgba(222,230,246,.46);
+  --tag-plate-active: rgba(232,240,255,.62);
+
   /* --- Rayons ----------------------------------------------------------- */
   --r-xs: 6px;
   --r-sm: 10px;
@@ -446,20 +452,21 @@ nav a.router-link-active {
    9. Icônes de tag
    ========================================================================= */
 
-/* Les icônes sont des PNG pensés pour un fond clair : on leur donne une
-   plaque claire pour qu'elles restent lisibles sur le thème sombre. */
+/* Les PNG sont transparents et dessinés pour un fond clair : sans plaque,
+   un glyphe sombre disparaît. La plaque est donc volontairement sourde —
+   assez claire pour que le tracé se détache, assez éteinte pour ne pas
+   trouer le thème. Teinte froide plutôt que blanc pur : elle se fond dans
+   les surfaces en verre au lieu de les percer.
+   Un seul curseur à régler : --tag-plate. */
 .tag-icon {
   border-radius: var(--r-xs) !important;
-  background: rgba(255,255,255,.9);
+  background: var(--tag-plate);
   padding: 2px;
-  box-shadow: 0 0 0 1px rgba(255,255,255,.12);
 }
 
 .tag-btn.active .tag-icon {
-  background: #fff;
-  box-shadow:
-    0 0 0 1px var(--c-accent),
-    0 0 14px -2px rgba(69,227,255,.95);
+  background: var(--tag-plate-active);
+  box-shadow: 0 0 0 1px var(--c-accent-line);
   filter: none !important;
 }
 
@@ -635,10 +642,13 @@ nav a.router-link-active {
   border-color: var(--c-negative) !important;
 }
 
+/* 16px sur une puce déjà teintée : à cette taille le tracé ne porte plus,
+   la plaque doit remonter un peu pour rester lisible. */
 .selected-tag-btn .tag-icon,
 .excluded-tag-btn .tag-icon {
   padding: 1px;
   border-radius: 4px !important;
+  background: var(--tag-plate-active);
 }
 
 /* =========================================================================
