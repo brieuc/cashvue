@@ -628,7 +628,7 @@ nav a.router-link-active {
 /* Hauteur figée à 2rem dans le SFC : les puces agrandies y seraient
    rognées. (Le conteneur de TagFilter est en min-height, il suit seul.) */
 .entry-filter .selected-tags-sticky {
-  height: 3rem !important;
+  height: 2.3rem !important;
 }
 
 .mode-toggle {
@@ -783,11 +783,13 @@ input[type="date"]::-webkit-calendar-picker-indicator {
    14. Modales
    ========================================================================= */
 
+/* Pas de centrage vertical : les modales restent collées en haut, comme
+   le prévoient les SFC (flex-start + leur propre padding). Le clavier
+   mobile qui s'ouvre sur un champ ne déplace donc pas la fenêtre. */
 .modal-overlay {
   background: rgba(23,32,64,.36) !important;
   -webkit-backdrop-filter: blur(8px) saturate(120%);
   backdrop-filter: blur(8px) saturate(120%);
-  align-items: center !important;
 }
 
 .modal {

@@ -25,6 +25,7 @@
       <EntryList
         v-if="!showTagGrid"
         :tags="selectedTags"
+        :excluded-tags="excludedTags"
         :start-date="startDate"
         :end-date="endDate"
         :search-text="searchText"
@@ -35,6 +36,7 @@
       <TagGrid
         v-else
         :tags="selectedTags"
+        :excluded-tags="excludedTags"
         :start-date="startDate"
         :end-date="endDate"
         :search-text="searchText"
@@ -46,7 +48,12 @@
 
     <!-- Tags en bas fixe -->
     <div class="tag-bar">
-      <EntryFilter v-model:search-text="searchText" v-model:tags="selectedTags" />
+      <EntryFilter
+        v-model:search-text="searchText"
+        v-model:tags="selectedTags"
+        v-model:excluded-tags="excludedTags"
+        v-model:exclude-mode="excludeMode"
+      />
     </div>
   </div>
 </template>
@@ -61,8 +68,8 @@ import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import TagGrid from '@/components/grid/TagGrid.vue';
 import { ref, watch } from 'vue';
 
-
-
+const excludeMode = ref<boolean>(false);
+const excludedTags = ref<Array<TagDto>>([]);
 const selectedTags = ref<Array<TagDto>>([]);
 const selectedPeriod = ref<PeriodDto | undefined>();
 const toDateOnly = ref<boolean>(false);
@@ -80,12 +87,10 @@ const searchText = ref<string>('');
 
 watch(selectedTagFromTagGrid, (tag) => {
   if (!tag) return;
-  const alreadySelected = selectedTags.value.some((t) => t.id === tag.id);
+  const currentTags = excludeMode.value ? excludedTags : selectedTags;
+  const alreadySelected = currentTags.value.some((t) => t.id === tag.id);
   if (!alreadySelected) {
-    // On remplace le tableau au lieu de le muter (push) : les watchers sur selectedTags
-    // (HeaderView, targetCurrencyCode...) sont superficiels et ne réagissent qu'à un
-    // changement de référence, pas à une mutation en place.
-    selectedTags.value.push(tag);
+    currentTags.value.push(tag);
   }
 });
 

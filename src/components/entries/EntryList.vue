@@ -45,8 +45,9 @@ const emit = defineEmits<{
     toggleView : [];
 }>();
 
-const { tags, startDate, endDate, searchText, filteringCurrency } = defineProps<{
-  tags: TagDto[];
+const { tags, excludedTags, startDate, endDate, searchText, filteringCurrency } = defineProps<{
+  tags: TagDto[],
+  excludedTags: TagDto[],
   startDate: string,
   endDate: string,
   searchText: string,
@@ -83,6 +84,7 @@ const loadEntries = async () => {
   const params: GetEntriesParams = {
       startDate: startDate,
       endDate: endDate,
+      excludedTagIds: excludedTags.map(tagDto => tagDto.id!),
       tagIds: tags.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: 0,
@@ -122,6 +124,7 @@ const loadNextPage = async () => {
   const params: GetEntriesParams = {
       startDate: startDate,
       endDate: endDate,
+      excludedTagIds: excludedTags.map(tagDto => tagDto.id!),
       tagIds: tags.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: nextPage,
