@@ -1,10 +1,10 @@
 <template>
   <div class="entry-filter">
     <div class="selected-tags-sticky">
-      <button class="mode-toggle" :class="{ excluding }" @click="excluding = !excluding">
-        {{ excluding ? 'Exclus' : 'Inclus' }}
+      <button class="mode-toggle" :class="{ excluding: excludeMode }" @click="excludeMode = !excludeMode">
+        {{ excludeMode ? 'Exclus' : 'Inclus' }}
       </button>
-      <ExcludedTag v-if="excluding" :tags="excludedTags" @remove="handleRemove" />
+      <ExcludedTag v-if="excludeMode" :tags="excludedTags" @remove="handleRemove" />
       <SelectedTag v-else :tags="tags" @remove="handleRemove" />
     </div>
     <div class="tag-selection-scrollable" :class="{ 'search-active': expanded }">
@@ -13,7 +13,7 @@
           <span class="icon">&#128269;</span>
           <span v-if="searchText.length > 0" class="badge"></span>
         </button>
-        <TagSelection :selected-tags="excluding ? excludedTags : tags" @toggle="handleToggle" />
+        <TagSelection :selected-tags="excludeMode ? excludedTags : tags" @toggle="handleToggle" />
       </template>
       <template v-else>
         <button class="search-toggle active" @click="expanded = false">
@@ -37,14 +37,14 @@ import TextFilter from './TextFilter.vue'
 const tags = defineModel<TagDto[]>('tags', { default: () => [] })
 const excludedTags = defineModel<TagDto[]>('excludedTags', { default: () => [] })
 const searchText = defineModel<string>('searchText', { default: '' })
-
+const excludeMode = defineModel<boolean>('excludeMode', {default: () => false});
 const expanded = ref(false)
-const excluding = ref(false)
+//const excluding = ref(false)
 
 // Un tag ne peut pas être à la fois sélectionné et exclu : on le retire de l'autre liste.
 const handleToggle = (newTags: TagDto[]) => {
   const ids = new Set(newTags.map(tag => tag.id))
-  if (excluding.value) {
+  if (excludeMode.value) {
     excludedTags.value = newTags
     if (tags.value.some(tag => ids.has(tag.id)))
       tags.value = tags.value.filter(tag => !ids.has(tag.id))
@@ -56,7 +56,7 @@ const handleToggle = (newTags: TagDto[]) => {
 }
 
 const handleRemove = (tagToRemove: TagDto) => {
-  if (excluding.value)
+  if (excludeMode.value)
     excludedTags.value = excludedTags.value.filter(tag => tag.id !== tagToRemove.id)
   else
     tags.value = tags.value.filter(tag => tag.id !== tagToRemove.id)

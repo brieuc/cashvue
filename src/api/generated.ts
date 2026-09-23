@@ -226,6 +226,8 @@ export type ComputationRequestDto = {
   endDate: string;
   /** List of tags to filter entries in the calculation */
   tags?: TagDto[];
+  /** List of tags to exclude from entries in the calculation */
+  excludedTags?: TagDto[];
   /** list of currencies to filter entries in the calculation */
   currencies?: CurrencyDto[];
   /** Search text */
@@ -486,6 +488,10 @@ endDate?: string;
  * List of tag IDs to filter entries
  */
 tagIds?: number[];
+/**
+ * List of tag IDs to exclude from the entries
+ */
+excludedTagIds?: number[];
 /**
  * Minimum transaction amount
  */
@@ -1738,7 +1744,7 @@ export const getGetEntriesUrl = (params?: GetEntriesParams,) => {
   const normalizedParams = new URLSearchParams();
 
   Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["tagIds","currencyCodes","sort"];
+    const explodeParameters = ["tagIds","excludedTagIds","currencyCodes","sort"];
 
     if (Array.isArray(value) && explodeParameters.includes(key)) {
       value.forEach((v) => {

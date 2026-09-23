@@ -114,6 +114,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "200": {
             "description": "Tag mis à jour avec succès",
             "content": {
@@ -123,9 +126,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           },
           "404": {
             "description": "Tag non trouvé"
@@ -184,6 +184,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Récurrence non trouvée"
+          },
           "200": {
             "description": "Récurrence trouvée",
             "content": {
@@ -193,9 +196,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -234,9 +234,6 @@
           "400": {
             "description": "Données invalides"
           },
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "200": {
             "description": "Récurrence mise à jour avec succès",
             "content": {
@@ -246,6 +243,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -270,11 +270,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Récurrence supprimée avec succès"
-          },
           "404": {
             "description": "Récurrence non trouvée"
+          },
+          "204": {
+            "description": "Récurrence supprimée avec succès"
           }
         }
       }
@@ -348,6 +348,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "404": {
             "description": "Taux non trouvé"
           },
@@ -360,9 +363,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       },
@@ -465,6 +465,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "200": {
             "description": "Période mise à jour avec succès",
             "content": {
@@ -477,9 +480,6 @@
           },
           "404": {
             "description": "Période non trouvée"
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       },
@@ -504,11 +504,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
           "204": {
             "description": "Période supprimée avec succès"
+          },
+          "404": {
+            "description": "Période non trouvée"
           }
         }
       }
@@ -535,6 +535,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Entrée non trouvée"
+          },
           "200": {
             "description": "Entrée trouvée",
             "content": {
@@ -544,9 +547,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Entrée non trouvée"
           }
         }
       },
@@ -582,9 +582,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
-          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -594,6 +591,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
           },
           "404": {
             "description": "Entrée non trouvée"
@@ -724,6 +724,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Tag créé avec succès",
             "content": {
@@ -733,9 +736,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1267,6 +1267,24 @@
             "example": [1, 2, 5]
           },
           {
+            "name": "excludedTagIds",
+            "in": "query",
+            "description": "List of tag IDs to exclude from the entries",
+            "required": false,
+            "schema": {
+              "uniqueItems": true,
+              "type": "array",
+              "description": "List of tag IDs to exclude from the entries",
+              "example": [1, 2, 5],
+              "items": {
+                "type": "integer",
+                "description": "List of tag IDs to exclude from the entries",
+                "format": "int64"
+              }
+            },
+            "example": [1, 2, 5]
+          },
+          {
             "name": "startAmount",
             "in": "query",
             "description": "Minimum transaction amount",
@@ -1454,6 +1472,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Entrées créées avec succès",
             "content": {
@@ -1463,9 +1484,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1564,9 +1582,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Devise créée avec succès",
             "content": {
@@ -1576,6 +1591,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1636,6 +1654,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides ou taux de change manquant"
+          },
           "200": {
             "description": "Calcul effectué avec succès",
             "content": {
@@ -1645,9 +1666,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides ou taux de change manquant"
           }
         }
       }
@@ -2347,6 +2365,20 @@
             "uniqueItems": true,
             "type": "array",
             "description": "List of tags to filter entries in the calculation",
+            "example": [
+              {
+                "id": 1,
+                "title": "Office"
+              }
+            ],
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          },
+          "excludedTags": {
+            "uniqueItems": true,
+            "type": "array",
+            "description": "List of tags to exclude from entries in the calculation",
             "example": [
               {
                 "id": 1,
