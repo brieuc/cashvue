@@ -133,6 +133,10 @@ h3 {
   margin: 0;
   overflow-wrap: break-word;
   word-break: break-word;
+  /* Le texte est déjà stocké avec ses \n (saisis dans le <textarea> de
+     EntryModal) ; par défaut <p> les collapse au rendu. pre-line les
+     respecte tout en laissant les mots longs se couper normalement. */
+  white-space: pre-line;
 }
 .amount-line {
   display: flex;

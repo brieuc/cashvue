@@ -30,6 +30,13 @@
           </select>
         </div>
 
+        <div class="date-quick-actions">
+          <button type="button" class="date-quick-btn" @click="setQuickDate(-1)">Hier</button>
+          <button type="button" class="date-quick-btn" @click="setQuickDate(0)">Maintenant</button>
+          <button type="button" class="date-quick-btn" @click="setQuickDate(1)">Demain</button>
+          <button type="button" class="date-quick-btn" @click="addHour">+1h</button>
+        </div>
+
         <div class="tag-filter-wrapper">
           <TagFilter v-model="form.tags" />
         </div>
@@ -121,7 +128,23 @@ const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
   tags: entry.tags,
 });
 
-const getDefaultAccountingDate = () => new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+// Format attendu par <input type="datetime-local"> : heure locale, sans offset.
+const toLocalInputValue = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+const getDefaultAccountingDate = () => toLocalInputValue(new Date());
+
+// Hier/Maintenant/Demain gardent l'heure actuelle et ne décalent que le
+// jour (daysOffset en jours, négatif pour Hier), plutôt qu'une heure fixe
+// comme minuit.
+const setQuickDate = (daysOffset: number) => {
+  form.accountingDate = toLocalInputValue(new Date(Date.now() + daysOffset * 86400000));
+};
+
+// Cumulatif : ajoute 1h à la date déjà saisie (et non à "maintenant"),
+// pour permettre plusieurs clics successifs.
+const addHour = () => {
+  const current = form.accountingDate ? new Date(form.accountingDate) : new Date();
+  form.accountingDate = toLocalInputValue(new Date(current.getTime() + 3600000));
+};
 
 const defaultForm : CreateEntryRequest = {
   title: '',
@@ -303,6 +326,32 @@ onUpdated(() => {
   min-width: 0;
   max-width: 100%;
   -webkit-appearance: none;
+}
+
+/* Ligne dédiée sous la ligne principale : indépendante de .form-row, elle
+   ne dispute donc jamais l'espace avec la devise et peut passer à la ligne
+   sans effet de bord sur le reste du formulaire. */
+.date-quick-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  padding: 0 0.75rem;
+  margin: -0.15rem 0 0.4rem;
+}
+
+.date-quick-btn {
+  flex: 0 0 auto;
+  padding: 0.3rem 0.6rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 12px;
+  background: transparent;
+  color: #7f8c8d;
+  font-size: 0.75rem;
+  cursor: pointer;
+}
+
+.date-quick-btn:hover {
+  background: #f0f4f8;
 }
 
 .modal-body > .form-group {
