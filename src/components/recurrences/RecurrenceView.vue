@@ -79,6 +79,7 @@ const frequencyLabel = computed(() => {
   font-size: 0.8rem;
   color: #5a6c7d;
   margin: 0;
+  white-space: pre-line;
 }
 .amount-line {
   display: flex;
