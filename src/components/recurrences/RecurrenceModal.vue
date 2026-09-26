@@ -7,6 +7,33 @@
       <button type="submit" class="btn-submit" @click="handleSubmit">Save</button>
     </div>
     <div class="modal-body">
+      <div class="form-row">
+        <input id="startDate" v-model="form.startDate" type="datetime-local" required class="date-input" />
+
+        <button
+            type="button"
+            class="amount-toggle"
+            :class="isPositive ? 'positive' : 'negative'"
+            @click="isPositive = !isPositive">
+            {{ isPositive ? '+' : '−' }}
+        </button>
+        <input v-model.number="form.amount"
+          type="number"
+          inputmode="decimal"
+          step="any"
+          class="amount-input"
+          ref="inputRef"/>
+        <select v-model="form.currencyCode" required class="currency-select">
+          <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
+            {{ currency.code }}
+          </option>
+        </select>
+      </div>
+
+      <div class="tag-filter-wrapper">
+        <TagFilter v-model="form.tags" />
+      </div>
+
       <div class="form-group">
         <label for="title">Titre</label>
         <input id="title" v-model="form.title" type="text">
@@ -15,49 +42,18 @@
         <label for="description">Description</label>
         <textarea id="description" v-model="form.description"></textarea>
       </div>
-      <div class="form-row">
-        <div class="form-group" style="display: flex; justify-content: space-evenly; align-items: center; padding: 0 1rem;">
-        <span>
-          <button
-              type="button"
-              class="amount-toggle"
-              :class="isPositive ? 'positive' : 'negative'"
-              @click="isPositive = !isPositive">
-              {{ isPositive ? '+' : '−' }}
-          </button>
-        </span>
-        <span><input v-model.number="form.amount"
-          type="number"
-          inputmode="decimal"
-          step="any"
-          class="amount-input"
-          ref="inputRef"/>
-        </span>
-        <span style="min-width: 5rem;"><select v-model="form.currencyCode" required>
-          <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
-                {{ currency.code }}
-              </option>
-            </select></span>
+
+      <div class="form-group">
+        <label for="frequency">Fréquence</label>
+        <select id="frequency" v-model="form.frequency">
+          <option value="DAILY">Quotidien</option>
+          <option value="WEEKLY">Hebdomadaire</option>
+          <option value="MONTHLY">Mensuel</option>
+          <option value="QUARTERLY">Trimestriel</option>
+          <option value="YEARLY">Annuel</option>
+          <option value="NONE">Aucun</option>
+        </select>
       </div>
-      </div>
-      <div class="form-row">
-        <div class="form-group">
-          <label for="startDate">Date de début</label>
-          <input id="startDate" v-model="form.startDate" type="datetime-local">
-        </div>
-        <div class="form-group">
-          <label for="frequency">Fréquence</label>
-          <select id="frequency" v-model="form.frequency">
-            <option value="DAILY">Quotidien</option>
-            <option value="WEEKLY">Hebdomadaire</option>
-            <option value="MONTHLY">Mensuel</option>
-            <option value="QUARTERLY">Trimestriel</option>
-            <option value="YEARLY">Annuel</option>
-            <option value="NONE">Aucun</option>
-          </select>
-        </div>
-      </div>
-      <TagFilter v-model="form.tags" />
     </div>
   </div>
 </div>
@@ -67,6 +63,7 @@
 import { type GetCurrenciesParams, type RecurrenceDto, RecurrenceDtoFrequency } from '@/api/generated';
 import { onMounted, reactive, ref, watch } from 'vue';
 import { useCurrencies } from '@/composables/useCurrencies';
+import TagFilter from '../filter/TagFilter.vue';
 
 const { currencies, fetchCurrencies } = useCurrencies();
 interface props {
@@ -181,9 +178,42 @@ onMounted(() => {
 }
 
 .form-row {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.75rem;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.date-input,
+.currency-select {
+  padding: 0.4rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.date-input:focus,
+.currency-select:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.date-input {
+  flex: 1 1 100px;
+  min-width: 0;
+  max-width: 100%;
+  -webkit-appearance: none;
+}
+
+/* Contrairement à EntryModal, .modal-body a ici un padding horizontal
+   (1.25rem, ligne 177) : une marge négative égale l'annule pour que
+   TagFilter atteigne les bords de la modale, comme dans EntryModal. */
+.tag-filter-wrapper {
+  margin: 0 -1.25rem 0.75rem;
+  border-top: 1px solid #e1e8ed;
+  padding-top: 0.5rem;
 }
 
 .form-group {
@@ -249,24 +279,34 @@ onMounted(() => {
   background: #ecf0f1;
 }
 .amount-toggle {
-  width: 2.5rem;
-  height: 2.5rem;
+  flex: 0 0 auto;
+  width: 1.75rem;
+  height: 1.75rem;
   border: none;
   border-radius: 4px;
-  font-size: 1.25rem;
+  font-size: 1rem;
   font-weight: bold;
   color: white;
   cursor: pointer;
   transition: background-color 0.2s;
 }
 
-.form-group input.amount-input {
-  font-size: 1.75rem;
+.amount-input {
+  font-size: 1.3rem;
   font-weight: 600;
   text-align: right;
-  width: 8ch;
-  padding: 0.5rem 0.75rem;
-  height: 3rem;
+  width: 6ch;
+  flex: 0 0 auto;
+  padding: 0.4rem 0.5rem;
+  height: 2.25rem;
+  border: 1px solid #dfe6e9;
+  border-radius: 6px;
+  font-family: inherit;
+}
+
+.amount-input:focus {
+  outline: none;
+  border-color: #3498db;
 }
 
 .amount-toggle.positive {
@@ -275,11 +315,5 @@ onMounted(() => {
 
 .amount-toggle.negative {
   background-color: #ef4444; /* rouge */
-}
-
-@media (max-width: 640px) {
-  .form-row {
-    grid-template-columns: 1fr;
-  }
 }
 </style>
