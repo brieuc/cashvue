@@ -12,6 +12,7 @@
       <HeaderView
         :selected-period="selectedPeriod"
         :selected-tags="selectedTags"
+        :excluded-tags="excludedTags"
         :search-text="searchText"
         :entries-updated="entriesChanged"
         :to-date-only="toDateOnly"
@@ -61,7 +62,7 @@
 <script setup lang="ts">
 import { type TagDto, type PeriodDto } from '@/api/generated';
 import EntryList from '@/components/entries/EntryList.vue';
-import HeaderView from '@/components/HeaderView.vue';
+import HeaderView from '@/components/header/HeaderView.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
 import EntryFilter from '@/components/filter/EntryFilter.vue';
 import { effectiveEndDate } from '@/composables/useEffectivePeriod';

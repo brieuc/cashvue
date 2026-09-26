@@ -28,12 +28,13 @@ import { type TagDto, type PeriodDto, type ComputationRequestDto } from '@/api/g
 import { useComputation } from '@/composables/useComputation';
 import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import { computed, ref, watch, type Component } from 'vue';
-import HeaderTotalPanel from './header/HeaderTotalPanel.vue';
-import HeaderCurrencyPanel from './header/HeaderCurrencyPanel.vue';
+import HeaderTotalPanel from './HeaderTotalPanel.vue';
+import HeaderCurrencyPanel from './HeaderCurrencyPanel.vue';
 
 interface Props {
   selectedPeriod : PeriodDto | undefined,
   selectedTags : TagDto[],
+  excludedTags : TagDto[],
   entriesUpdated : number,
   searchText : string,
   toDateOnly : boolean,
@@ -94,40 +95,40 @@ const panels = computed<PanelDescriptor[]>(() => {
 });
 
 watch(() => searchText, () => {
-  getComputation(selectedPeriod, selectedTags);
+  getComputation();
 });
 
 watch(() => entriesUpdated, () => {
-  getComputation(selectedPeriod, selectedTags);
+  getComputation();
 });
 
-watch(() => selectedPeriod, (period) => {
-  getComputation(period, selectedTags);
+watch(() => selectedPeriod, () => {
+  getComputation();
 });
 
-watch(() => selectedTags, (tags) => {
-  getComputation(selectedPeriod, tags);
+watch(() => selectedTags, () => {
+  getComputation();
 }, {deep : true})
 
-watch(() => excludedTags, (tags) => {
-  getComputation(selectedPeriod, tags);
+watch(() => excludedTags, () => {
+  getComputation();
 }, {deep : true})
 
 watch(() => toDateOnly, () => {
-  getComputation(selectedPeriod, selectedTags);
+  getComputation();
 })
 
 watch([activeIndex, panels], ([index, currentPanels]) => {
   currency.value = currentPanels[index]?.currency ?? null;
 }, { immediate: true });
 
-const getComputation = (period : PeriodDto | undefined, selectedTags : TagDto[]) => {
-  if (!period)
+const getComputation = () => {
+  if (!selectedPeriod)
     return;
 
   const request : ComputationRequestDto = {
-    startDate: period.startDate,
-    endDate: toDateOnly ? effectiveEndDate(period)! : period.endDate,
+    startDate: selectedPeriod.startDate,
+    endDate: toDateOnly ? effectiveEndDate(selectedPeriod)! : selectedPeriod.endDate,
     tags: selectedTags,
     excludedTags: excludedTags,
     searchText: searchText,
