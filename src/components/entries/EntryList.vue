@@ -31,6 +31,7 @@ import EntryModal from './EntryModal.vue'
 //import { createEntry, type EntryDto, type getEntries, type GetEntriesParams } from '@/api/generated'
 import type { EntryDto, GetEntriesParams, TagDto } from '@/api/generated'
 import EntryView from './EntryView.vue'
+import { toNaiveLocalIso } from '@/utils/localDate'
 
 const { entries, currentPage, error, fetchEntries, addEntry, editEntry, removeEntry } = useEntries()
 //const entries = ref<Entry[]>([])
@@ -215,13 +216,13 @@ const handleSubmit = async (formData: EntryDto) => {
 
 const handleDuplicate = (entry: EntryDto) => {
   const { id, modificationDate, ...rest } = entry;
-  const accountingDate = new Date(new Date(rest.accountingDate).getTime() + 1000).toISOString();
+  const accountingDate = toNaiveLocalIso(new Date(new Date(rest.accountingDate).getTime() + 1000));
   persistNewEntry({ ...rest, accountingDate });
 };
 
 const handleDuplicateToNow = (entry: EntryDto) => {
   const { id, modificationDate, ...rest } = entry;
-  persistNewEntry({ ...rest, accountingDate: new Date().toISOString() });
+  persistNewEntry({ ...rest, accountingDate: toNaiveLocalIso(new Date()) });
 };
 
 const handleDelete = (entry: EntryDto) => {

@@ -81,6 +81,7 @@ import { type TagGroupDto, type EntryDto, type GetCurrenciesParams, type TagDto,
 import type { CreateEntryRequest } from '@/types/types';
 import { useCurrencies } from '@/composables/useCurrencies';
 import { useTagGroups } from '@/composables/useTagGroups';
+import { toLocalInputValue } from '@/utils/localDate';
 
 const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 const { currencies, fetchCurrencies } = useCurrencies();
@@ -128,8 +129,6 @@ const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
   tags: entry.tags,
 });
 
-// Format attendu par <input type="datetime-local"> : heure locale, sans offset.
-const toLocalInputValue = (date: Date) => new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
 const getDefaultAccountingDate = () => toLocalInputValue(new Date());
 
 // Hier/Maintenant/Demain gardent l'heure actuelle et ne décalent que le
