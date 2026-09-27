@@ -7,8 +7,7 @@
     <div class="card-right">
       <span class="date">{{ formatDate(entry.accountingDate) }}</span>
       <div class="amount-line">
-        <span class="amount" :class="entry.amount >= 0 ? 'positive' : 'negative'">{{ entry.amount }}</span>
-        <span class="currency">{{ entry.currencyCode }}</span>
+        <span class="amount" :class="entry.amount >= 0 ? 'positive' : 'negative'">{{ formatAmount(absoluteAmount(entry.amount), entry.currencyCode) }}</span>
       </div>
     </div>
   </div>
@@ -34,6 +33,7 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue';
 import type { EntryDto } from '@/api/generated';
+import { absoluteAmount, formatAmount } from '@/utils/formatAmount';
 
 const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 const showMenu = ref(false);
@@ -149,7 +149,6 @@ h3 {
   color: #2c3e50;
 }
 .amount.positive { color: #27ae60; }
-.amount.negative { color: #e74c3c; }
 .currency {
   font-weight: 600;
   color:grey;

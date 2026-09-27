@@ -449,8 +449,8 @@ nav a.router-link-active {
   color: var(--c-text) !important;
 }
 
-.amount.positive { color: var(--c-positive) !important; }
-.amount.negative { color: var(--c-negative) !important; }
+.amount.positive { color:#0b9d6d !important; }
+.amount.negative { color:rgb(103, 105, 105) !important; }
 
 .currency {
   color: var(--c-text-muted) !important;

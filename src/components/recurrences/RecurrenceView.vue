@@ -7,8 +7,7 @@
     <div class="card-right">
       <span class="date">{{ formatDate(recurrence.startDate) }}</span>
       <div class="amount-line">
-        <span class="amount">{{ recurrence.amount }}</span>
-        <span class="currency">{{ recurrence.currencyCode }}</span>
+        <span class="amount" :class="recurrence.amount >= 0 ? 'positive' : 'negative'">{{ formatAmount(absoluteAmount(recurrence.amount), recurrence.currencyCode) }}</span>
       </div>
     </div>
   </div>
@@ -25,6 +24,7 @@
 <script setup lang="ts">
 import type { RecurrenceDto } from '@/api/generated';
 import { computed } from 'vue';
+import { absoluteAmount, formatAmount } from '@/utils/formatAmount';
 
 interface props {
   recurrence: RecurrenceDto
@@ -91,11 +91,7 @@ const frequencyLabel = computed(() => {
   font-size: 1rem;
   color: #2c3e50;
 }
-.currency {
-  font-weight: 600;
-  color: black;
-  font-size: 1rem;
-}
+.amount.positive { color: #27ae60; }
 .tag-icon {
   margin-left: 0.25rem;
   border-radius: 3px;

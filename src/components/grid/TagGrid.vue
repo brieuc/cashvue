@@ -20,7 +20,7 @@
 <script setup lang="ts">
 import { computed, watchEffect } from 'vue'
 import { useComputation } from '@/composables/useComputation'
-import { formatAmount } from '@/utils/formatAmount'
+import { formatAmount, absoluteAmount } from '@/utils/formatAmount'
 import type { ComputationRequestDto, TagAmountDto, TagDto } from '@/api/generated'
 
 const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
@@ -41,11 +41,6 @@ const emit = defineEmits<{
 const selectedTag = defineModel<TagDto>();
 
 const { fetchTagAmounts, tagAmounts } = useComputation();
-
-const absoluteAmount = (amount: number | undefined) => {
-  const value = amount ?? 0.0
-  return value < 0.0 ? value * -1.0 : value;
-};
 
 const selectTagAmount = (tagAmountDto: TagAmountDto) => {
   if (tagAmountDto.tag)

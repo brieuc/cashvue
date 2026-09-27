@@ -30,6 +30,7 @@ import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import { computed, ref, watch, type Component } from 'vue';
 import HeaderTotalPanel from './HeaderTotalPanel.vue';
 import HeaderCurrencyPanel from './HeaderCurrencyPanel.vue';
+import { absoluteAmount } from '@/utils/formatAmount';
 
 interface Props {
   selectedPeriod : PeriodDto | undefined,
@@ -56,11 +57,6 @@ interface PanelDescriptor {
 }
 
 const currency = defineModel<string | null>('currency', { default: null });
-
-const absoluteAmount = (amount: number | undefined) => {
-  const value = amount ?? 0.0
-  return value < 0.0 ? value * -1.0 : value;
-};
 
 const panels = computed<PanelDescriptor[]>(() => {
   const result: PanelDescriptor[] = [

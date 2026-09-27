@@ -53,7 +53,10 @@
         </div>
 
         <div class="form-group title-group">
-          <input v-model="form.title" type="text" placeholder="Titre" @click="showSuggestions = !showSuggestions" @blur="showSuggestions = false" />
+          <div class="input-wrapper">
+            <input ref="titleInputRef" v-model="form.title" type="text" placeholder="Titre" @click="showSuggestions = !showSuggestions" @blur="showSuggestions = false" />
+            <button v-if="form.title" type="button" class="clear-btn" @click="clearTitle">&times;</button>
+          </div>
           <div v-if="showSuggestions" class="suggestions-list">
             <div v-for="suggestion in titleSuggestions" :key="suggestion.id"
               :class="['suggestion-item', { 'suggestion-flash': flashedSuggestionId === suggestion.id }]"
@@ -65,7 +68,10 @@
         </div>
 
         <div class="form-group">
-          <textarea v-model="form.description" rows="2" placeholder="Description"></textarea>
+          <div class="input-wrapper">
+            <textarea ref="descriptionInputRef" v-model="form.description" rows="2" placeholder="Description"></textarea>
+            <button v-if="form.description" type="button" class="clear-btn" @click="clearDescription">&times;</button>
+          </div>
         </div>
 
 
@@ -93,6 +99,8 @@ interface Props {
 }
 
 const inputRef = ref<HTMLInputElement | null>(null);
+const titleInputRef = ref<HTMLInputElement | null>(null);
+const descriptionInputRef = ref<HTMLTextAreaElement | null>(null);
 const props = defineProps<Props>();
 
 const emit = defineEmits<{
@@ -111,6 +119,16 @@ const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
     showSuggestions.value = false;
     flashedSuggestionId.value = null;
   }, 150);
+};
+
+const clearTitle = () => {
+  form.title = '';
+  titleInputRef.value?.focus();
+};
+
+const clearDescription = () => {
+  form.description = '';
+  descriptionInputRef.value?.focus();
 };
 
 const selectTagGroup = (tagGroup : TagGroupDto) => {
@@ -518,6 +536,33 @@ onUpdated(() => {
 
 .title-group {
   position: relative;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper input,
+.input-wrapper textarea {
+  padding-right: 2rem;
+}
+
+.clear-btn {
+  position: absolute;
+  right: 4px;
+  width: 24px;
+  height: 24px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
 }
 
 .suggestions-list {
