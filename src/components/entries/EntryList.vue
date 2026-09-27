@@ -215,7 +215,8 @@ const handleSubmit = async (formData: EntryDto) => {
 
 const handleDuplicate = (entry: EntryDto) => {
   const { id, modificationDate, ...rest } = entry;
-  persistNewEntry(rest);
+  const accountingDate = new Date(new Date(rest.accountingDate).getTime() + 1000).toISOString();
+  persistNewEntry({ ...rest, accountingDate });
 };
 
 const handleDuplicateToNow = (entry: EntryDto) => {
