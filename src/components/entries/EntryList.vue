@@ -12,7 +12,8 @@
       </div>
     </div>
     <div v-if="hasMorePage" class="load-more">
-      <button class="load-more-btn" @click="loadNextPage">Load next page</button>
+      <button v-if="!isLoadingAll" class="load-more-btn" @click="loadAllEntries">Load all entries</button>
+      <div v-else class="spinner" aria-label="Loading"></div>
     </div>
 
     <div class="fab-wrapper">
@@ -39,6 +40,7 @@ const isModalOpen = ref(false)
 const selectedEntry = ref<EntryDto | null>(null);
 const highlightedEntryId = ref<number | null>(null);
 const hasMorePage = ref(false);
+const isLoadingAll = ref(false);
 const paginationSize = 100;
 
 const emit = defineEmits<{
@@ -119,8 +121,14 @@ watchEffect(async() => {
   loadEntries();
 })
 
-const loadNextPage = async () => {
-  const nextPage = (currentPage.value?.number ?? 0) + 1;
+// Instead of load the next entries thanks to page and size. We reload all the
+// entries with reload = true. My first idea was to change the size of the request by giving
+// the number of remaining entries to load all at once. It would broke the pagination.
+// By loading everything and replace the entries array, we don't loose the scrollbar
+// offset so this is fine.
+const loadAllEntries = async () => {
+  //const nextPage = (currentPage.value?.number ?? 0) + 1;
+  // const numberOfRemainingEntries = (currentPage.value?.totalElements ?? 0) - (currentPage.value?.size ?? 0)
 
   const params: GetEntriesParams = {
       startDate: startDate,
@@ -128,12 +136,19 @@ const loadNextPage = async () => {
       excludedTagIds: excludedTags.map(tagDto => tagDto.id!),
       tagIds: tags.map(tagDto => tagDto.id!),
       searchText: searchText,
-      page: nextPage,
-      size: paginationSize,
+      //page: nextPage,
+      //size: paginationSize,
+      page: 0,
+      size: currentPage.value?.totalElements ?? 0,
       sort: ["accountingDate:desc"]
   };
 
-  await fetchEntries(params, false);
+  isLoadingAll.value = true;
+  try {
+    await fetchEntries(params, true);
+  } finally {
+    isLoadingAll.value = false;
+  }
 };
 
 /*
@@ -366,6 +381,19 @@ h3 {
 .load-more-btn:hover {
   background: #f0f8ff;
   border-color: #aed6f1;
+}
+
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #d6e9f8;
+  border-top-color: #5dade2;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
 }
 
 @keyframes flash {

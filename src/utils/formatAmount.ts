@@ -39,6 +39,11 @@ export function getLocaleForCurrency(
 
 const formatterCache = new Map<string, Intl.NumberFormat>();
 
+export function absoluteAmount(amount: number | undefined): number {
+  const value = amount ?? 0.0
+  return value < 0.0 ? value * -1.0 : value;
+}
+
 export function formatAmount(amount: number, code: string): string {
   if (!code)
     return '';
