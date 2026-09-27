@@ -25,12 +25,13 @@ import type { ComputationRequestDto, TagAmountDto, TagDto } from '@/api/generate
 
 const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 
-const { tags, startDate, endDate, searchText, targetCurrencyCode } = defineProps<{
-  tags: TagDto[];
-  startDate: string;
-  endDate: string;
-  searchText: string;
-  targetCurrencyCode: string;
+const { tags, excludedTags, startDate, endDate, searchText, targetCurrencyCode } = defineProps<{
+  tags: TagDto[],
+  excludedTags: TagDto[],
+  startDate: string,
+  endDate: string,
+  searchText: string,
+  targetCurrencyCode: string
 }>();
 
 const emit = defineEmits<{
@@ -61,6 +62,7 @@ watchEffect(async () => {
     startDate: startDate,
     endDate: endDate,
     tags: tags,
+    excludedTags: excludedTags,
     searchText: searchText,
     targetCurrencyCode: targetCurrencyCode,
   };
