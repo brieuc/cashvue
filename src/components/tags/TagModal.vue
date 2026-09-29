@@ -35,6 +35,10 @@
         <input type="checkbox" id="isCumulativeChk" v-model="form.isCumulative" />
         <label for="isCumulativeChk">Cumulative Tag</label>
       </div>
+      <div class="form-group checkbox-group">
+        <input type="checkbox" id="hiddenChk" v-model="form.hidden" />
+        <label for="hiddenChk">Hidden</label>
+      </div>
     </div>
   </div>
 </div>
@@ -42,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import type { GetCurrenciesParams, TagDto } from '@/api/generated';
+import type { TagDto } from '@/api/generated';
 import { computed, onMounted, reactive, watch } from 'vue';
 import { useTags } from '@/composables/useTags';
 import { useCurrencies } from '@/composables/useCurrencies';
@@ -118,9 +122,7 @@ const uploadIcon = async (event: Event) => {
 };
 
 const loadCurrencies = () => {
-  const params : GetCurrenciesParams = {
-  };
-  fetchCurrencies(params);
+  fetchCurrencies();
 }
 
 onMounted(() => {

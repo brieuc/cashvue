@@ -19,9 +19,7 @@ export function useComputation() {
 
       computeTagAmounts(computationRequest).then(response => {
         if (response.status === 200) {
-          // generated.ts types the response data as a single TagAmountDto,
-          // but the back-end actually returns a List<TagAmountDto>
-          tagAmounts.value = response.data as unknown as TagAmountDto[];
+          tagAmounts.value = response.data;
         }
       })
   }

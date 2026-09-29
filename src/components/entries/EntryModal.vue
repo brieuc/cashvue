@@ -83,7 +83,7 @@
 <script setup lang="ts">
 import { reactive, onMounted, watch, onUpdated, ref, nextTick } from 'vue'
 import TagFilter from '../filter/TagFilter.vue';
-import { type TagGroupDto, type EntryDto, type GetCurrenciesParams, type TagDto, type TagGroupTitleSuggestionDto } from '@/api/generated';
+import { type TagGroupDto, type EntryDto, type TagDto, type TagGroupTitleSuggestionDto } from '@/api/generated';
 import type { CreateEntryRequest } from '@/types/types';
 import { useCurrencies } from '@/composables/useCurrencies';
 import { useTagGroups } from '@/composables/useTagGroups';
@@ -258,9 +258,7 @@ const handleSubmit = () => {
 }
 
 const loadCurrencies = () => {
-  const params : GetCurrenciesParams = {
-  };
-  fetchCurrencies(params);
+  fetchCurrencies();
 }
 
 onMounted(() => {
