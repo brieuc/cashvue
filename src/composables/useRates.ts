@@ -1,25 +1,35 @@
-// src/composables/useRates.ts
-import { useApi } from './useApi'
-import { rateService } from '@/services/rates'
-import type { UseRatesReturn, CreateRateRequest, UpdateRateRequest } from '@/types/types'
+import { createRate, deleteRate, getRatesByCurrency, updateRate, type RateDto } from "@/api/generated";
+import { ref } from "vue";
 
-export function useRates(): UseRatesReturn {
-  const { loading, execute } = useApi()
+const rates = ref<RateDto[]>([]);
 
-  const getAll = () => execute(() => rateService.getAll())
+export function useRates() {
 
-  const getByDate = (date: string) => execute(() => rateService.getByDate(date))
+  const fetchRatesByCurrency = async (currencyCode: string) => {
+    const response = await getRatesByCurrency(currencyCode);
+    if (response.status === 200) {
+      rates.value = response.data || [];
+    }
+  };
 
-  const getByCurrency = (currencyCode: string) =>
-    execute(() => rateService.getByCurrency(currencyCode))
+  const fetchLatestRate = async (currencyCode: string): Promise<RateDto | undefined> => {
+    const response = await getRatesByCurrency(currencyCode);
+    if (response.status === 200) {
+      return response.data?.[0];
+    }
+  };
 
-  const create = (data: CreateRateRequest) =>
-    execute(() => rateService.create(data), 'Taux créé !')
+  const addRate = (rate: RateDto) => {
+    return createRate(rate);
+  };
 
-  const update = (id: string, data: UpdateRateRequest) =>
-    execute(() => rateService.update(id, data), 'Taux mis à jour !')
+  const editRate = (id: number, rate: RateDto) => {
+    return updateRate(id, rate);
+  };
 
-  const deleteRate = (id: string) => execute(() => rateService.delete(id), 'Taux supprimé !')
+  const removeRate = (id: number) => {
+    return deleteRate(id);
+  };
 
-  return { loading, getAll, getByDate, getByCurrency, create, update, deleteRate }
+  return { rates, fetchRatesByCurrency, fetchLatestRate, addRate, editRate, removeRate };
 }

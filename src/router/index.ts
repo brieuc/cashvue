@@ -41,6 +41,18 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/currencies',
+    name: 'currencies',
+    component: () => import('../components/currencies/CurrencyList.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
+    path: '/currencies/:code',
+    name: 'rates',
+    component: () => import('../components/currencies/RateList.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting

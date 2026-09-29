@@ -114,6 +114,9 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Tag non trouvé"
+          },
           "400": {
             "description": "Données invalides"
           },
@@ -126,9 +129,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Tag non trouvé"
           }
         }
       },
@@ -153,11 +153,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Tag supprimé avec succès"
-          },
           "404": {
             "description": "Tag non trouvé"
+          },
+          "204": {
+            "description": "Tag supprimé avec succès"
           }
         }
       }
@@ -234,6 +234,9 @@
           "400": {
             "description": "Données invalides"
           },
+          "404": {
+            "description": "Récurrence non trouvée"
+          },
           "200": {
             "description": "Récurrence mise à jour avec succès",
             "content": {
@@ -243,9 +246,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -270,11 +270,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "204": {
             "description": "Récurrence supprimée avec succès"
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       }
@@ -301,9 +301,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Taux non trouvé"
-          },
           "200": {
             "description": "Taux trouvé",
             "content": {
@@ -313,6 +310,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       },
@@ -351,9 +351,6 @@
           "400": {
             "description": "Données invalides"
           },
-          "404": {
-            "description": "Taux non trouvé"
-          },
           "200": {
             "description": "Taux mis à jour avec succès",
             "content": {
@@ -363,6 +360,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Taux non trouvé"
           }
         }
       },
@@ -465,6 +465,9 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Période non trouvée"
+          },
           "400": {
             "description": "Données invalides"
           },
@@ -477,9 +480,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Période non trouvée"
           }
         }
       },
@@ -592,11 +592,11 @@
               }
             }
           },
-          "400": {
-            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
-          },
           "404": {
             "description": "Entrée non trouvée"
+          },
+          "400": {
+            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
           }
         }
       },
@@ -979,6 +979,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Récurrence créée avec succès",
             "content": {
@@ -988,88 +991,11 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
     },
     "/rates": {
-      "get": {
-        "tags": [
-          "Rates"
-        ],
-        "summary": "Récupérer tous les taux de change",
-        "description": "Retourne une liste paginée de tous les taux de change",
-        "operationId": "getRates",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Page number (starts at 0)",
-            "required": false,
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "description": "Page number (starts at 0)",
-              "format": "int32",
-              "example": 0,
-              "default": 0
-            },
-            "example": 0
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "Number of elements per page",
-            "required": false,
-            "schema": {
-              "maximum": 1000,
-              "minimum": 1,
-              "type": "integer",
-              "description": "Number of elements per page",
-              "format": "int32",
-              "example": 20
-            },
-            "example": 20
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-              "example": [
-                "title:asc"
-              ],
-              "items": {
-                "type": "string",
-                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-                "example": "[\"title:asc\"]"
-              }
-            },
-            "example": [
-              "title:asc"
-            ]
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/PagedModelRateDto"
-                }
-              }
-            }
-          }
-        }
-      },
       "post": {
         "tags": [
           "Rates"
@@ -1433,6 +1359,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Entrée créée avec succès",
             "content": {
@@ -1442,9 +1371,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1472,9 +1398,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Entrées créées avec succès",
             "content": {
@@ -1484,6 +1407,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1494,69 +1420,18 @@
           "Currencies"
         ],
         "summary": "Récupérer toutes les devises",
-        "description": "Retourne une liste paginée de toutes les devises",
+        "description": "Retourne une liste de toutes les devises",
         "operationId": "getCurrencies",
-        "parameters": [
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Page number (starts at 0)",
-            "required": false,
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "description": "Page number (starts at 0)",
-              "format": "int32",
-              "example": 0,
-              "default": 0
-            },
-            "example": 0
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "Number of elements per page",
-            "required": false,
-            "schema": {
-              "maximum": 1000,
-              "minimum": 1,
-              "type": "integer",
-              "description": "Number of elements per page",
-              "format": "int32",
-              "example": 20
-            },
-            "example": 20
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-              "example": [
-                "title:asc"
-              ],
-              "items": {
-                "type": "string",
-                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-                "example": "[\"title:asc\"]"
-              }
-            },
-            "example": [
-              "title:asc"
-            ]
-          }
-        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/PagedModelCurrencyDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/CurrencyDto"
+                  }
                 }
               }
             }
@@ -1582,6 +1457,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Devise créée avec succès",
             "content": {
@@ -1591,9 +1469,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1618,9 +1493,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides ou taux de change manquant"
-          },
           "200": {
             "description": "Calcul effectué avec succès",
             "content": {
@@ -1630,6 +1502,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides ou taux de change manquant"
           }
         }
       }
@@ -1662,7 +1537,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/TagAmountDto"
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TagAmountDto"
+                  }
                 }
               }
             }
@@ -1843,58 +1721,6 @@
               "type": "string"
             },
             "example": "EUR"
-          },
-          {
-            "name": "page",
-            "in": "query",
-            "description": "Page number (starts at 0)",
-            "required": false,
-            "schema": {
-              "maximum": 2147483647,
-              "minimum": 0,
-              "type": "integer",
-              "description": "Page number (starts at 0)",
-              "format": "int32",
-              "example": 0,
-              "default": 0
-            },
-            "example": 0
-          },
-          {
-            "name": "size",
-            "in": "query",
-            "description": "Number of elements per page",
-            "required": false,
-            "schema": {
-              "maximum": 1000,
-              "minimum": 1,
-              "type": "integer",
-              "description": "Number of elements per page",
-              "format": "int32",
-              "example": 20
-            },
-            "example": 20
-          },
-          {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-            "required": false,
-            "schema": {
-              "type": "array",
-              "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-              "example": [
-                "title:asc"
-              ],
-              "items": {
-                "type": "string",
-                "description": "Sort criteria (format: 'property:direction' where direction = asc|desc)",
-                "example": "[\"title:asc\"]"
-              }
-            },
-            "example": [
-              "title:asc"
-            ]
           }
         ],
         "responses": {
@@ -2013,6 +1839,31 @@
           },
           "204": {
             "description": "Devise supprimée avec succès"
+          }
+        }
+      }
+    },
+    "/currencies/reference": {
+      "get": {
+        "tags": [
+          "Currencies"
+        ],
+        "summary": "Récupérer la devise de référence",
+        "description": "Retourne la devise de référence dans laquelle les taux sont exprimés",
+        "operationId": "getReferenceCurrency",
+        "responses": {
+          "404": {
+            "description": "Aucune devise de référence définie"
+          },
+          "200": {
+            "description": "Devise de référence trouvée",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CurrencyDto"
+                }
+              }
+            }
           }
         }
       }
@@ -2647,20 +2498,6 @@
           }
         }
       },
-      "PagedModelRateDto": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/RateDto"
-            }
-          },
-          "page": {
-            "$ref": "#/components/schemas/PageMetadata"
-          }
-        }
-      },
       "PagedModelPeriodDto": {
         "type": "object",
         "properties": {
@@ -2682,20 +2519,6 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EntryDto"
-            }
-          },
-          "page": {
-            "$ref": "#/components/schemas/PageMetadata"
-          }
-        }
-      },
-      "PagedModelCurrencyDto": {
-        "type": "object",
-        "properties": {
-          "content": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/CurrencyDto"
             }
           },
           "page": {

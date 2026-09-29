@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { type GetCurrenciesParams, type RecurrenceDto, RecurrenceDtoFrequency } from '@/api/generated';
+import { type RecurrenceDto, RecurrenceDtoFrequency } from '@/api/generated';
 import { onMounted, reactive, ref, watch } from 'vue';
 import { useCurrencies } from '@/composables/useCurrencies';
 import TagFilter from '../filter/TagFilter.vue';
@@ -127,9 +127,7 @@ const cancel = () => {
 };
 
 const loadCurrencies = () => {
-  const params : GetCurrenciesParams = {
-  };
-  fetchCurrencies(params);
+  fetchCurrencies();
 }
 
 onMounted(() => {

@@ -231,7 +231,7 @@ const handleSubmit = async (formData: EntryDto) => {
 
 const handleDuplicate = (entry: EntryDto) => {
   const { id, modificationDate, ...rest } = entry;
-  const accountingDate = toNaiveLocalIso(new Date(new Date(rest.accountingDate).getTime() + 1000));
+  const accountingDate = toNaiveLocalIso(new Date(new Date(rest.accountingDate).getTime() + (60 * 1000)));
   persistNewEntry({ ...rest, accountingDate });
 };
 

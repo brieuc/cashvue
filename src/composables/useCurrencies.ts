@@ -1,15 +1,22 @@
-import { getCurrencies, type CurrencyDto, type GetCurrenciesParams } from "@/api/generated";
+import { getCurrencies, getReferenceCurrency, type CurrencyDto } from "@/api/generated";
 import { ref } from "vue";
 
 export function useCurrencies() {
 
   const currencies = ref<CurrencyDto[]>([]);
+  const referenceCurrency = ref<CurrencyDto>();
 
-  const fetchCurrencies = async (params : GetCurrenciesParams) => {
-    getCurrencies(params).then(response => {
-      currencies.value = response.data.content || [];
+  const fetchCurrencies = async () => {
+    getCurrencies().then(response => {
+      currencies.value = response.data || [];
     });
   }
 
-  return { currencies, fetchCurrencies };
+  const fetchReferenceCurrency = async () => {
+    getReferenceCurrency().then(response => {
+      referenceCurrency.value = response.data || undefined;
+    })
+  };
+
+  return { currencies, fetchCurrencies, fetchReferenceCurrency, referenceCurrency };
 }

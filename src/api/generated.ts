@@ -343,11 +343,6 @@ export type PagedModelRecurrenceDto = {
   page?: PageMetadata;
 };
 
-export type PagedModelRateDto = {
-  content?: RateDto[];
-  page?: PageMetadata;
-};
-
 export type PagedModelPeriodDto = {
   content?: PeriodDto[];
   page?: PageMetadata;
@@ -355,11 +350,6 @@ export type PagedModelPeriodDto = {
 
 export type PagedModelEntryDto = {
   content?: EntryDto[];
-  page?: PageMetadata;
-};
-
-export type PagedModelCurrencyDto = {
-  content?: CurrencyDto[];
   page?: PageMetadata;
 };
 
@@ -437,25 +427,6 @@ export const GetRecurrencesFrequenciesItem = {
   NONE: 'NONE',
 } as const;
 
-export type GetRatesParams = {
-/**
- * Page number (starts at 0)
- * @minimum 0
- * @maximum 2147483647
- */
-page?: number;
-/**
- * Number of elements per page
- * @minimum 1
- * @maximum 1000
- */
-size?: number;
-/**
- * Sort criteria (format: 'property:direction' where direction = asc|desc)
- */
-sort?: string[];
-};
-
 export type GetPeriodsParams = {
 /**
  * Page number (starts at 0)
@@ -526,25 +497,6 @@ size?: number;
 sort?: string[];
 };
 
-export type GetCurrenciesParams = {
-/**
- * Page number (starts at 0)
- * @minimum 0
- * @maximum 2147483647
- */
-page?: number;
-/**
- * Number of elements per page
- * @minimum 1
- * @maximum 1000
- */
-size?: number;
-/**
- * Sort criteria (format: 'property:direction' where direction = asc|desc)
- */
-sort?: string[];
-};
-
 export type GetTagGroupsParams = {
 /**
  * IDs des tags à filtrer
@@ -561,25 +513,6 @@ fromDate: string;
  * Date de fin de la période (inclusive)
  */
 toDate: string;
-};
-
-export type GetRatesByCurrencyParams = {
-/**
- * Page number (starts at 0)
- * @minimum 0
- * @maximum 2147483647
- */
-page?: number;
-/**
- * Number of elements per page
- * @minimum 1
- * @maximum 1000
- */
-size?: number;
-/**
- * Sort criteria (format: 'property:direction' where direction = asc|desc)
- */
-sort?: string[];
 };
 
 export type GetPeriodByDateParams = {
@@ -1531,58 +1464,6 @@ export const createRecurrence = async (recurrenceDto: NonReadonly<RecurrenceDto>
 
 
 /**
- * Retourne une liste paginée de tous les taux de change
- * @summary Récupérer tous les taux de change
- */
-export type getRatesResponse200 = {
-  data: PagedModelRateDto
-  status: 200
-}
-    
-export type getRatesResponseSuccess = (getRatesResponse200) & {
-  headers: Headers;
-};
-;
-
-export type getRatesResponse = (getRatesResponseSuccess)
-
-export const getGetRatesUrl = (params?: GetRatesParams,) => {
-  const normalizedParams = new URLSearchParams();
-
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["sort"];
-
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? 'null' : v.toString());
-      });
-      return;
-    }
-      
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
-
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/rates?${stringifiedParams}` : `/rates`
-}
-
-export const getRates = async (params?: GetRatesParams, options?: RequestInit): Promise<getRatesResponse> => {
-  
-  return customFetch<getRatesResponse>(getGetRatesUrl(params),
-  {      
-    ...options,
-    method: 'GET'
-    
-    
-  }
-);}
-
-
-
-/**
  * Crée un nouveau taux de change
  * @summary Créer un nouveau taux
  */
@@ -1867,11 +1748,11 @@ export const createBatch = async (entryDto: NonReadonly<EntryDto[]>, options?: R
 
 
 /**
- * Retourne une liste paginée de toutes les devises
+ * Retourne une liste de toutes les devises
  * @summary Récupérer toutes les devises
  */
 export type getCurrenciesResponse200 = {
-  data: PagedModelCurrencyDto
+  data: CurrencyDto[]
   status: 200
 }
     
@@ -1882,32 +1763,17 @@ export type getCurrenciesResponseSuccess = (getCurrenciesResponse200) & {
 
 export type getCurrenciesResponse = (getCurrenciesResponseSuccess)
 
-export const getGetCurrenciesUrl = (params?: GetCurrenciesParams,) => {
-  const normalizedParams = new URLSearchParams();
+export const getGetCurrenciesUrl = () => {
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["sort"];
 
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? 'null' : v.toString());
-      });
-      return;
-    }
-      
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
+  
 
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/currencies?${stringifiedParams}` : `/currencies`
+  return `/currencies`
 }
 
-export const getCurrencies = async (params?: GetCurrenciesParams, options?: RequestInit): Promise<getCurrenciesResponse> => {
+export const getCurrencies = async ( options?: RequestInit): Promise<getCurrenciesResponse> => {
   
-  return customFetch<getCurrenciesResponse>(getGetCurrenciesUrl(params),
+  return customFetch<getCurrenciesResponse>(getGetCurrenciesUrl(),
   {      
     ...options,
     method: 'GET'
@@ -2013,7 +1879,7 @@ export const compute = async (computationRequestDto: ComputationRequestDto, opti
  * @summary Calculer la somme par tag avec conversion de devises
  */
 export type computeTagAmountsResponse200 = {
-  data: TagAmountDto
+  data: TagAmountDto[]
   status: 200
 }
 
@@ -2232,34 +2098,17 @@ export type getRatesByCurrencyResponseSuccess = (getRatesByCurrencyResponse200) 
 
 export type getRatesByCurrencyResponse = (getRatesByCurrencyResponseSuccess)
 
-export const getGetRatesByCurrencyUrl = (currencyCode: string,
-    params?: GetRatesByCurrencyParams,) => {
-  const normalizedParams = new URLSearchParams();
+export const getGetRatesByCurrencyUrl = (currencyCode: string,) => {
 
-  Object.entries(params || {}).forEach(([key, value]) => {
-    const explodeParameters = ["sort"];
 
-    if (Array.isArray(value) && explodeParameters.includes(key)) {
-      value.forEach((v) => {
-        normalizedParams.append(key, v === null ? 'null' : v.toString());
-      });
-      return;
-    }
-      
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : value.toString())
-    }
-  });
+  
 
-  const stringifiedParams = normalizedParams.toString();
-
-  return stringifiedParams.length > 0 ? `/rates/currency/${currencyCode}?${stringifiedParams}` : `/rates/currency/${currencyCode}`
+  return `/rates/currency/${currencyCode}`
 }
 
-export const getRatesByCurrency = async (currencyCode: string,
-    params?: GetRatesByCurrencyParams, options?: RequestInit): Promise<getRatesByCurrencyResponse> => {
+export const getRatesByCurrency = async (currencyCode: string, options?: RequestInit): Promise<getRatesByCurrencyResponse> => {
   
-  return customFetch<getRatesByCurrencyResponse>(getGetRatesByCurrencyUrl(currencyCode,params),
+  return customFetch<getRatesByCurrencyResponse>(getGetRatesByCurrencyUrl(currencyCode),
   {      
     ...options,
     method: 'GET'
@@ -2402,6 +2251,50 @@ export const deleteCurrency = async (code: string, options?: RequestInit): Promi
   {      
     ...options,
     method: 'DELETE'
+    
+    
+  }
+);}
+
+
+
+/**
+ * Retourne la devise de référence dans laquelle les taux sont exprimés
+ * @summary Récupérer la devise de référence
+ */
+export type getReferenceCurrencyResponse200 = {
+  data: CurrencyDto
+  status: 200
+}
+
+export type getReferenceCurrencyResponse404 = {
+  data: void
+  status: 404
+}
+    
+export type getReferenceCurrencyResponseSuccess = (getReferenceCurrencyResponse200) & {
+  headers: Headers;
+};
+export type getReferenceCurrencyResponseError = (getReferenceCurrencyResponse404) & {
+  headers: Headers;
+};
+
+export type getReferenceCurrencyResponse = (getReferenceCurrencyResponseSuccess | getReferenceCurrencyResponseError)
+
+export const getGetReferenceCurrencyUrl = () => {
+
+
+  
+
+  return `/currencies/reference`
+}
+
+export const getReferenceCurrency = async ( options?: RequestInit): Promise<getReferenceCurrencyResponse> => {
+  
+  return customFetch<getReferenceCurrencyResponse>(getGetReferenceCurrencyUrl(),
+  {      
+    ...options,
+    method: 'GET'
     
     
   }
