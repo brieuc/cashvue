@@ -1,1 +1,2 @@
 Ne pas mettre à jour le code directement à part si je te demande expressément.
+@COMPONENTS.md

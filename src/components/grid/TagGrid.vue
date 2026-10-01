@@ -28,8 +28,8 @@ const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 const { tags, excludedTags, startDate, endDate, searchText, targetCurrencyCode } = defineProps<{
   tags: TagDto[],
   excludedTags: TagDto[],
-  startDate: string,
-  endDate: string,
+  startDate: string | undefined,
+  endDate: string | undefined,
   searchText: string,
   targetCurrencyCode: string
 }>();
@@ -53,6 +53,7 @@ const sortedTagAmounts = computed(() => {
 });
 
 watchEffect(async () => {
+  if (!startDate || !endDate) return;
   const request: ComputationRequestDto = {
     startDate: startDate,
     endDate: endDate,

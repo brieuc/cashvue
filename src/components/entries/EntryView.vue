@@ -23,6 +23,8 @@
       <div v-if="showMenu" class="actions-menu" @click.stop>
         <button type="button" class="menu-item" @click="onDuplicate">Dupliquer</button>
         <button type="button" class="menu-item" @click="onDuplicateToNow">Dupliquer à maintenant</button>
+        <button type="button" class="menu-item" @click="onFilterWithTags">Filtrer avec ces tags</button>
+        <button type="button" class="menu-item" @click="onComputeUntilThisDate">Calculer jusqu'à cette date</button>
         <button type="button" class="menu-item" @click="onDelete">Supprimer</button>
       </div>
     </div>
@@ -59,6 +61,8 @@ const emit = defineEmits<{
   duplicate: [entry: EntryDto]
   duplicateToNow: [entry: EntryDto]
   delete: [entry: EntryDto]
+  filterWithTags: [entry: EntryDto]
+  computeUntilThisDate: [entry: EntryDto]
 }>();
 
 const toggleMenu = () => {
@@ -77,6 +81,16 @@ const onDuplicate = () => {
 const onDuplicateToNow = () => {
   closeMenu();
   emit('duplicateToNow', props.entry);
+};
+
+const onFilterWithTags = () => {
+  closeMenu();
+  emit('filterWithTags', props.entry);
+};
+
+const onComputeUntilThisDate = () => {
+  closeMenu();
+  emit('computeUntilThisDate', props.entry);
 };
 
 const onDelete = () => {
@@ -158,6 +172,7 @@ h3 {
   position: relative;
 }
 .actions-btn {
+  position: relative;
   background: transparent;
   border: none;
   padding: 0.1rem 0.3rem;
@@ -165,6 +180,12 @@ h3 {
   font-size: 1rem;
   line-height: 1;
   cursor: pointer;
+}
+/* Zone de tap invisible (~44px) plus grande que le bouton */
+.actions-btn::before {
+  content: '';
+  position: absolute;
+  inset: -12px -14px;
 }
 .actions-btn:hover {
   color: #2c3e50;

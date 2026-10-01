@@ -24,25 +24,24 @@
 </template>
 
 <script setup lang="ts">
-import { type TagDto, type PeriodDto, type ComputationRequestDto } from '@/api/generated';
+import { type TagDto, type ComputationRequestDto } from '@/api/generated';
 import { useComputation } from '@/composables/useComputation';
-import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import { computed, ref, watch, type Component } from 'vue';
 import HeaderTotalPanel from './HeaderTotalPanel.vue';
 import HeaderCurrencyPanel from './HeaderCurrencyPanel.vue';
 import { absoluteAmount } from '@/utils/formatAmount';
 
 interface Props {
-  selectedPeriod : PeriodDto | undefined,
+  startDate : string | undefined,
+  endDate : string | undefined,
   selectedTags : TagDto[],
   excludedTags : TagDto[],
   entriesUpdated : number,
   searchText : string,
-  toDateOnly : boolean,
   targetCurrencyCode: string,
 }
 
-const { selectedPeriod, selectedTags, excludedTags, entriesUpdated, searchText, toDateOnly, targetCurrencyCode } = defineProps<Props>();
+const { startDate, endDate, selectedTags, excludedTags, entriesUpdated, searchText, targetCurrencyCode } = defineProps<Props>();
 
 const { fetchComputation: fetchTotalComputation, computationResponse: totalComputation } = useComputation();
 
@@ -98,7 +97,7 @@ watch(() => entriesUpdated, () => {
   getComputation();
 });
 
-watch(() => selectedPeriod, () => {
+watch(() => [startDate, endDate], () => {
   getComputation();
 });
 
@@ -110,21 +109,17 @@ watch(() => excludedTags, () => {
   getComputation();
 }, {deep : true})
 
-watch(() => toDateOnly, () => {
-  getComputation();
-})
-
 watch([activeIndex, panels], ([index, currentPanels]) => {
   currency.value = currentPanels[index]?.currency ?? null;
 }, { immediate: true });
 
 const getComputation = () => {
-  if (!selectedPeriod)
+  if (!startDate || !endDate)
     return;
 
   const request : ComputationRequestDto = {
-    startDate: selectedPeriod.startDate,
-    endDate: toDateOnly ? effectiveEndDate(selectedPeriod)! : selectedPeriod.endDate,
+    startDate: startDate,
+    endDate: endDate,
     tags: selectedTags,
     excludedTags: excludedTags,
     searchText: searchText,

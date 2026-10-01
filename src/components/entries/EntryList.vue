@@ -7,7 +7,9 @@
         <EntryView :entry="entry"
           @duplicate="handleDuplicate"
           @duplicate-to-now="handleDuplicateToNow"
-          @delete="handleDelete">
+          @delete="handleDelete"
+          @filter-with-tags="handleFilterWithTags"
+          @compute-until-this-date="handleComputeUntilThisDate">
         </EntryView>
       </div>
     </div>
@@ -48,18 +50,21 @@ const emit = defineEmits<{
     toggleView : [];
 }>();
 
-const { tags, excludedTags, startDate, endDate, searchText, filteringCurrency } = defineProps<{
-  tags: TagDto[],
+const { excludedTags, startDate, endDate, searchText, filteringCurrency } = defineProps<{
   excludedTags: TagDto[],
-  startDate: string,
-  endDate: string,
+  startDate: string | undefined,
+  endDate: string | undefined,
   searchText: string,
   filteringCurrency: string // not for the request, only to filter the current entries
 }>();
 
+const tags = defineModel<TagDto[]>('tags', { default: () => [] })
+const untilDate = defineModel<string | undefined>('untilDate')
+
 const isFuture = (date: string) => new Date(date).getTime() > Date.now();
 
 const isInCurrentPeriod = (date: string) => {
+    if (!startDate || !endDate) return false;
     const entryDate = new Date(date);
     const start = new Date(startDate);
     const end = new Date(endDate);
@@ -83,12 +88,13 @@ const selectEntry = async (entry: EntryDto) => {
 };
 
 const loadEntries = async () => {
+  if (!startDate || !endDate) return;
   // Faire une gestion des pages
   const params: GetEntriesParams = {
       startDate: startDate,
       endDate: endDate,
       excludedTagIds: excludedTags.map(tagDto => tagDto.id!),
-      tagIds: tags.map(tagDto => tagDto.id!),
+      tagIds: tags.value.map(tagDto => tagDto.id!),
       searchText: searchText,
       page: 0,
       size: paginationSize,
@@ -129,12 +135,13 @@ watchEffect(async() => {
 const loadAllEntries = async () => {
   //const nextPage = (currentPage.value?.number ?? 0) + 1;
   // const numberOfRemainingEntries = (currentPage.value?.totalElements ?? 0) - (currentPage.value?.size ?? 0)
+  if (!startDate || !endDate) return;
 
   const params: GetEntriesParams = {
       startDate: startDate,
       endDate: endDate,
       excludedTagIds: excludedTags.map(tagDto => tagDto.id!),
-      tagIds: tags.map(tagDto => tagDto.id!),
+      tagIds: tags.value.map(tagDto => tagDto.id!),
       searchText: searchText,
       //page: nextPage,
       //size: paginationSize,
@@ -251,6 +258,16 @@ const handleDelete = (entry: EntryDto) => {
     }
   });
 };
+
+const handleFilterWithTags = (entry: EntryDto) => {
+  tags.value = (entry.tags ?? []).map(tag => ({ ...tag }));
+};
+
+const handleComputeUntilThisDate = (entry: EntryDto) => {
+  untilDate.value = entry.accountingDate;
+};
+
+
 
   /*
   const response = await createEntry(formData)
