@@ -10,12 +10,12 @@
 
     <div class="header-bar">
       <HeaderView
-        :selected-period="selectedPeriod"
+        :start-date="startDate"
+        :end-date="endDate"
         :selected-tags="selectedTags"
         :excluded-tags="excludedTags"
         :search-text="searchText"
         :entries-updated="entriesChanged"
-        :to-date-only="toDateOnly"
         :target-currency-code="targetCurrencyCode"
         v-model:currency="activeCurrency">
       </HeaderView>
@@ -25,12 +25,13 @@
     <div class="entry-content">
       <EntryList
         v-if="!showTagGrid"
-        :tags="selectedTags"
         :excluded-tags="excludedTags"
         :start-date="startDate"
         :end-date="endDate"
         :search-text="searchText"
         :filtering-currency="activeCurrency"
+        v-model:tags="selectedTags"
+        v-model:until-date="untilDate"
         @entries-changed="entriesChanged++"
         @toggle-view="showTagGrid = true"
       />
@@ -78,10 +79,10 @@ const activeCurrency = ref<string>('CHF');
 const targetCurrencyCode = ref<string>('CHF');
 const showTagGrid = ref<boolean>(false);
 const selectedTagFromTagGrid = ref<TagDto>();
+const untilDate = ref<string>();
 
-
-const startDate = ref<string>("2000-01-01T00:00:00");
-const endDate = ref<string>("2000-01-01T00:00:00");
+const startDate = ref<string>();
+const endDate = ref<string>();
 
 const entriesChanged = ref<number>(0);
 const searchText = ref<string>('');
@@ -105,6 +106,14 @@ watch(() => selectedTags, (tags) => {
   const nextCurrency = lastTag?.currencyCode ?? "CHF";
   targetCurrencyCode.value = nextCurrency;
 }, {deep : true});
+
+
+watch(untilDate, (date) => {
+  if (date !== undefined)
+      endDate.value = date;
+  else
+    endDate.value = toDateOnly.value ? effectiveEndDate(selectedPeriod.value)! : selectedPeriod.value?.endDate;
+});
 
 watch([selectedPeriod, toDateOnly], ([newPeriod, toDateOnlyValue]) => {
   if (!newPeriod)
