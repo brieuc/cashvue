@@ -14,7 +14,7 @@
         <input v-model="form.valueDate" type="date">
       </div>
       <div class="form-group">
-        <input v-model.number="form.rate" type="number" step="any" placeholder="Taux">
+        <input v-model.number="form.rate" type="number" inputmode="decimal" step="any" placeholder="Taux">
       </div>
       <button v-if="rate?.id" type="button" class="btn-delete" @click="handleDelete">Supprimer</button>
     </div>
