@@ -19,7 +19,7 @@
         <button class="search-toggle active" @click="expanded = false">
           <span class="icon">&#128269;</span>
         </button>
-        <TextFilter v-model="searchText" />
+        <TextFilter v-model="searchText" @clear="expanded = false" />
         <button class="close-btn" @click="expanded = false">&times;</button>
       </template>
     </div>

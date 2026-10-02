@@ -17,12 +17,15 @@
               @click="isPositive = !isPositive">
               {{ isPositive ? '+' : '−' }}
           </button>
-          <input v-model.number="form.amount"
-            type="number"
-            inputmode="decimal"
-            step="any"
-            class="amount-input"
-            ref="inputRef"/>
+          <div class="input-wrapper amount-wrapper">
+            <input v-model.number="form.amount"
+              type="number"
+              inputmode="decimal"
+              step="any"
+              class="amount-input"
+              ref="inputRef"/>
+            <button v-if="form.amount != null && String(form.amount) !== ''" type="button" class="clear-btn" @click="clearAmount">&times;</button>
+          </div>
           <select v-model="form.currencyCode" required class="currency-select">
             <option v-for="currency in currencies" :key="currency.code" :value="currency.code">
               {{ currency.code }}
@@ -124,6 +127,11 @@ const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
 const clearTitle = () => {
   form.title = '';
   titleInputRef.value?.focus();
+};
+
+const clearAmount = () => {
+  form.amount = null;
+  inputRef.value?.focus();
 };
 
 const clearDescription = () => {
@@ -430,13 +438,17 @@ onUpdated(() => {
   font-size: 1.3rem;
   font-weight: 600;
   text-align: right;
-  width: 6ch;
-  flex: 0 0 auto;
+  /* 6ch de saisie + la place réservée à la croix (padding-right de .input-wrapper) */
+  width: calc(6ch + 2rem);
   padding: 0.4rem 0.5rem;
   height: 2.25rem;
   border: 1px solid #dfe6e9;
   border-radius: 6px;
   font-family: inherit;
+}
+
+.amount-wrapper {
+  flex: 0 0 auto;
 }
 
 .amount-input:focus {

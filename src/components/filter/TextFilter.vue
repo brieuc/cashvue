@@ -18,6 +18,10 @@ const searchText = defineModel<string>({ default: '' })
 const inputText = ref(searchText.value)
 const inputRef = ref<HTMLInputElement>()
 
+const emit = defineEmits<{
+  clear: []
+}>()
+
 let timeout: ReturnType<typeof setTimeout>
 
 watch(inputText, (val) => {
@@ -31,6 +35,7 @@ const clear = () => {
   inputText.value = ''
   searchText.value = ''
   inputRef.value?.focus()
+  emit('clear')
 }
 
 onMounted(() => {
