@@ -1,10 +1,10 @@
-import { compute, computeTagAmounts, type ComputationRequestDto, type ComputationResponseDto, type TagAmountDto } from "@/api/generated"
+import { compute, computeTagAmounts, type ComputationRequestDto, type ComputationResponseDto, type TagsAmountDto } from "@/api/generated"
 import { ref } from "vue";
 
 export function useComputation() {
 
   const computationResponse = ref<ComputationResponseDto>();
-  const tagAmounts = ref<TagAmountDto[]>();
+  const tagAmounts = ref<TagsAmountDto[]>();
 
   const fetchComputation = async(computationRequest: ComputationRequestDto) => {
 

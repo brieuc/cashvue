@@ -10,6 +10,11 @@
       "description": "Generated server url"
     }
   ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
   "tags": [
     {
       "name": "Rates",
@@ -114,12 +119,6 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
-          },
-          "400": {
-            "description": "Données invalides"
-          },
           "200": {
             "description": "Tag mis à jour avec succès",
             "content": {
@@ -129,6 +128,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       },
@@ -153,11 +158,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Tag non trouvé"
-          },
           "204": {
             "description": "Tag supprimé avec succès"
+          },
+          "404": {
+            "description": "Tag non trouvé"
           }
         }
       }
@@ -184,9 +189,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "200": {
             "description": "Récurrence trouvée",
             "content": {
@@ -196,6 +198,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -234,9 +239,6 @@
           "400": {
             "description": "Données invalides"
           },
-          "404": {
-            "description": "Récurrence non trouvée"
-          },
           "200": {
             "description": "Récurrence mise à jour avec succès",
             "content": {
@@ -246,6 +248,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Récurrence non trouvée"
           }
         }
       },
@@ -301,6 +306,9 @@
           }
         ],
         "responses": {
+          "404": {
+            "description": "Taux non trouvé"
+          },
           "200": {
             "description": "Taux trouvé",
             "content": {
@@ -310,9 +318,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Taux non trouvé"
           }
         }
       },
@@ -348,8 +353,8 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
+          "404": {
+            "description": "Taux non trouvé"
           },
           "200": {
             "description": "Taux mis à jour avec succès",
@@ -361,8 +366,8 @@
               }
             }
           },
-          "404": {
-            "description": "Taux non trouvé"
+          "400": {
+            "description": "Données invalides"
           }
         }
       },
@@ -387,11 +392,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Taux supprimé avec succès"
-          },
           "404": {
             "description": "Taux non trouvé"
+          },
+          "204": {
+            "description": "Taux supprimé avec succès"
           }
         }
       }
@@ -418,9 +423,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -430,6 +432,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Période non trouvée"
           }
         }
       },
@@ -465,12 +470,6 @@
           "required": true
         },
         "responses": {
-          "404": {
-            "description": "Période non trouvée"
-          },
-          "400": {
-            "description": "Données invalides"
-          },
           "200": {
             "description": "Période mise à jour avec succès",
             "content": {
@@ -480,6 +479,12 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
+          },
+          "404": {
+            "description": "Période non trouvée"
           }
         }
       },
@@ -582,6 +587,12 @@
           "required": true
         },
         "responses": {
+          "404": {
+            "description": "Entrée non trouvée"
+          },
+          "400": {
+            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
+          },
           "200": {
             "description": "Entrée mise à jour avec succès",
             "content": {
@@ -591,12 +602,6 @@
                 }
               }
             }
-          },
-          "404": {
-            "description": "Entrée non trouvée"
-          },
-          "400": {
-            "description": "Données invalides ou incohérence entre l'ID du path et l'ID du body"
           }
         }
       },
@@ -621,11 +626,11 @@
           }
         ],
         "responses": {
-          "204": {
-            "description": "Entrée supprimée avec succès"
-          },
           "404": {
             "description": "Entrée non trouvée"
+          },
+          "204": {
+            "description": "Entrée supprimée avec succès"
           }
         }
       }
@@ -724,9 +729,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Tag créé avec succès",
             "content": {
@@ -736,6 +738,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -979,9 +984,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Récurrence créée avec succès",
             "content": {
@@ -991,6 +993,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1015,6 +1020,9 @@
           "required": true
         },
         "responses": {
+          "400": {
+            "description": "Données invalides"
+          },
           "201": {
             "description": "Taux créé avec succès",
             "content": {
@@ -1024,9 +1032,6 @@
                 }
               }
             }
-          },
-          "400": {
-            "description": "Données invalides"
           }
         }
       }
@@ -1125,9 +1130,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Période créée avec succès",
             "content": {
@@ -1137,6 +1139,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1457,9 +1462,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides"
-          },
           "201": {
             "description": "Devise créée avec succès",
             "content": {
@@ -1469,6 +1471,9 @@
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides"
           }
         }
       }
@@ -1529,9 +1534,6 @@
           "required": true
         },
         "responses": {
-          "400": {
-            "description": "Données invalides ou taux de change manquant"
-          },
           "200": {
             "description": "Calcul effectué avec succès",
             "content": {
@@ -1539,11 +1541,14 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TagAmountDto"
+                    "$ref": "#/components/schemas/TagsAmountDto"
                   }
                 }
               }
             }
+          },
+          "400": {
+            "description": "Données invalides ou taux de change manquant"
           }
         }
       }
@@ -1762,9 +1767,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Aucune période ne contient cette date"
-          },
           "200": {
             "description": "Période trouvée",
             "content": {
@@ -1774,6 +1776,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Aucune période ne contient cette date"
           }
         }
       }
@@ -1799,9 +1804,6 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Devise non trouvée"
-          },
           "200": {
             "description": "Devise trouvée",
             "content": {
@@ -1811,6 +1813,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Devise non trouvée"
           }
         }
       },
@@ -1834,11 +1839,11 @@
           }
         ],
         "responses": {
-          "404": {
-            "description": "Devise non trouvée"
-          },
           "204": {
             "description": "Devise supprimée avec succès"
+          },
+          "404": {
+            "description": "Devise non trouvée"
           }
         }
       }
@@ -1852,9 +1857,6 @@
         "description": "Retourne la devise de référence dans laquelle les taux sont exprimés",
         "operationId": "getReferenceCurrency",
         "responses": {
-          "404": {
-            "description": "Aucune devise de référence définie"
-          },
           "200": {
             "description": "Devise de référence trouvée",
             "content": {
@@ -1864,6 +1866,9 @@
                 }
               }
             }
+          },
+          "404": {
+            "description": "Aucune devise de référence définie"
           }
         }
       }
@@ -2347,11 +2352,15 @@
         },
         "description": "Result of aggregated amount calculation"
       },
-      "TagAmountDto": {
+      "TagsAmountDto": {
         "type": "object",
         "properties": {
-          "tag": {
-            "$ref": "#/components/schemas/TagDto"
+          "tags": {
+            "type": "array",
+            "description": "Tag the amount is aggregated for",
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
           },
           "amount": {
             "type": "number",
@@ -2525,6 +2534,13 @@
             "$ref": "#/components/schemas/PageMetadata"
           }
         }
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
       }
     }
   }

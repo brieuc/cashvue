@@ -2,9 +2,12 @@
   <div class="tag-grid-view">
     <p v-if="!tagAmounts?.length" class="empty">Aucun montant</p>
     <div v-else class="grid">
-      <div v-for="item in sortedTagAmounts" :key="item.tag?.id" class="card" @click="selectTagAmount(item)">
-        <img v-if="item.tag?.icon" class="tag-icon" :src="`${uploadsUrl}/${item.tag.icon}`" />
-        <h3>{{ item.tag?.title }}</h3>
+      <div v-for="item in sortedTagAmounts" :key="item.tags?.map(t => t.id).join('-')" class="card" @click="selectTagAmount(item)">
+        <div class="tag-icons" :style="{ '--icon-size': iconSize(item.tags?.length) }">
+          <template v-for="t in item.tags" :key="t.id">
+            <img v-if="t.icon" class="tag-icon" :src="`${uploadsUrl}/${t.icon}`" />
+          </template>
+        </div>
         <div class="amount-line">
           <span class="amount" :class="(item.amount ?? 0) >= 0 ? 'positive' : 'negative'">{{ formatAmount(absoluteAmount(item.amount), targetCurrencyCode) }}</span>
         </div>
@@ -21,7 +24,7 @@
 import { computed, watchEffect } from 'vue'
 import { useComputation } from '@/composables/useComputation'
 import { formatAmount, absoluteAmount } from '@/utils/formatAmount'
-import type { ComputationRequestDto, TagAmountDto, TagDto } from '@/api/generated'
+import type { ComputationRequestDto, TagsAmountDto, TagDto } from '@/api/generated'
 
 const uploadsUrl = import.meta.env.VITE_UPLOADS_URL;
 
@@ -38,14 +41,16 @@ const emit = defineEmits<{
   toggleView: [];
 }>();
 
-const selectedTag = defineModel<TagDto>();
+const selectedTag = defineModel<TagDto[]>();
 
 const { fetchTagAmounts, tagAmounts } = useComputation();
 
-const selectTagAmount = (tagAmountDto: TagAmountDto) => {
-  if (tagAmountDto.tag)
-    selectedTag.value = tagAmountDto.tag;
+const selectTagAmount = (tagAmountDto: TagsAmountDto) => {
+  if (tagAmountDto.tags?.length)
+    selectedTag.value = tagAmountDto.tags;
 };
+
+const iconSize = (count = 1) => count <= 1 ? '38px' : count <= 3 ? '24px' : '18px';
 
 const sortedTagAmounts = computed(() => {
   if (!tagAmounts.value) return [];
@@ -99,10 +104,16 @@ watchEffect(async () => {
 .card:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
+.tag-icons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.2rem;
+}
 .tag-icon {
   border-radius: 4px;
-  width: 32px;
-  height: 32px;
+  width: var(--icon-size, 32px);
+  height: var(--icon-size, 32px);
   object-fit: contain;
 }
 h3 {

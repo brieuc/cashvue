@@ -29,7 +29,7 @@ Composant racine de l'écran principal : **propriétaire de tout l'état de filt
 | `targetCurrencyCode` (init `'CHF'`) | watcher `selectedTags` : devise du dernier tag qui en a une, sinon `'CHF'` | `HeaderView`, `TagGrid` |
 | `entriesChanged` (compteur) | `EntryList` (`@entries-changed` → `++`) | `HeaderView` (`:entries-updated`) → recalcul des totaux |
 | `showTagGrid` | `EntryList` (`@toggle-view` → true), `TagGrid` (`@toggle-view` → false) | bascule `EntryList` ⇄ `TagGrid` |
-| `selectedTagFromTagGrid` | `TagGrid` (v-model) | watcher → ajoute le tag à `selectedTags` ou `excludedTags` selon `excludeMode` |
+| `selectedTagFromTagGrid` (`TagDto[]`) | `TagGrid` (v-model, groupe de tags de la carte cliquée) ; remis à `undefined` par le watcher | watcher → ajoute chaque tag du groupe (sans doublon) à `selectedTags` ou `excludedTags` selon `excludeMode` |
 
 ### Enfants
 ```

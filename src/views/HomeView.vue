@@ -78,7 +78,7 @@ const toDateOnly = ref<boolean>(false);
 const activeCurrency = ref<string>('CHF');
 const targetCurrencyCode = ref<string>('CHF');
 const showTagGrid = ref<boolean>(false);
-const selectedTagFromTagGrid = ref<TagDto>();
+const selectedTagFromTagGrid = ref<TagDto[]>();
 const untilDate = ref<string>();
 
 const startDate = ref<string>();
@@ -87,13 +87,15 @@ const endDate = ref<string>();
 const entriesChanged = ref<number>(0);
 const searchText = ref<string>('');
 
-watch(selectedTagFromTagGrid, (tag) => {
-  if (!tag) return;
+watch(selectedTagFromTagGrid, (tagsToAdd) => {
+  if (!tagsToAdd?.length) return;
   const currentTags = excludeMode.value ? excludedTags : selectedTags;
-  const alreadySelected = currentTags.value.some((t) => t.id === tag.id);
-  if (!alreadySelected) {
-    currentTags.value.push(tag);
+  for (const tag of tagsToAdd) {
+    if (!currentTags.value.some((t) => t.id === tag.id)) {
+      currentTags.value.push(tag);
+    }
   }
+  selectedTagFromTagGrid.value = undefined;
 });
 
 watch(() => selectedTags, (tags) => {

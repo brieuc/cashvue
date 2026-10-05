@@ -66,6 +66,8 @@ const panels = computed<PanelDescriptor[]>(() => {
         nbEntries: totalComputation.value?.numberOfEntries,
         totalAmount: absoluteAmount(totalComputation.value?.totalAmount),
         currency: totalComputation.value?.targetCurrencyCode ?? '',
+        startDate,
+        endDate,
       },
       currency: null,
     },

@@ -278,8 +278,9 @@ export type ComputationResponseDto = {
 /**
  * Aggregated amount for a specific tag
  */
-export type TagAmountDto = {
-  tag?: TagDto;
+export type TagsAmountDto = {
+  /** Tag the amount is aggregated for */
+  tags?: TagDto[];
   /** Total amount aggregated for this tag */
   amount?: number;
 };
@@ -1879,7 +1880,7 @@ export const compute = async (computationRequestDto: ComputationRequestDto, opti
  * @summary Calculer la somme par tag avec conversion de devises
  */
 export type computeTagAmountsResponse200 = {
-  data: TagAmountDto[]
+  data: TagsAmountDto[]
   status: 200
 }
 
