@@ -1,6 +1,9 @@
 <template>
   <div class="header-panel">
-    <span><h2>{{ nbEntries }} entrées</h2></span>
+    <span>
+      <h2>{{ nbEntries }} entrées</h2>
+      <small v-if="startDate && endDate" class="header-range">{{ formatDay(startDate) }} → {{ formatDay(endDate) }}</small>
+    </span>
     <span><h2>{{ formatAmount(totalAmount, currency) }}</h2></span>
   </div>
 </template>
@@ -12,9 +15,17 @@ interface Props {
   nbEntries: number | undefined,
   totalAmount: number,
   currency: string,
+  startDate?: string,
+  endDate?: string,
 }
 
 defineProps<Props>();
+
+// "YYYY-MM-DD[THH:mm...]" -> "DD.MM.YYYY" (sans passer par Date, pour éviter tout décalage de fuseau)
+const formatDay = (date: string): string => {
+  const [year, month, day] = date.slice(0, 10).split('-');
+  return `${day}.${month}.${year}`;
+};
 </script>
 
 <style scoped>
@@ -25,6 +36,12 @@ defineProps<Props>();
   height: 100%;
   padding: 0 0.75rem;
   color: #fff;
+}
+
+.header-range {
+  display: block;
+  font-size: 0.65rem;
+  opacity: 0.7;
 }
 
 .header-panel h2 {

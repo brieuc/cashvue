@@ -110,6 +110,10 @@ const loadEntries = async () => {
 }
 
 watch(entries, (newEntries) => {
+  if (entries.value.length === 0) {
+    //Maybe there is some entries in the other periods
+  }
+
   console.log("watch entries")
   const totalElements = currentPage.value?.totalElements;
   if (totalElements != null && newEntries.length < totalElements) {

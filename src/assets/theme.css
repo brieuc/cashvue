@@ -496,8 +496,8 @@ nav a.router-link-active {
 
 /* Grille de tags : l'icône est le sujet de la carte (32px avant) */
 .grid .card .tag-icon {
-  width: 38px !important;
-  height: 38px !important;
+  width: var(--icon-size, 38px) !important;
+  height: var(--icon-size, 38px) !important;
 }
 
 /* Aperçu dans la modale de tag — seule image enfant directe (32px avant) */
