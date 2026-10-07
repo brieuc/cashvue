@@ -108,7 +108,10 @@ watchEffect(async () => {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  align-items: center;
+  align-content: center;
   gap: 0.2rem;
+  min-height: 52px;
 }
 .tag-icon {
   border-radius: 4px;
