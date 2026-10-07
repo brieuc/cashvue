@@ -62,7 +62,7 @@
           </div>
           <div v-if="showSuggestions" class="suggestions-list">
             <div v-for="suggestion in titleSuggestions" :key="suggestion.id"
-              :class="['suggestion-item', { 'suggestion-flash': flashedSuggestionId === suggestion.id }]"
+              class="suggestion-item"
               @mousedown.prevent="selectSuggestion(suggestion)">
               <span>{{ suggestion.title }}</span>
               <span class="usage-count">{{ suggestion.usageCount }}</span>
@@ -113,15 +113,10 @@ const emit = defineEmits<{
 
 const isPositive = ref<boolean>(false);
 const showSuggestions = ref<boolean>(false);
-const flashedSuggestionId = ref<number | null>(null);
 
 const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
-  flashedSuggestionId.value = suggestion.id ?? null;
   form.title = suggestion.title;
-  setTimeout(() => {
-    showSuggestions.value = false;
-    flashedSuggestionId.value = null;
-  }, 150);
+  showSuggestions.value = false;
 };
 
 const clearTitle = () => {
@@ -211,10 +206,12 @@ watch(() => form.tags, (tags) => {
       const match = matchTagGroup(data);
       if (match?.id != null) {
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
-          // Only interested in replacing the title with suggestion if it is empty
-          if (form.title === '')
-              form.title = titleSuggestions.value[0]?.title ?? ''
           titleSuggestions.value = suggestions;
+          // Only interested in replacing the title with suggestion if it is empty
+          if (form.title === '') {
+              form.title = titleSuggestions.value[0]?.title ?? ''
+              showSuggestions.value = true;
+          }
         });
       }
       else {
@@ -576,22 +573,31 @@ onUpdated(() => {
 }
 
 .suggestions-list {
-  position: absolute;
-  top: 100%;
-  left: 0.75rem;
-  right: 0.75rem;
-  max-height: 120px;
-  overflow-y: auto;
-  border: 1px solid #dfe6e9;
-  border-radius: 6px;
+  display: flex;
+  gap: 0.4rem;
+  margin: 0.25rem -0.75rem 0;
+  padding: 0.4rem 0.75rem;
+  overflow-x: auto;
+  /* !important : theme.css impose bordure, rayon et ombre sur .suggestions-list */
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   background: white;
   z-index: 10;
 }
 
 .suggestion-item {
-  display: flex;
-  justify-content: space-between;
-  padding: 0.5rem 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+  padding: 0.25rem 0.6rem;
+  background: var(--c-accent-dim);
+  border: 1px solid var(--c-accent-line);
+  border-radius: 12px;
+  color: var(--c-accent);
+  font-size: 0.78rem;
   cursor: pointer;
 }
 
@@ -599,8 +605,5 @@ onUpdated(() => {
   background: #f0f4f8;
 }
 
-.suggestion-flash {
-  background: #bfdbfe;
-}
 
 </style>
