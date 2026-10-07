@@ -93,7 +93,7 @@ watchEffect(async () => {
   display: grid;
   gap: 0.125rem;
   /* 3 colonnes de la largeur du plus grand montant (en ch, ×0.9 : les séparateurs sont plus étroits qu un chiffre) + padding (2×0.15rem) et bordures (2×1px) de la carte */
-  grid-template-columns: repeat(3, calc(var(--amount-ch, 8) * 0.9ch + 0.3rem + 2px));
+  grid-template-columns: repeat(3, calc(var(--amount-ch, 8) * 1.0ch + 0.3rem + 2px));
   justify-content: center;
 }
 .card {
