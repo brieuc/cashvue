@@ -1,10 +1,12 @@
 <template>
   <div class="header-panel">
-    <span>
-      <h2>{{ nbEntries }} entrées</h2>
-      <small v-if="startDate && endDate" class="header-range">{{ formatDay(startDate) }} → {{ formatDay(endDate) }}</small>
-    </span>
-    <span><h2>{{ formatAmount(totalAmount, currency) }}</h2></span>
+    <div class="header-panel-label">
+      <template v-if="startDate && endDate">{{ formatDay(startDate) }} → {{ formatDay(endDate) }}</template>
+    </div>
+    <div class="header-panel-row">
+      <span><h2>{{ nbEntries }} entrées</h2></span>
+      <span><h2>{{ formatAmount(totalAmount, currency) }}</h2></span>
+    </div>
   </div>
 </template>
 
@@ -31,20 +33,26 @@ const formatDay = (date: string): string => {
 <style scoped>
 .header-panel {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.1rem;
   height: 100%;
   padding: 0 0.75rem;
   color: #fff;
 }
 
-.header-range {
-  display: block;
+.header-panel-label {
   font-size: 0.65rem;
-  opacity: 0.7;
+  color: rgba(255, 255, 255, 0.75);
 }
 
-.header-panel h2 {
+.header-panel-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-panel-row h2 {
   margin: 0;
   font-size: 1rem;
   font-weight: 600;
