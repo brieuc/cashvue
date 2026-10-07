@@ -1,7 +1,7 @@
 <template>
   <div class="tag-grid-view">
     <p v-if="!tagAmounts?.length" class="empty">Aucun montant</p>
-    <div v-else class="grid">
+    <div v-else class="grid" :style="{ '--amount-ch': maxAmountLength }">
       <div v-for="item in sortedTagAmounts" :key="item.tags?.map(t => t.id).join('-')" class="card" @click="selectTagAmount(item)">
         <div class="tag-icons" :style="{ '--icon-size': iconSize(item.tags?.length) }">
           <template v-for="t in item.tags" :key="t.id">
@@ -50,12 +50,17 @@ const selectTagAmount = (tagAmountDto: TagsAmountDto) => {
     selectedTag.value = tagAmountDto.tags;
 };
 
-const iconSize = (count = 1) => count <= 1 ? '38px' : count <= 3 ? '24px' : '18px';
+const iconSize = (count = 1) => count <= 1 ? '38px' : count <= 3 ? '28px' : '18px';
 
 const sortedTagAmounts = computed(() => {
   if (!tagAmounts.value) return [];
       return [...tagAmounts.value].sort((a, b) => Number(a.amount ?? 0) - Number(b.amount ?? 0));
 });
+
+// Longueur (en caractères) du plus grand montant affiché : sert à dimensionner les colonnes de la grille
+const maxAmountLength = computed(() =>
+  Math.max(0, ...sortedTagAmounts.value.map(item =>
+    formatAmount(absoluteAmount(item.amount), targetCurrencyCode).length)));
 
 watchEffect(async () => {
   if (!startDate || !endDate) return;
@@ -87,7 +92,8 @@ watchEffect(async () => {
 .grid {
   display: grid;
   gap: 0.6rem;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  /* largeur min = plus grand montant (en ch, ×1.1 pour le gras) + padding et bordures de la carte */
+  grid-template-columns: repeat(auto-fill, minmax(max(80px, calc(var(--amount-ch, 8) * 1.1ch + 1.5rem)), 1fr));
 }
 .card {
   display: flex;
@@ -137,6 +143,7 @@ h3 {
   font-weight: 600;
   font-size: 1rem;
   color: #2c3e50;
+  white-space: nowrap;
 }
 .amount.positive { color: #27ae60; }
 .amount.negative { color: #0c0a22; }

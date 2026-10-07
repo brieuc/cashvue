@@ -927,10 +927,6 @@ input[type="date"]::-webkit-calendar-picker-indicator {
   background: rgba(24,32,56,.05) !important;
 }
 
-.suggestion-flash {
-  background: var(--c-accent-dim) !important;
-  box-shadow: inset 2px 0 0 var(--c-accent);
-}
 
 .tag-group-btn {
   background: transparent !important;
