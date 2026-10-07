@@ -22,9 +22,10 @@
     </div>
 
     <!-- Liste au milieu scrollable -->
-    <div class="entry-content">
+    <PullToRefresh class="entry-content" @refresh="refresh">
       <EntryList
         v-if="!showTagGrid"
+        :key="refreshKey"
         :excluded-tags="excludedTags"
         :start-date="startDate"
         :end-date="endDate"
@@ -37,6 +38,7 @@
       />
       <TagGrid
         v-else
+        :key="refreshKey"
         :tags="selectedTags"
         :excluded-tags="excludedTags"
         :start-date="startDate"
@@ -46,7 +48,7 @@
         @toggle-view="showTagGrid = false"
         v-model="selectedTagFromTagGrid"
       />
-    </div>
+    </PullToRefresh>
 
     <!-- Tags en bas fixe -->
     <div class="tag-bar">
@@ -62,6 +64,7 @@
 
 <script setup lang="ts">
 import { type TagDto, type PeriodDto } from '@/api/generated';
+import PullToRefresh from '@/components/PullToRefresh.vue';
 import EntryList from '@/components/entries/EntryList.vue';
 import HeaderView from '@/components/header/HeaderView.vue';
 import PeriodSelection from '@/components/PeriodSelection.vue';
@@ -85,6 +88,13 @@ const startDate = ref<string>();
 const endDate = ref<string>();
 
 const entriesChanged = ref<number>(0);
+const refreshKey = ref<number>(0);
+
+// Pull-to-refresh : le changement de key remonte la liste/grille (rechargement) et recalcule les totaux
+const refresh = () => {
+  refreshKey.value++;
+  entriesChanged.value++;
+};
 const searchText = ref<string>('');
 
 watch(selectedTagFromTagGrid, (tagsToAdd) => {

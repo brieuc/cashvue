@@ -82,7 +82,7 @@ watchEffect(async () => {
   flex-direction: column;
   min-height: 100%;
   margin: 0 auto;
-  padding: 0.75rem;
+  padding: 0.25rem;
 }
 .empty {
   text-align: center;
@@ -91,9 +91,10 @@ watchEffect(async () => {
 }
 .grid {
   display: grid;
-  gap: 0.6rem;
-  /* largeur min = plus grand montant (en ch, ×1.1 pour le gras) + padding et bordures de la carte */
-  grid-template-columns: repeat(auto-fill, minmax(max(80px, calc(var(--amount-ch, 8) * 1.1ch + 1.5rem)), 1fr));
+  gap: 0.125rem;
+  /* 3 colonnes de la largeur du plus grand montant (en ch, ×0.9 : les séparateurs sont plus étroits qu un chiffre) + padding (2×0.15rem) et bordures (2×1px) de la carte */
+  grid-template-columns: repeat(3, calc(var(--amount-ch, 8) * 0.9ch + 0.3rem + 2px));
+  justify-content: center;
 }
 .card {
   display: flex;
@@ -104,7 +105,7 @@ watchEffect(async () => {
   background: #fff;
   border: 1px solid #e1e8ed;
   border-radius: 8px;
-  padding: 0.75rem 0.5rem;
+  padding: 0.25rem 0.15rem;
   transition: box-shadow 0.2s;
 }
 .card:hover {
@@ -141,7 +142,7 @@ h3 {
 }
 .amount {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: 0.8rem;
   color: #2c3e50;
   white-space: nowrap;
 }
