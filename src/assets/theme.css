@@ -547,11 +547,11 @@ nav a.router-link-active {
    ========================================================================= */
 
 .grid {
-  gap: 0.5rem !important;
+  gap: 0.25rem !important;
 }
 
 .grid > .card {
-  padding: 0.9rem 0.5rem !important;
+  padding: 0.9rem 0.15rem !important;
 }
 
 .tag-grid-view .amount.negative {
