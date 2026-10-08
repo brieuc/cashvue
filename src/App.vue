@@ -9,6 +9,7 @@
         <RouterLink to="/periods">Periods</RouterLink>
         <RouterLink to="/recurrences">Recurrences</RouterLink>
         <RouterLink to="/currencies">Currencies</RouterLink>
+        <RouterLink to="/histo">Graphs</RouterLink>
         <RouterLink to="/about">About</RouterLink>
       </nav>
     </div>

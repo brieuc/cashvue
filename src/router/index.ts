@@ -53,6 +53,12 @@ const routes: RouteRecordRaw[] = [
     meta: { requiresAuth: true },
   },
   {
+    path: '/histo',
+    name: 'histo',
+    component: () => import('../components/graph/TagHistogram.vue'),
+    meta: { requiresAuth: true },
+  },
+  {
     path: '/about',
     name: 'about',
     // route level code-splitting
