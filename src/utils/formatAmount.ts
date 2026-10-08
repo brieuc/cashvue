@@ -19,6 +19,7 @@ export const CURRENCY_LOCALES = {
   LKR: 'si-LK',
   JPY: 'ja-JP',
   MXN: 'es-MX',
+  TWD: 'zh-TW',
 } as const satisfies Record<string, string>;
 
 export type CurrencyCode = keyof typeof CURRENCY_LOCALES;
@@ -48,13 +49,17 @@ export function formatAmount(amount: number, code: string): string {
   if (!code)
     return '';
   const upper = code.toUpperCase();
-  let formatter = formatterCache.get(upper);
-  if (!formatter) {
-    formatter = new Intl.NumberFormat(getLocaleForCurrency(upper), {
-      style: 'currency',
-      currency: upper,
-    });
-    formatterCache.set(upper, formatter);
+  try {
+    let formatter = formatterCache.get(upper);
+    if (!formatter) {
+      formatter = new Intl.NumberFormat(getLocaleForCurrency(upper), {
+        style: 'currency',
+        currency: upper,
+      });
+      formatterCache.set(upper, formatter);
+    }
+    return formatter.format(amount);
+  } catch {
+    return `${amount} ${upper}`;
   }
-  return formatter.format(amount);
 }

@@ -92,11 +92,23 @@ watchEffect(async () => {
 .grid {
   display: grid;
   gap: 0.125rem;
-  /* 3 colonnes de la largeur du plus grand montant (en ch, ×0.9 : les séparateurs sont plus étroits qu un chiffre) + padding (2×0.15rem) et bordures (2×1px) de la carte */
-  grid-template-columns: repeat(3, calc(var(--amount-ch, 8) * 1.0ch + 0.3rem + 2px));
+  /* Le font-size est porté par la grille pour que les unités ch correspondent à celles du montant */
+  font-size: 0.8rem;
+  /* Largeur d'une carte = texte + padding horizontal (2×0.15rem, imposé par theme.css) + bordures (2×1px) */
+  --card-extra: calc(0.3rem + 2px);
+  /* Minimum : de quoi afficher « CHF 7'222.00 » (12 caractères, lettres capitales et gras : 1.15ch par caractère) */
+  --cell-min: calc(12 * 1.15ch + var(--card-extra));
+  /* Maximum : largeur du plus gros montant calculé, jamais inférieure au minimum */
+  --cell-max: max(var(--cell-min), calc(var(--amount-ch, 12) * 1.15ch + var(--card-extra)));
+  /* Autant de colonnes que la largeur disponible le permet (auto-fill compte sur le minimum avec 1fr) ; la largeur des cartes est plafonnée par --cell-max */
+  grid-template-columns: repeat(auto-fill, minmax(var(--cell-min), 1fr));
   justify-content: center;
 }
 .card {
+  max-width: var(--cell-max);
+  justify-self: center;
+  width: 100%;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -142,7 +154,7 @@ h3 {
 }
 .amount {
   font-weight: 600;
-  font-size: 0.8rem;
+  font-size: 1em;
   color: #2c3e50;
   white-space: nowrap;
 }

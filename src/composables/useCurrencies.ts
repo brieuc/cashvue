@@ -1,4 +1,4 @@
-import { getCurrencies, getReferenceCurrency, type CurrencyDto } from "@/api/generated";
+import { createCurrency, getCurrencies, getReferenceCurrency, type CurrencyDto } from "@/api/generated";
 import { ref } from "vue";
 
 export function useCurrencies() {
@@ -18,5 +18,9 @@ export function useCurrencies() {
     })
   };
 
-  return { currencies, fetchCurrencies, fetchReferenceCurrency, referenceCurrency };
+  const addCurrency = async (currency: CurrencyDto) => {
+    return createCurrency(currency);
+  };
+
+  return { currencies, addCurrency, fetchCurrencies, fetchReferenceCurrency, referenceCurrency };
 }
