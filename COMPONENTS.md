@@ -102,6 +102,7 @@ Parent : `HomeView`. Liste des écritures + création/édition/suppression.
 | `EntryModal` | `:is-open=isModalOpen`, `:entry=selectedEntry` (null = création) | `@close`, `@submit` (payload `CreateEntryRequest`) |
 
 `EntryModal` contient lui-même un `TagFilter v-model="form.tags"`.
+`EntryModal` est rendu via `<Teleport to="body">` : enfant Vue d'`EntryList` (props/emits inchangés), mais hors de `PullToRefresh` dans le DOM pour que ses gestes tactiles ne déclenchent pas le pull-to-refresh (cf. `docs/modal-teleport-pull-to-refresh.md`).
 
 ---
 

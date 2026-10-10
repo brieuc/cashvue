@@ -296,6 +296,8 @@ onUpdated(() => {
   max-width: 700px;
   max-height: 95vh;
   overflow-y: auto;
+  /* Empêche le scroll de se propager à la page derrière une fois en butée */
+  overscroll-behavior: contain;
 }
 
 .modal-header {
