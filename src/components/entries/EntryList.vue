@@ -23,7 +23,11 @@
       <button class="add-btn" @click="isModalOpen = true, selectedEntry = null">+</button>
     </div>
 
-    <EntryModal :is-open="isModalOpen" :entry="selectedEntry" @close="isModalOpen = false" @submit="handleSubmit" />
+    <!-- Teleport : sort la modale de PullToRefresh dans le DOM, sinon ses touches
+         remontent jusqu'au pull-to-refresh qui bloque le scroll (voir docs/modal-teleport-pull-to-refresh.md) -->
+    <Teleport to="body">
+      <EntryModal :is-open="isModalOpen" :entry="selectedEntry" @close="isModalOpen = false" @submit="handleSubmit" />
+    </Teleport>
   </div>
 </template>
 
