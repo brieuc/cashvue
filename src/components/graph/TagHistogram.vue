@@ -64,7 +64,7 @@
         <template v-for="p in selectedPeriods" :key="p.id">
           <div class="bars">
             <div v-for="(combo, index) in combos" :key="comboKey(combo)" class="bar-col">
-              <span class="bar-amount">{{ displayAmount(p.id!, combo) }}</span>
+              <div class="bar-amount"><span>{{ displayAmount(p.id!, combo) }}</span></div>
               <div
                 class="bar"
                 :class="{ positive: (amountOf(p.id!, combo) ?? 0) > 0 }"
@@ -109,7 +109,7 @@ const targetCurrencyCode = ref<string>('CHF')
 // Montants indexés par `${periodId}|${comboKey}`
 const amounts = ref<Record<string, number | undefined>>({})
 
-const availablePeriods = computed(() => periods.value.filter((p) => !p.hidden))
+const availablePeriods = computed(() => periods.value)
 const availableTags = computed(() => tags.value.filter((t) => !t.hidden))
 
 // L'ordre d'affichage des périodes suit celui de la liste chargée (pas l'ordre de sélection)
@@ -385,7 +385,9 @@ h3 {
   grid-auto-flow: column;
   column-gap: 1.5rem;
   width: max-content;
-  padding-top: 1.5rem;
+  /* Place pour les montants en diagonale qui dépassent au-dessus et à droite des barres */
+  padding-top: 4.5rem;
+  padding-right: 4.5rem;
 }
 .bars {
   display: flex;
@@ -402,14 +404,25 @@ h3 {
   align-items: center;
   justify-content: flex-end;
 }
+/* Boîte de la largeur de la barre ; le texte part de son centre et monte à 45° vers la droite */
 .bar-amount {
+  position: relative;
+  width: 100%;
+  height: 0.9rem;
+}
+.bar-amount span {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform-origin: left bottom;
+  transform: rotate(-55deg);
   font-size: 0.65rem;
   font-weight: 600;
   color: #2c3e50;
   white-space: nowrap;
-  writing-mode: vertical-rl;
-  transform: rotate(180deg);
-  margin-bottom: 0.2rem;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 0 0.1rem;
+  border-radius: 2px;
 }
 .bar {
   width: 28px;

@@ -1,5 +1,5 @@
 <template>
-<div class="period-row">
+<div class="period-row" ref="row">
     <button type="button" class="today-toggle" :class="{ active: toDateOnly }" @click="toDateOnly = !toDateOnly">
       <span class="toggle-track"><span class="toggle-thumb"></span></span>
       à ce jour
@@ -15,7 +15,7 @@
 <script setup lang="ts">
 import { type GetPeriodsParams, type PeriodDto } from '@/api/generated';
 import { usePeriods } from '@/composables/usePeriods';
-import { computed, onMounted, watch } from 'vue';
+import { computed, onMounted, useTemplateRef, watch } from 'vue';
 
 //const selectedPeriod = ref<PeriodDto | undefined>();
 const {periods, fetchPeriods} = usePeriods();
@@ -30,25 +30,24 @@ interface Emit {
 const availablePeriods = computed(() => periods.value.filter(p => !p.hidden));
 
 watch(availablePeriods, (periods) => {
-  const first = periods?.[0];
-  if (first) {
-    console.log("emit " + JSON.stringify(first));
-    selectedPeriod.value = first;
-    //emit("select", first);
-    /*
-        setTimeout(() => {    emit("select", first);}, 100);
+  if (!periods.length) return;
+  const savedTitle = localStorage.getItem('selected-period');
+  selectedPeriod.value = periods.find(p => p.title === savedTitle) ?? periods[0];
+}, { immediate: true});
 
+const row = useTemplateRef<HTMLElement>('row');
 
-
-    */
-  }
-});
+// flush 'post' : le bouton .active est déjà rendu quand on scrolle
+watch(selectedPeriod, () => {
+  row.value?.querySelector('.tag-btn.active')
+    ?.scrollIntoView({ inline: 'center', block: 'nearest', behavior: 'smooth' });
+}, { flush: 'post' });
 
 const emit = defineEmits<Emit>();
 
 const select = (p : PeriodDto) => {
   selectedPeriod.value = p;
-  console.log("period selection " + JSON.stringify(p));
+  localStorage.setItem('selected-period', p.title);
   emit("select", p);
 }
 
@@ -61,15 +60,7 @@ const loadPeriods = () => {
 }
 
 onMounted(() => {
-  console.log("mounted period");
   loadPeriods();
-  // The periods update should treated in the watch but since
-  // we don't reload the usePeriod.periods every time, we need
-  // to manage the selected element directly there when the period
-  // is already loaded.
-  if (periods.value) {
-    selectedPeriod.value = periods.value?.[0];
-  }
 })
 
 </script>

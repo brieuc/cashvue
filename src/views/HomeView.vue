@@ -67,7 +67,7 @@ import { type TagDto, type PeriodDto } from '@/api/generated';
 import PullToRefresh from '@/components/PullToRefresh.vue';
 import EntryList from '@/components/entries/EntryList.vue';
 import HeaderView from '@/components/header/HeaderView.vue';
-import PeriodSelection from '@/components/PeriodSelection.vue';
+import PeriodSelection from '@/components/periods/PeriodSelection.vue';
 import EntryFilter from '@/components/filter/EntryFilter.vue';
 import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import TagGrid from '@/components/grid/TagGrid.vue';
