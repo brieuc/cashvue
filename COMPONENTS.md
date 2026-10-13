@@ -132,7 +132,7 @@ Parents : `EntryModal` (`v-model="form.tags"`), `RecurrenceModal` (`v-model="for
 Composant de présentation pur (aucun emit, aucun état).
 Parent : `PeriodList` (route des périodes), `<PeriodView :period="period">` dans un `v-for`.
 
-- Entrée : `period: PeriodDto` (lecture seule) → affiche `title`, `startDate`–`endDate`, icône si `hidden`.
+- Entrée : `period: PeriodDto` (lecture seule) → affiche `title`, `startDate`–`endDate`, icône si `hidden`, icône discrète (trois lignes, décalée à gauche de l'œil barré si les deux) si `description` est renseignée. Le texte de la description n'est pas affiché ici : il est saisi dans `PeriodModal` (`<textarea>`, champ `description`).
 - Le clic est géré par `PeriodList` (sur la `.card` parente) → ouvre `PeriodModal` avec `selectedPeriod`.
 - Source des données : `PeriodList` lit `usePeriods().periods` (**singleton partagé** avec `PeriodSelection` de HomeView : une période créée/modifiée dans PeriodList est visible dans la barre de sélection).
 

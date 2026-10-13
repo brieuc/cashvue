@@ -16,6 +16,9 @@
       <div class="form-group">
         <input v-model="form.endDate" type="datetime-local">
       </div>
+      <div class="form-group">
+        <textarea v-model="form.description" rows="4" placeholder="Description"></textarea>
+      </div>
       <div class="form-group checkbox-group">
         <input type="checkbox" id="hiddenChk" v-model="form.hidden" />
         <label for="hiddenChk">Hidden</label>
@@ -69,6 +72,7 @@ const getFormPeriod = (prd : PeriodDto) : PeriodDto => ({
   startDate: prd.startDate?.slice(0, 16),
   endDate: prd.endDate?.slice(0, 16),
   currencyCode: prd.currencyCode,
+  description: prd.description ?? '',
   hidden: prd.hidden
 });
 
@@ -78,6 +82,7 @@ const defaultForm : PeriodDto = {
   startDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   endDate: new Date(Date.now() - new Date().getTimezoneOffset() * 60000).toISOString().slice(0, 16),
   currencyCode: null,
+  description: '',
   hidden: false
 };
 
