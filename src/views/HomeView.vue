@@ -1,12 +1,22 @@
 <template>
   <div class="app-layout">
     <!-- Period en haut fixe -->
-    <div class="period-bar">
-      <PeriodSelection
-        v-model="selectedPeriod"
-        v-model:to-date="toDateOnly"
-      />
+    <div class="period-header">
+      <div class="period-bar">
+        <PeriodSelection
+          v-model="selectedPeriod"
+          v-model:to-date="toDateOnly"
+        />
+      </div>
+      <button v-if="selectedPeriod?.description" type="button" class="description-btn"
+        :class="{ active: showDescription }" @click="showDescription = !showDescription">
+        <IconDescription :size="18" />
+      </button>
+      <!-- Hors de PullToRefresh : sinon ses gestes tactiles déclenchent le pull-to-refresh -->
+      <PeriodDescription v-if="showDescription && selectedPeriod?.description" class="description-panel"
+        :description="selectedPeriod.description" />
     </div>
+    <div v-if="showDescription" class="description-backdrop" @click="showDescription = false"></div>
 
     <div class="header-bar">
       <HeaderView
@@ -68,6 +78,8 @@ import PullToRefresh from '@/components/PullToRefresh.vue';
 import EntryList from '@/components/entries/EntryList.vue';
 import HeaderView from '@/components/header/HeaderView.vue';
 import PeriodSelection from '@/components/periods/PeriodSelection.vue';
+import PeriodDescription from '@/components/periods/PeriodDescription.vue';
+import IconDescription from '@/components/periods/IconDescription.vue';
 import EntryFilter from '@/components/filter/EntryFilter.vue';
 import { effectiveEndDate } from '@/composables/useEffectivePeriod';
 import TagGrid from '@/components/grid/TagGrid.vue';
@@ -78,6 +90,7 @@ const excludedTags = ref<Array<TagDto>>([]);
 const selectedTags = ref<Array<TagDto>>([]);
 const selectedPeriod = ref<PeriodDto | undefined>();
 const toDateOnly = ref<boolean>(false);
+const showDescription = ref<boolean>(false);
 const activeCurrency = ref<string>('CHF');
 const targetCurrencyCode = ref<string>('CHF');
 const showTagGrid = ref<boolean>(false);
@@ -127,6 +140,9 @@ watch(untilDate, (date) => {
     endDate.value = toDateOnly.value ? effectiveEndDate(selectedPeriod.value)! : selectedPeriod.value?.endDate;
 });
 
+// Le panneau se ferme au changement de période
+watch(selectedPeriod, () => { showDescription.value = false; });
+
 watch([selectedPeriod, toDateOnly], ([newPeriod, toDateOnlyValue]) => {
   if (!newPeriod)
     return;
@@ -154,11 +170,19 @@ const handleSelectPeriod = (period: PeriodDto) => {
   overflow-y: hidden;
 }
 
-.period-bar {
+.period-header {
+  position: relative;
   flex-shrink: 0;
   z-index: 10;
+  display: flex;
+  align-items: center;
   background: white;
   border-bottom: 1px solid #e1e8ed;
+}
+
+.period-bar {
+  flex: 1;
+  min-width: 0;
   padding: 0.75rem;
   overflow-x: auto;
   overflow-y: hidden;
@@ -189,6 +213,39 @@ const handleSelectPeriod = (period: PeriodDto) => {
   max-height: 200px;
   display: flex;
   flex-direction: column;
+}
+
+.description-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  margin: 0 0.5rem;
+  padding: 0.35rem;
+  background: none;
+  border: none;
+  border-radius: 6px;
+  color: #7f8c8d;
+  cursor: pointer;
+}
+
+.description-btn.active {
+  background: #ecf0f1;
+  color: #2c3e50;
+}
+
+/* Panneau en superposition : ne décale ni les totaux ni la liste */
+.description-panel {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+}
+
+/* Capte le clic en dehors pour fermer, sous la barre (z-index 10) */
+.description-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 9;
 }
 
 /* Scroll horizontal sans barre visible */
