@@ -37,7 +37,7 @@ Composant racine de l'écran principal : **propriétaire de tout l'état de filt
 HomeView
 ├── PeriodSelection   v-model=selectedPeriod, v-model:to-date=toDateOnly
 ├── PeriodDescription (v-if showDescription && selectedPeriod.description, hors PullToRefresh)
-│                     :description=selectedPeriod.description
+│                     :period-id=selectedPeriod.id (charge getRenderedDescription)
 ├── HeaderView        :start-date :end-date :selected-tags :excluded-tags :search-text
 │                     :entries-updated=entriesChanged :target-currency-code
 │                     v-model:currency=activeCurrency
@@ -53,7 +53,7 @@ HomeView
 ### Chaînes de données notables
 - **Période** : `PeriodSelection` → `selectedPeriod` + `toDateOnly` → (watcher HomeView) `startDate/endDate` → `HeaderView`/`EntryList`/`TagGrid`. Aucun enfant ne connaît `selectedPeriod`, `toDateOnly` ni `effectiveEndDate`.
 - Tant qu'aucune période n'est chargée, `startDate`/`endDate` valent `undefined` : `HeaderView`, `EntryList` et `TagGrid` ne lancent aucune requête.
-- **Description de la période** : `selectedPeriod.description` → bouton `IconDescription` (visible seulement si renseignée) → `showDescription` → panneau `PeriodDescription` en superposition (`position: absolute` sous la `.period-header`, `max-height: 40vh`, `white-space: pre-line`). Rendu hors `PullToRefresh` pour que ses gestes ne le déclenchent pas. Un backdrop transparent ferme au clic ; changer de période ferme aussi.
+- **Description de la période** : `selectedPeriod.description` → bouton `IconDescription` (visible seulement si renseignée) → `showDescription` → panneau `PeriodDescription` en superposition, qui charge lui-même le texte rendu par le back (`GET /periods/{id}/description/rendered`, `{{ }}` déjà remplacés) à l'ouverture (`position: absolute` sous la `.period-header`, `max-height: 40vh`, `white-space: pre-line`). Rendu hors `PullToRefresh` pour que ses gestes ne le déclenchent pas. Un backdrop transparent ferme au clic ; changer de période ferme aussi.
 - **Devise** : `HeaderView` (carrousel) → `activeCurrency` → `EntryList` (filtre côté client uniquement, pas de requête).
 - **Devise cible** : `selectedTags` → `targetCurrencyCode` → `HeaderView`/`TagGrid` (conversion côté back). `EntryList` ne la reçoit pas.
 - **Rafraîchissement des totaux** : `EntryList` CRUD → `emit('entriesChanged')` → `entriesChanged++` → `HeaderView` watch → `getComputation()`.

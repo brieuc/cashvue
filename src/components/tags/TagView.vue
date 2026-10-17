@@ -7,6 +7,7 @@
   <div class="tag-title">
     <img class="tag-icon" :src="`${uploadsUrl}/${tag.icon}`" />
     <h3>{{ tag.title }}</h3>
+    <span v-if="tag.code" class="tag-code">{{ tag.code }}</span>
   </div>
   <div>
     <span style="color:cadetblue;">{{ tag.description }}</span>
@@ -42,6 +43,12 @@ const { tag } = defineProps<props>();
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.tag-code {
+  font-size: 0.75rem;
+  color: #95a5a6;
+  font-family: monospace;
 }
 
 .tag-icon {

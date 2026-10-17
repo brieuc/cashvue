@@ -44,6 +44,11 @@ export type TagDto = {
    */
   title: string;
   /**
+   * Unique code of the tag
+   * @maxLength 255
+   */
+  code?: string;
+  /**
    * Detailed description of the tag
    * @maxLength 500
    */
@@ -352,6 +357,17 @@ export type PagedModelRecurrenceDto = {
 export type PagedModelPeriodDto = {
   content?: PeriodDto[];
   page?: PageMetadata;
+};
+
+/**
+ * Period description with the {{ }} expressions replaced by computed amounts
+ */
+export type RenderedDescriptionDto = {
+  /**
+   * Rendered text
+   * @nullable
+   */
+  rendered?: string | null;
 };
 
 export type PagedModelEntryDto = {
@@ -2115,6 +2131,50 @@ export const getGetRatesByCurrencyUrl = (currencyCode: string,) => {
 export const getRatesByCurrency = async (currencyCode: string, options?: RequestInit): Promise<getRatesByCurrencyResponse> => {
   
   return customFetch<getRatesByCurrencyResponse>(getGetRatesByCurrencyUrl(currencyCode),
+  {      
+    ...options,
+    method: 'GET'
+    
+    
+  }
+);}
+
+
+
+/**
+ * Retourne la description avec les expressions {{ }} remplacées par les montants calculés sur la période
+ * @summary Rendre la description d'une période
+ */
+export type getRenderedDescriptionResponse200 = {
+  data: RenderedDescriptionDto
+  status: 200
+}
+
+export type getRenderedDescriptionResponse404 = {
+  data: void
+  status: 404
+}
+    
+export type getRenderedDescriptionResponseSuccess = (getRenderedDescriptionResponse200) & {
+  headers: Headers;
+};
+export type getRenderedDescriptionResponseError = (getRenderedDescriptionResponse404) & {
+  headers: Headers;
+};
+
+export type getRenderedDescriptionResponse = (getRenderedDescriptionResponseSuccess | getRenderedDescriptionResponseError)
+
+export const getGetRenderedDescriptionUrl = (id: number,) => {
+
+
+  
+
+  return `/periods/${id}/description/rendered`
+}
+
+export const getRenderedDescription = async (id: number, options?: RequestInit): Promise<getRenderedDescriptionResponse> => {
+  
+  return customFetch<getRenderedDescriptionResponse>(getGetRenderedDescriptionUrl(id),
   {      
     ...options,
     method: 'GET'

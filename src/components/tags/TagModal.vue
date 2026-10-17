@@ -11,6 +11,9 @@
         <input v-model="form.title" type="text" placeholder="Title">
       </div>
       <div class="form-group">
+        <input v-model="form.code" type="text" placeholder="Code">
+      </div>
+      <div class="form-group">
         <input v-model="form.description" type="text" placeholder="Description">
       </div>
       <div class="form-group">
@@ -74,6 +77,7 @@ const emit = defineEmits<emits>();
 const getFormTag = (t : TagDto) : TagDto => ({
   id: t.id,
   title: t.title,
+  code: t.code,
   description: t.description,
   icon: t.icon,
   hidden: t.hidden,
@@ -85,6 +89,7 @@ const getFormTag = (t : TagDto) : TagDto => ({
 const defaultForm : TagDto = {
   id: undefined,
   title: "",
+  code: "",
   description: "",
   icon: "",
   hidden: false,
