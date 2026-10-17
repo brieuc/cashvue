@@ -14,7 +14,7 @@
       </button>
       <!-- Hors de PullToRefresh : sinon ses gestes tactiles déclenchent le pull-to-refresh -->
       <PeriodDescription v-if="showDescription && selectedPeriod?.description" class="description-panel"
-        :description="selectedPeriod.description" />
+        :period-id="selectedPeriod.id" />
     </div>
     <div v-if="showDescription" class="description-backdrop" @click="showDescription = false"></div>
 
