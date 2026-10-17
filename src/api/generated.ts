@@ -155,6 +155,11 @@ export type PeriodDto = {
    * @maxLength 255
    */
   title: string;
+  /**
+   * Description of the period
+   * @nullable
+   */
+  description?: string | null;
   /** Start date and time of the period */
   startDate: string;
   /** End date and time of the period */

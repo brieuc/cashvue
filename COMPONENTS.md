@@ -28,6 +28,7 @@ Composant racine de l'écran principal : **propriétaire de tout l'état de filt
 | `activeCurrency` (init `'CHF'`) | `HeaderView` (v-model:currency — panneau visible du carrousel) | `EntryList` (`:filtering-currency`) |
 | `targetCurrencyCode` (init `'CHF'`) | watcher `selectedTags` : devise du dernier tag qui en a une, sinon `'CHF'` | `HeaderView`, `TagGrid` |
 | `entriesChanged` (compteur) | `EntryList` (`@entries-changed` → `++`) | `HeaderView` (`:entries-updated`) → recalcul des totaux |
+| `showDescription` | bouton `≡` de la `.period-header` (bascule), backdrop (→ false), watcher `selectedPeriod` (→ false) | affichage de `PeriodDescription` |
 | `showTagGrid` | `EntryList` (`@toggle-view` → true), `TagGrid` (`@toggle-view` → false) | bascule `EntryList` ⇄ `TagGrid` |
 | `selectedTagFromTagGrid` (`TagDto[]`) | `TagGrid` (v-model, groupe de tags de la carte cliquée) ; remis à `undefined` par le watcher | watcher → ajoute chaque tag du groupe (sans doublon) à `selectedTags` ou `excludedTags` selon `excludeMode` |
 
@@ -35,6 +36,8 @@ Composant racine de l'écran principal : **propriétaire de tout l'état de filt
 ```
 HomeView
 ├── PeriodSelection   v-model=selectedPeriod, v-model:to-date=toDateOnly
+├── PeriodDescription (v-if showDescription && selectedPeriod.description, hors PullToRefresh)
+│                     :description=selectedPeriod.description
 ├── HeaderView        :start-date :end-date :selected-tags :excluded-tags :search-text
 │                     :entries-updated=entriesChanged :target-currency-code
 │                     v-model:currency=activeCurrency
@@ -50,6 +53,7 @@ HomeView
 ### Chaînes de données notables
 - **Période** : `PeriodSelection` → `selectedPeriod` + `toDateOnly` → (watcher HomeView) `startDate/endDate` → `HeaderView`/`EntryList`/`TagGrid`. Aucun enfant ne connaît `selectedPeriod`, `toDateOnly` ni `effectiveEndDate`.
 - Tant qu'aucune période n'est chargée, `startDate`/`endDate` valent `undefined` : `HeaderView`, `EntryList` et `TagGrid` ne lancent aucune requête.
+- **Description de la période** : `selectedPeriod.description` → bouton `IconDescription` (visible seulement si renseignée) → `showDescription` → panneau `PeriodDescription` en superposition (`position: absolute` sous la `.period-header`, `max-height: 40vh`, `white-space: pre-line`). Rendu hors `PullToRefresh` pour que ses gestes ne le déclenchent pas. Un backdrop transparent ferme au clic ; changer de période ferme aussi.
 - **Devise** : `HeaderView` (carrousel) → `activeCurrency` → `EntryList` (filtre côté client uniquement, pas de requête).
 - **Devise cible** : `selectedTags` → `targetCurrencyCode` → `HeaderView`/`TagGrid` (conversion côté back). `EntryList` ne la reçoit pas.
 - **Rafraîchissement des totaux** : `EntryList` CRUD → `emit('entriesChanged')` → `entriesChanged++` → `HeaderView` watch → `getComputation()`.
@@ -132,7 +136,7 @@ Parents : `EntryModal` (`v-model="form.tags"`), `RecurrenceModal` (`v-model="for
 Composant de présentation pur (aucun emit, aucun état).
 Parent : `PeriodList` (route des périodes), `<PeriodView :period="period">` dans un `v-for`.
 
-- Entrée : `period: PeriodDto` (lecture seule) → affiche `title`, `startDate`–`endDate`, icône si `hidden`.
+- Entrée : `period: PeriodDto` (lecture seule) → affiche `title`, `startDate`–`endDate`, icône si `hidden`, `IconDescription` discrète (décalée à gauche de l'œil barré si les deux) si `description` est renseignée. Le texte de la description n'est pas affiché ici : il est saisi dans `PeriodModal` (`<textarea>`, champ `description`).
 - Le clic est géré par `PeriodList` (sur la `.card` parente) → ouvre `PeriodModal` avec `selectedPeriod`.
 - Source des données : `PeriodList` lit `usePeriods().periods` (**singleton partagé** avec `PeriodSelection` de HomeView : une période créée/modifiée dans PeriodList est visible dans la barre de sélection).
 
