@@ -228,7 +228,9 @@ const handleSubmit = async (formData: EntryDto) => {
         // loadEntries() we don't want to reload the entire list
         const index = entries.value.findIndex(entry => entry.id === selectedEntry.value?.id);
         if (index != -1) {
-          entries.value[index] = { ...selectedEntry.value, ...formData};
+          // On prend l'écriture renvoyée par le back : ses tags sont déjà triés
+          // (sortingOrder, EntryMapperImpl.tDto), contrairement à ceux du formulaire
+          entries.value[index] = response.data;
           highlightedEntryId.value = selectedEntry.value?.id ?? null;
           setTimeout(() => highlightedEntryId.value = null, 1500);
         }
@@ -242,6 +244,7 @@ const handleSubmit = async (formData: EntryDto) => {
       }
     })
   }
+  //here
 };
 
 const handleDuplicate = (entry: EntryDto) => {
