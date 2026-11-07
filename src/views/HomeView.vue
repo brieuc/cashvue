@@ -5,7 +5,7 @@
       <div class="period-bar">
         <PeriodSelection
           v-model="selectedPeriod"
-          v-model:to-date="toDateOnly"
+          v-model:to-date-now="toDateNow"
         />
       </div>
       <button v-if="selectedPeriod?.description" type="button" class="description-btn"
@@ -42,7 +42,7 @@
         :search-text="searchText"
         :filtering-currency="activeCurrency"
         v-model:tags="selectedTags"
-        v-model:until-date="untilDate"
+        v-model:until-date="untilEntryDate"
         @entries-changed="entriesChanged++"
         @toggle-view="showTagGrid = true"
       />
@@ -89,13 +89,13 @@ const excludeMode = ref<boolean>(false);
 const excludedTags = ref<Array<TagDto>>([]);
 const selectedTags = ref<Array<TagDto>>([]);
 const selectedPeriod = ref<PeriodDto | undefined>();
-const toDateOnly = ref<boolean>(false);
+const toDateNow = ref<boolean>(false);
 const showDescription = ref<boolean>(false);
 const activeCurrency = ref<string>('CHF');
 const targetCurrencyCode = ref<string>('CHF');
 const showTagGrid = ref<boolean>(false);
 const selectedTagFromTagGrid = ref<TagDto[]>();
-const untilDate = ref<string>();
+const untilEntryDate = ref<string>();
 
 const startDate = ref<string>();
 const endDate = ref<string>();
@@ -132,33 +132,34 @@ watch(() => selectedTags, (tags) => {
   targetCurrencyCode.value = nextCurrency;
 }, {deep : true});
 
-
-watch(untilDate, (date) => {
-  if (date !== undefined)
-      endDate.value = date;
-  else
-    endDate.value = toDateOnly.value ? effectiveEndDate(selectedPeriod.value)! : selectedPeriod.value?.endDate;
+watch(entriesChanged, () => {
+  // If an entry has been created or updated, should update the Until Now Date
+  endDate.value = toDateNow.value ? effectiveEndDate(selectedPeriod.value)! : selectedPeriod.value?.endDate;
 });
 
-// Le panneau se ferme au changement de période
-watch(selectedPeriod, () => { showDescription.value = false; });
 
-watch([selectedPeriod, toDateOnly], ([newPeriod, toDateOnlyValue]) => {
+watch(untilEntryDate, (date) => {
+  // 3 possibilities : until entry date if set or either the until now date or the real period end date
+  if (date !== undefined)
+    endDate.value = date;
+  else
+    // toDateNow could be active but the selected period could not be relevant with the toggle (period end date already in the past)
+    // so effectiveEndDate returns either Now Date or the endDate if the period is irrelevant.
+    endDate.value = toDateNow.value ? effectiveEndDate(selectedPeriod.value)! : selectedPeriod.value?.endDate;
+});
+
+watch([selectedPeriod, toDateNow], ([newPeriod, toDateOnlyValue]) => {
   if (!newPeriod)
     return;
-  console.log("HomeView newPeriod " + JSON.stringify(newPeriod));
   startDate.value = newPeriod.startDate;
   endDate.value = toDateOnlyValue ? effectiveEndDate(newPeriod)! : newPeriod.endDate;
 });
 
-
-
-/*
-const handleSelectPeriod = (period: PeriodDto) => {
-  startDate.value = period.startDate;
-  endDate.value = period.endDate;
-}
-*/
+// Close the description panel only if the new selected period doesn't have description
+watch(selectedPeriod, () => {
+  if (selectedPeriod.value?.description === null)
+    showDescription.value = false;
+});
 
 </script>
 
@@ -181,6 +182,9 @@ const handleSelectPeriod = (period: PeriodDto) => {
 }
 
 .period-bar {
+  /* Une seule ligne (celle de .period-header) sous la barre ET sous le bouton ;
+     theme.css en ajoutait une seconde sous la barre uniquement */
+  border-bottom: none !important;
   flex: 1;
   min-width: 0;
   padding: 0.75rem;
@@ -204,7 +208,6 @@ const handleSelectPeriod = (period: PeriodDto) => {
 
 .tag-bar {
   flex-shrink: 0;
-  z-index: 10;
   background: white;
   border-top: 1px solid #e1e8ed;
   /*padding: 0.75rem;*/
@@ -239,13 +242,18 @@ const handleSelectPeriod = (period: PeriodDto) => {
   top: 100%;
   left: 0;
   right: 0;
+  /* Le panneau recouvre le border-bottom de .period-header : on le refait */
+  border-top: 1px solid #e1e8ed;
 }
 
-/* Capte le clic en dehors pour fermer, sous la barre (z-index 10) */
+/* Capte le clic en dehors pour fermer, sous la barre de période (z-index 10), au-dessus de tout le reste dont la barre de tags */
 .description-backdrop {
   position: fixed;
   inset: 0;
   z-index: 9;
+  background: rgba(23, 32, 64, .36);
+  -webkit-backdrop-filter: blur(8px) saturate(120%);
+  backdrop-filter: blur(8px) saturate(120%);
 }
 
 /* Scroll horizontal sans barre visible */

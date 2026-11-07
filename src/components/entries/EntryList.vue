@@ -63,6 +63,7 @@ const { excludedTags, startDate, endDate, searchText, filteringCurrency } = defi
 }>();
 
 const tags = defineModel<TagDto[]>('tags', { default: () => [] })
+// UntilDate is not about the Until now from the period selection. It handles the Until Date from the contextuel menu only.
 const untilDate = defineModel<string | undefined>('untilDate')
 
 const isFuture = (date: string) => new Date(date).getTime() > Date.now();

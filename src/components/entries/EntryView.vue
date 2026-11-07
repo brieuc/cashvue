@@ -98,8 +98,14 @@ const onDelete = () => {
   emit('delete', props.entry);
 };
 
-onMounted(() => document.addEventListener('click', closeMenu));
-onUnmounted(() => document.removeEventListener('click', closeMenu));
+const onOutsideClick = (e: MouseEvent) => {
+  if (!showMenu.value || (e.target as Element).closest('.actions-wrapper')) return;
+  closeMenu();
+  e.stopPropagation();
+};
+
+onMounted(() => document.addEventListener('click', onOutsideClick, true));
+onUnmounted(() => document.removeEventListener('click', onOutsideClick, true));
 </script>
 
 <style scoped>
