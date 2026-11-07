@@ -166,18 +166,20 @@ const addHour = () => {
   form.accountingDate = toLocalInputValue(new Date(current.getTime() + 3600000));
 };
 
-const defaultForm : CreateEntryRequest = {
+// Fonction et non constante : la date par défaut doit être celle du moment de
+// la réinitialisation, pas celle de la création du composant.
+const getDefaultForm = () : CreateEntryRequest => ({
   title: '',
   amount: null,
   currencyCode: 'CHF',
   accountingDate: getDefaultAccountingDate(),
   description: '',
   tags: [] as Array<TagDto>,
-};
+});
 
 const tagGroups = ref<TagGroupDto[]>([]);
 const titleSuggestions = ref<TagGroupTitleSuggestionDto[]>([]);
-const form = reactive<CreateEntryRequest>({...defaultForm});
+const form = reactive<CreateEntryRequest>(getDefaultForm());
 
 const matchTagGroup = (groups: TagGroupDto[]): TagGroupDto | undefined => {
   const formTagIds = form.tags?.map(t => t.id) ?? [];
@@ -193,7 +195,7 @@ watch(() => props.entry, (entry) => {
     isPositive.value = entry.amount > 0.0 ? true : false;
   }
   else {
-    Object.assign(form, {...defaultForm});
+    Object.assign(form, getDefaultForm());
     isPositive.value = false;
   }
 }, {immediate: true});
@@ -239,7 +241,7 @@ const cancel = () => {
   // and we try to launch again the same entry, the watch props.entry
   // is not triggered again so the form stays blank.
   if (!props.entry) {
-    Object.assign(form, {...defaultForm});
+    Object.assign(form, getDefaultForm());
     isPositive.value = false;
   }
   emit("close");
@@ -258,7 +260,7 @@ const handleSubmit = () => {
   */
   emit('submit', submitData)
   // Reset the form
-  Object.assign(form, defaultForm);
+  Object.assign(form, getDefaultForm());
   isPositive.value = false;
 }
 

@@ -1,6 +1,6 @@
 <template>
 <div class="period-row" ref="row">
-    <button type="button" class="today-toggle" :class="{ active: toDateOnly }" @click="toDateOnly = !toDateOnly">
+    <button type="button" class="today-toggle" :class="{ active: toDateNow }" @click="toDateNow = !toDateNow">
       <span class="toggle-track"><span class="toggle-thumb"></span></span>
       à ce jour
     </button>
@@ -21,7 +21,7 @@ import { computed, onMounted, useTemplateRef, watch } from 'vue';
 const {periods, fetchPeriods} = usePeriods();
 
 const selectedPeriod = defineModel({type: Object, default: () => ({}) });
-const toDateOnly = defineModel('toDate', {type: Boolean, default: false});
+const toDateNow = defineModel('toDateNow', {type: Boolean, default: false});
 
 interface Emit {
   select: [PeriodDto]

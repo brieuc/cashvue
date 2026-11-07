@@ -105,7 +105,7 @@ watch(() => [startDate, endDate], () => {
 
 watch(() => selectedTags, () => {
   getComputation();
-}, {deep : true})
+}, {deep : true}) // Useful because of it's an array
 
 watch(() => excludedTags, () => {
   getComputation();
