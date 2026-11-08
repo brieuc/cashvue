@@ -4,7 +4,7 @@
   <button class="add-btn" @click="showModal = true">+</button>
 </div>
 <div v-if="showModal">
-  <PeriodModal :period="selectedPeriod" @submit="handleSubmit" @close="close"></PeriodModal>
+  <PeriodModal :period="selectedPeriod" @submit="handleSubmit" @delete="handleDelete" @close="close"></PeriodModal>
 </div>
 <div class="card" v-for="period in periods" v-bind:key="period.id" @click="selectPeriod(period)">
   <PeriodView :period="period"></PeriodView>
@@ -18,7 +18,7 @@ import { ref } from 'vue';
 import PeriodModal from './PeriodModal.vue';
 import { createPeriod, updatePeriod, type PeriodDto } from '@/api/generated';
 
-const { periods } = usePeriods();
+const { periods, removePeriod } = usePeriods();
 const selectedPeriod = ref<PeriodDto>();
 const showModal = ref<boolean>(false);
 
@@ -59,6 +59,15 @@ const handleSubmit = ( period: PeriodDto) => {
 
   showModal.value = false;
   selectedPeriod.value = undefined;
+};
+
+const handleDelete = (id: number) => {
+  removePeriod(id).then(response => {
+    if (response.status === 204) {
+      periods.value = periods.value.filter(prd => prd.id !== id);
+    }
+  });
+  close();
 };
 
 const close = () => {

@@ -37,6 +37,7 @@
         <button class="btn-create-entries" @click="handleCreate" :disabled="!hasSelected">Créer les entrées sélectionnées</button>
       </div>
       <p v-else-if="simulated" class="empty">Aucune entrée générée sur cette période.</p>
+      <button v-if="period?.id" type="button" class="btn-delete" @click="handleDelete">Delete</button>
     </div>
   </div>
 </div>
@@ -58,7 +59,8 @@ const { period } = defineProps<props>();
 
 interface emits {
   close: [],
-  submit: [PeriodDto]
+  submit: [PeriodDto],
+  delete: [number]
 }
 const emit = defineEmits<emits>();
 
@@ -126,6 +128,11 @@ const handleCreate = async () => {
 const handleSubmit = () => {
   const submitData : PeriodDto = {...form};
   emit("submit", submitData);
+};
+
+const handleDelete = () => {
+  if (period?.id)
+    emit("delete", period.id);
 };
 
 const cancel = () => {
@@ -275,4 +282,20 @@ const cancel = () => {
   margin-bottom: 0;
 }
 .entry-card .entry-card-content .currency { color: #2c3e50; }
+
+.btn-delete {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: #fdecea;
+}
 </style>
