@@ -42,6 +42,7 @@
         <input type="checkbox" id="hiddenChk" v-model="form.hidden" />
         <label for="hiddenChk">Hidden</label>
       </div>
+      <button v-if="tag?.id" type="button" class="btn-delete" @click="handleDelete">Delete</button>
     </div>
   </div>
 </div>
@@ -66,7 +67,8 @@ const { uploadIconFile } = useTags();
 
 interface emits {
   close: [],
-  submit: [TagDto]
+  submit: [TagDto],
+  delete: [number]
 }
 const emit = defineEmits<emits>();
 
@@ -110,6 +112,11 @@ watch(() => tag, (t) => {
 const handleSubmit = () => {
   const submitData : TagDto = {...form};
   emit("submit", submitData);
+};
+
+const handleDelete = () => {
+  if (tag?.id)
+    emit("delete", tag.id);
 };
 
 const cancel = () => {
@@ -278,5 +285,21 @@ onMounted(() => {
 
 .btn-submit:hover {
   background: #ecf0f1;
+}
+
+.btn-delete {
+  width: 100%;
+  padding: 0.6rem;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: #e74c3c;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.btn-delete:hover {
+  background: #fdecea;
 }
 </style>

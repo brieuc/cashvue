@@ -1,4 +1,4 @@
-import { createPeriod, getPeriods, updatePeriod, type GetPeriodsParams, type PeriodDto } from "@/api/generated";
+import { createPeriod, deletePeriod, getPeriods, updatePeriod, type GetPeriodsParams, type PeriodDto } from "@/api/generated";
 import { ref } from "vue";
 
 
@@ -24,5 +24,9 @@ export function usePeriods() {
     return updatePeriod(id, period);
   };
 
-  return {periods, fetchPeriods, addPeriod, editPeriod}
+  const removePeriod = (id : number) => {
+    return deletePeriod(id);
+  }
+
+  return {periods, fetchPeriods, addPeriod, editPeriod, removePeriod}
 }

@@ -4,7 +4,7 @@
   <button class="add-btn" @click="showModal = true">+</button>
 </div>
 <div v-if="showModal">
-  <TagModal :tag="selectedTag" @submit="handleSubmit" @close="close"></TagModal>
+  <TagModal :tag="selectedTag" @submit="handleSubmit" @delete="handleDelete" @close="close"></TagModal>
 </div>
 <div class="card" v-for="tag in tags" v-bind:key="tag.id" @click="selectTag(tag)">
   <TagView :tag="tag"></TagView>
@@ -18,7 +18,7 @@ import { ref } from 'vue';
 import TagModal from './TagModal.vue';
 import { createTag, updateTag, type TagDto } from '@/api/generated';
 
-const { tags } = useTags();
+const { tags, removeTag } = useTags();
 const selectedTag = ref<TagDto>();
 const showModal = ref<boolean>(false);
 
@@ -51,6 +51,15 @@ const handleSubmit = (tag: TagDto) => {
 
   selectedTag.value = undefined;
   showModal.value = false;
+};
+
+const handleDelete = (id: number) => {
+  removeTag(id).then(response => {
+    if (response.status === 204) {
+      tags.value = tags.value.filter(t => t.id !== id);
+    }
+  });
+  close();
 };
 
 const close = () => {

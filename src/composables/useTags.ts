@@ -1,5 +1,5 @@
 
-import { getTags, uploadIcon, type GetTagsParams, type UploadIconBody } from "@/api/generated"
+import { deleteTag, getTags, uploadIcon, type GetTagsParams, type UploadIconBody } from "@/api/generated"
 import { type TagDto } from "@/api/generated";
 import { ref } from "vue";
 
@@ -25,5 +25,9 @@ export function useTags() {
     }
   }
 
-  return {fetchTags, tags, uploadIconFile};
+  const removeTag = (id: number) => {
+    return deleteTag(id);
+  }
+
+  return {fetchTags, tags, uploadIconFile, removeTag};
 }
