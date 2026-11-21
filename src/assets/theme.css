@@ -634,7 +634,7 @@ nav a.router-link-active {
 }
 
 /* Hauteur figée à 2rem dans le SFC : les puces agrandies y seraient
-   rognées. (Le conteneur de TagFilter est en min-height, il suit seul.) */
+   rognées. (Le conteneur de TagFilter a sa propre hauteur fixe de 2.6rem.) */
 .entry-filter .selected-tags-sticky {
   height: 2.3rem !important;
 }

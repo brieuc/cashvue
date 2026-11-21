@@ -211,7 +211,6 @@ onMounted(() => {
 .tag-filter-wrapper {
   margin: 0 -1.25rem 0.75rem;
   border-top: 1px solid #e1e8ed;
-  padding-top: 0.5rem;
 }
 
 .form-group {
