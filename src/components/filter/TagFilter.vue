@@ -32,16 +32,25 @@ const handleRemove = (tagToRemove: TagDto) => {
   max-height: 100%;
 }
 
+/* Hauteur fixe (et non min-height) : identique avec ou sans tag.
+   Le centrage flex remplace le padding vertical et supprime l'espace
+   ajouté sous les puces par la ligne de base (line-height du body). */
 .selected-tags-sticky {
   flex-shrink: 0;
-  padding: 0.4rem 1.25rem;
+  display: flex;
+  align-items: center;
+  height: 2.6rem;
+  padding: 0 1.25rem;
   border-bottom: 1px solid #e1e8ed;
   background: white;
   overflow-x: auto;
   overflow-y: hidden;
   white-space: nowrap;
-  min-height: 2.6rem;
   box-sizing: border-box;
+}
+
+.selected-tags-sticky :deep(.selected-tag-btn) {
+  flex-shrink: 0;
 }
 
 .tag-selection-scrollable {

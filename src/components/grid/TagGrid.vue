@@ -171,12 +171,12 @@ h3 {
 }
 .toggle-btn {
   pointer-events: auto;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   background: #ecf0f1;
   border: none;
-  font-size: 1.1rem;
+  font-size: 1.35rem;
   cursor: pointer;
   display: flex;
   align-items: center;

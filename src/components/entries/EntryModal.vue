@@ -205,6 +205,8 @@ watch(() => form.tags, (tags) => {
   if (tagIds.length > 0) {
     // fetchTagGroups( {tagIds : tagIds} ); avoid property name when same name as value
     fetchTagGroups({ tagIds }).then(data => {
+      tagGroups.value = data;
+      // check if there is a perfect match which should allow us to directly get a title
       const match = matchTagGroup(data);
       if (match?.id != null) {
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
@@ -220,9 +222,14 @@ watch(() => form.tags, (tags) => {
         // We reload the tag groups even when we select a tag group from the list because
         // this watch is called with the new tags. We should prevent that behavior by reloading
         // the tag group array only when there is not a match.
-        tagGroups.value = data;
+        form.title = ''
       }
     });
+  }
+  else {
+    tagGroups.value = [];
+    form.title = '';
+    showSuggestions.value = false;
   }
 });
 
@@ -497,7 +504,6 @@ onUpdated(() => {
 .tag-filter-wrapper {
   margin-bottom: 0.75rem;
   border-top: 1px solid #e1e8ed;
-  padding-top: 0.5rem;
 }
 
 .tag-group-proposals {

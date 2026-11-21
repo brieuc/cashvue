@@ -326,8 +326,8 @@ h2 {
 }
 .add-btn, .toggle-btn {
   pointer-events: auto;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: none;
   cursor: pointer;
@@ -341,14 +341,14 @@ h2 {
 .add-btn {
   background: #3498db;
   color: white;
-  font-size: 1.5rem;
+  font-size: 1.8rem;
 }
 .add-btn:hover {
   background: #2980b9;
 }
 .toggle-btn {
   background: #ecf0f1;
-  font-size: 1.1rem;
+  font-size: 1.35rem;
 }
 .toggle-btn:hover {
   background: #dfe4e6;
