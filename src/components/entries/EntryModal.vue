@@ -209,6 +209,8 @@ watch(() => form.tags, (tags) => {
       // check if there is a perfect match which should allow us to directly get a title
       const match = matchTagGroup(data);
       if (match?.id != null) {
+        // If there is a match, no need to display the list anymore
+        tagGroups.value = [];
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
           titleSuggestions.value = suggestions;
           // Only interested in replacing the title with suggestion if it is empty
