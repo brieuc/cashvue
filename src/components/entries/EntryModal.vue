@@ -113,6 +113,7 @@ const emit = defineEmits<{
 
 const isPositive = ref<boolean>(false);
 const showSuggestions = ref<boolean>(false);
+const selectedTagsFromTagGroup = ref<TagDto[]>();
 
 const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
   form.title = suggestion.title;
@@ -132,13 +133,6 @@ const clearAmount = () => {
 const clearDescription = () => {
   form.description = '';
   descriptionInputRef.value?.focus();
-};
-
-const selectTagGroup = (tagGroup : TagGroupDto) => {
-  form.tags = tagGroup.tags ?? [];
-  // Once we select the tag group, no need to display the list anymore
-  // See the extra workaround in the watch tags
-  tagGroups.value = [];
 };
 
 const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
@@ -200,17 +194,32 @@ watch(() => props.entry, (entry) => {
   }
 }, {immediate: true});
 
+const selectTagGroup = (tagGroup : TagGroupDto) => {
+  form.tags = tagGroup.tags ?? [];
+  selectedTagsFromTagGroup.value = [...tagGroup.tags ?? []];
+  // Once we select the tag group, no need to display the list anymore
+  // See the extra workaround in the watch tags
+  tagGroups.value = [];
+};
+
 watch(() => form.tags, (tags) => {
   const tagIds = tags?.map(tag => tag.id).filter((id): id is number => id != null) ?? [];
   if (tagIds.length > 0) {
     // fetchTagGroups( {tagIds : tagIds} ); avoid property name when same name as value
+    const sameAsTagGroup = tags?.length === selectedTagsFromTagGroup.value?.length
+                            && !!tags?.every(t => selectedTagsFromTagGroup.value?.some(s => s.id === t.id));
+
     fetchTagGroups({ tagIds }).then(data => {
-      tagGroups.value = data;
+      // If the tags are provided by the selectedTagGroup, we don't need to display further possibilities
+      // So we don't fill tagGroups from the component. In a way, we even should not fetch tag groups.
+      if (!sameAsTagGroup)
+        tagGroups.value = data;
+
       // check if there is a perfect match which should allow us to directly get a title
       const match = matchTagGroup(data);
       if (match?.id != null) {
         // If there is a match, no need to display the list anymore
-        tagGroups.value = [];
+        //tagGroups.value = [];
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
           titleSuggestions.value = suggestions;
           // Only interested in replacing the title with suggestion if it is empty
