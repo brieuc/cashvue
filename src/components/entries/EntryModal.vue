@@ -134,13 +134,16 @@ const clearDescription = () => {
   descriptionInputRef.value?.focus();
 };
 
-const getFormEntry = (entry : CreateEntryRequest) : CreateEntryRequest => ({
+// Dans le formulaire, tags est toujours défini (TagFilter attend un tableau)
+type EntryForm = CreateEntryRequest & { tags: TagDto[] };
+
+const getFormEntry = (entry : CreateEntryRequest) : EntryForm => ({
   title: entry.title,
   amount: Math.abs(entry.amount as number),
   currencyCode: entry.currencyCode,
   accountingDate: entry.accountingDate,
   description: entry.description,
-  tags: entry.tags,
+  tags: entry.tags ?? [],
 });
 
 const getDefaultAccountingDate = () => toLocalInputValue(new Date());
@@ -161,7 +164,7 @@ const addHour = () => {
 
 // Fonction et non constante : la date par défaut doit être celle du moment de
 // la réinitialisation, pas celle de la création du composant.
-const getDefaultForm = () : CreateEntryRequest => ({
+const getDefaultForm = () : EntryForm => ({
   title: '',
   amount: null,
   currencyCode: 'CHF',
@@ -172,7 +175,7 @@ const getDefaultForm = () : CreateEntryRequest => ({
 
 const tagGroups = ref<TagGroupDto[]>([]);
 const titleSuggestions = ref<TagGroupTitleSuggestionDto[]>([]);
-const form = reactive<CreateEntryRequest>(getDefaultForm());
+const form = reactive<EntryForm>(getDefaultForm());
 
 const matchTagGroup = (groups: TagGroupDto[]): TagGroupDto | undefined => {
   const formTagIds = form.tags?.map(t => t.id) ?? [];
@@ -285,6 +288,8 @@ watch(() => props.isOpen, (open) => {
   } else {
     // Fermeture, quelle qu'en soit l'origine (save, cancel, overlay)
     tagGroups.value = [];
+    titleSuggestions.value = [];
+    showSuggestions.value = false;
   }
 });
 
