@@ -1,5 +1,5 @@
 <template>
-  <div v-if="isOpen" class="modal-overlay" @click="$emit('close')">
+  <div v-if="isOpen" class="modal-overlay" @click="cancel">
     <div class="modal" @click.stop>
       <div class="modal-header">
         <button type="button" class="btn-cancel" @click="cancel">Cancel</button>
@@ -41,7 +41,7 @@
         </div>
 
         <div class="tag-filter-wrapper">
-          <TagFilter v-model="form.tags" />
+          <TagFilter v-model="form.tags" @update:model-value="onTagsChanged" />
         </div>
 
         <div v-if="form.tags?.length && tagGroups.length" class="tag-group-proposals">
@@ -113,7 +113,6 @@ const emit = defineEmits<{
 
 const isPositive = ref<boolean>(false);
 const showSuggestions = ref<boolean>(false);
-const selectedTagsFromTagGroup = ref<TagDto[]>();
 
 const selectSuggestion = (suggestion: TagGroupTitleSuggestionDto) => {
   form.title = suggestion.title;
@@ -183,43 +182,74 @@ const matchTagGroup = (groups: TagGroupDto[]): TagGroupDto | undefined => {
   );
 };
 
-watch(() => props.entry, (entry) => {
-  if(entry) {
-    Object.assign(form, getFormEntry(entry));
-    isPositive.value = entry.amount > 0.0 ? true : false;
-  }
-  else {
+// Initialisation du formulaire à chaque ouverture (cf. watch props.isOpen).
+// Pas de watch sur props.entry : rouvrir la même entry ne change pas la prop,
+// le formulaire garderait alors les modifications annulées.
+const initForm = () => {
+  if (props.entry) {
+    Object.assign(form, getFormEntry(props.entry));
+    isPositive.value = props.entry.amount > 0;
+  } else {
     Object.assign(form, getDefaultForm());
     isPositive.value = false;
   }
-}, {immediate: true});
+};
 
 const selectTagGroup = (tagGroup : TagGroupDto) => {
   form.tags = tagGroup.tags ?? [];
-  selectedTagsFromTagGroup.value = [...tagGroup.tags ?? []];
-  // Once we select the tag group, no need to display the list anymore
-  // See the extra workaround in the watch tags
+
+  if (tagGroup.id != null) {
+    fetchTitleSuggestionsForTagGroup(tagGroup.id).then(suggestions => {
+      titleSuggestions.value = suggestions;
+      // Only interested in replacing the title with suggestion if it is empty
+      if (form.title === '') {
+          form.title = titleSuggestions.value[0]?.title ?? ''
+          showSuggestions.value = true;
+      }
+    });
+  }
   tagGroups.value = [];
 };
 
-watch(() => form.tags, (tags) => {
-  const tagIds = tags?.map(tag => tag.id).filter((id): id is number => id != null) ?? [];
+const onTagsChanged = (tags: TagDto[]) => {
+ const tagIds = tags?.map(tag => tag.id).filter((id): id is number => id != null) ?? [];
   if (tagIds.length > 0) {
-    // fetchTagGroups( {tagIds : tagIds} ); avoid property name when same name as value
-    const sameAsTagGroup = tags?.length === selectedTagsFromTagGroup.value?.length
-                            && !!tags?.every(t => selectedTagsFromTagGroup.value?.some(s => s.id === t.id));
 
     fetchTagGroups({ tagIds }).then(data => {
-      // If the tags are provided by the selectedTagGroup, we don't need to display further possibilities
-      // So we don't fill tagGroups from the component. In a way, we even should not fetch tag groups.
-      if (!sameAsTagGroup)
-        tagGroups.value = data;
-
+      tagGroups.value = data;
       // check if there is a perfect match which should allow us to directly get a title
       const match = matchTagGroup(data);
       if (match?.id != null) {
-        // If there is a match, no need to display the list anymore
-        //tagGroups.value = [];
+        fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
+          titleSuggestions.value = suggestions;
+          // Only interested in replacing the title with suggestion if it is empty
+          if (form.title === '') {
+              form.title = titleSuggestions.value[0]?.title ?? ''
+              showSuggestions.value = true;
+          }
+        });
+      }
+      else {
+        if (form.title === '') {
+            form.title = titleSuggestions.value[0]?.title ?? ''
+            showSuggestions.value = true;
+        }
+      }
+    });
+  }
+  else {
+    tagGroups.value = [];
+    form.title = '';
+    showSuggestions.value = false;
+  }
+};
+
+/*
+watch(() => form.tags, (tags) => {
+
+      // check if there is a perfect match which should allow us to directly get a title
+      const match = matchTagGroup(tags);
+      if (match?.id != null) {
         fetchTitleSuggestionsForTagGroup(match.id).then(suggestions => {
           titleSuggestions.value = suggestions;
           // Only interested in replacing the title with suggestion if it is empty
@@ -243,25 +273,23 @@ watch(() => form.tags, (tags) => {
     showSuggestions.value = false;
   }
 });
-
-// Put the focus on the amount textfield when opening the modal
+*/
+// On surveille la prop plutôt que l'événement close : le save ne passe pas par close.
 watch(() => props.isOpen, (open) => {
-  if (open && !props.entry) {
-    form.accountingDate = getDefaultAccountingDate();
-    nextTick(() => {
-      inputRef.value?.focus();
-    });
+  if (open) {
+    // selectedEntry et isModalOpen sont modifiés dans le même tick côté EntryList :
+    // props.entry est déjà à jour ici.
+    initForm();
+    // Focus sur le montant pour une nouvelle entry
+    if (!props.entry) nextTick(() => inputRef.value?.focus());
+  } else {
+    // Fermeture, quelle qu'en soit l'origine (save, cancel, overlay)
+    tagGroups.value = [];
   }
 });
 
+// Pas de reset ici : le formulaire est réinitialisé à l'ouverture suivante.
 const cancel = () => {
-  // Need to verifiy if there is an entry because if we clear the data
-  // and we try to launch again the same entry, the watch props.entry
-  // is not triggered again so the form stays blank.
-  if (!props.entry) {
-    Object.assign(form, getDefaultForm());
-    isPositive.value = false;
-  }
   emit("close");
 };
 
